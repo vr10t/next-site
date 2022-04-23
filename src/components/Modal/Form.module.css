@@ -1,0 +1,21 @@
+@keyframes ani {
+  
+   
+  }
+  @keyframes textAni {
+   
+  }
+  
+.bgAni:hover{
+  transition: all;
+  transition-duration: 1s;
+  animation-name: ani;
+  animation-duration: 0.2s;
+  animation-iteration-count: 1;
+}
+.textAni{
+ 
+  animation-name: textAni;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+}

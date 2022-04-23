@@ -1,0 +1,31 @@
+@keyframes caption-r {
+  0% {
+    left: 10%;
+    opacity: 0;
+  
+  }
+  100% {
+    left: -24rem;
+    opacity: 1;
+  }
+}
+@keyframes caption-l {
+  0% {
+    left: -10%;
+  
+  }
+  100% {
+    left: 0%;
+  }
+}
+.aniL{
+  animation-name: caption-l;
+  animation-duration: 1.2s;
+  animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.aniR{
+  animation-name: caption-r;
+  animation-duration: 1.2s;
+}
+
