@@ -19,13 +19,13 @@
   }
 }
 .aniL{
-  animation-name: caption-l;
+  /* animation-name: caption-l;
   animation-duration: 1.2s;
-  animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+  animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1); */
 }
 
 .aniR{
-  animation-name: caption-r;
-  animation-duration: 1.2s;
+  /* animation-name: caption-r;
+  animation-duration: 1.2s; */
 }
 

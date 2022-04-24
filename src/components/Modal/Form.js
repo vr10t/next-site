@@ -5,13 +5,17 @@ import { BsFillPersonPlusFill } from "@react-icons/all-files/bs/BsFillPersonPlus
 import { BsCalendarFill } from "@react-icons/all-files/bs/BsCalendarFill";
 import { FaMapPin } from "@react-icons/all-files/fa/FaMapPin";
 import { BsClockFill } from "@react-icons/all-files/bs/BsClockFill";
-import HCaptcha from "@hcaptcha/react-hcaptcha";
+
 import InputField from "./InputField2";
 import { useState } from "react";
 import Image from "next/image"
 import styles from "./Form.module.css"
+import dynamic from 'next/dynamic'
+const HCaptcha = dynamic(() => import('@hcaptcha/react-hcaptcha'))
+
 export default function Form() {
   const [state, setState] = useState("");
+  
   let date = new Date();
   var day = date.getDate();
   var month = date.getMonth() + 1;
@@ -35,7 +39,7 @@ export default function Form() {
      
       <div className="grid max-w-2xl left-1/2 ">
       <h1 className="text-center font-bold ">Book a Ride</h1>
-        <div className="md:grid mx-4 lg:grid-cols-2 lg:gap-4 md:float-right">
+        <div className="md:grid mx-4 xl:grid-cols-2 lg:gap-4 md:float-right">
           <div className="noblur flex flex-col"> {/*first col*/}
             <InputField
               icon={
@@ -140,7 +144,7 @@ export default function Form() {
         </label></div>
         <button
               type="button"
-              className="flex max-w-xl mx-10 align-middle py-3 relative mt-9 md:h-16 lg:w-full bg-gradient-to-r hover:to-rose-600 hover:from-orange-500 from-orange-400  to-rose-500  rounded-full text-stone-800 text-xl justify-center  shadow-md font-bold transition-all duration-1000 ease-in-out ">
+              className="flex max-w-xl mx-8 align-middle py-3 relative mt-9 md:h-16 xl:w-full bg-gradient-to-r hover:to-rose-600 hover:from-orange-500 from-orange-400  to-rose-500  rounded-full text-stone-50 text-xl justify-center  shadow-md font-bold transition-all duration-1000 ease-in-out ">
               Book Now!
             </button>
 </div>
