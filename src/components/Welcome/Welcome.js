@@ -3,8 +3,8 @@ import { FaMapMarkedAlt } from "@react-icons/all-files/fa/FaMapMarkedAlt";
 import { FaPlaneDeparture } from "@react-icons/all-files/fa/FaPlaneDeparture";
 import { FaRoute } from "@react-icons/all-files/fa/FaRoute";
 import { FaTaxi } from "@react-icons/all-files/fa/FaTaxi";
-import Features from "./Features"
-
+import Features from "./Features";
+import Image from "next/image";
 
 // import tailwindcss from 'tailwindcss'
 export default function Welcome() {
@@ -14,17 +14,16 @@ export default function Welcome() {
         <hr></hr>
         <h1 className="relative ml-2 px-4 md:ml-10 mt-12  pt-20 font-bold text-4xl sm:text-5xl  ">
           About us...
+          
         </h1>
       </div>
 
       {/* <div className="h-20 bg-gray-50"></div> */}
 
-      <div className=" px-4  py-16 sm:flex sm:flex-row">
-        <img
-          className="md:flex hidden rounded-xl mx-4 bg-black w-full h-auto md:w-1/3 lg:w-2/5  justify-start"
-          src="promo-6.webp"
-          alt="..."
-        />
+      <div className=" px-4  py-16 sm:flex flex-col items-center lg:flex-row">
+        <div className="lg:block hidden rounded-xl mx-4  lg:w-2/5  justify-start">
+          <Image className="rounded-xl" src="/promo-6.webp" alt="..." width={1000} height={1300} />
+        </div>
         <div className="max-w-screen   ml-1 md:ml-4 text-indent-sm w-fit lg:w-1/2 lg:justify-end">
           <h2 className="mb-4 ">
             {" "}
@@ -53,7 +52,7 @@ export default function Welcome() {
           </h5>
         </div>
       </div>
-      <div className="max-w-screen md:mx-10 flex flex-col lg:flex-row">
+      <div className="max-w-screen md:mx-10 grid md:grid-cols-2 lg:grid-cols-4">
         <ServicesItem
           title="Address Pickup"
           text="We always pick up our clients on time, 24/7 availability."
@@ -76,7 +75,6 @@ export default function Welcome() {
         />
       </div>
       <Features />
-      
     </div>
   );
 }

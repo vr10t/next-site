@@ -6,6 +6,9 @@ export default function Contact(){
 
 
 <section id="contact" className="bg-gray-100">
+<h1 className="relative ml-2 px-4 md:ml-10   pt-20 font-bold text-4xl sm:text-5xl  ">
+          Contact...
+        </h1>
 <div className="max-w-screen-xl px-4 py-16 mx-auto sm:px-6 lg:px-8">
   <div className="grid grid-cols-1 gap-x-16 gap-y-8 lg:grid-cols-5">
     <div className="lg:py-12 lg:col-span-2">
@@ -20,18 +23,18 @@ export default function Contact(){
       </div>
     </div>
 
-    <div className="p-8 bg-white rounded-lg shadow-md lg:p-12 lg:col-span-3">
+    <div className="p-8 bg-neutral-50 rounded-lg shadow-md lg:p-12 lg:col-span-3">
       <form action="" className="space-y-4">
         <div>
           <label className="sr-only" for="name">Name</label>
-          <input className="w-full p-3 text-sm border-gray-200 rounded-lg" placeholder="Name" type="text" id="name" />
+          <input className="w-full bg-neutral-50 p-3 text-sm border-gray-200 rounded-lg" placeholder="Name" type="text" id="name" />
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className="sr-only" for="email">Email</label>
             <input
-              className="w-full p-3 text-sm border-gray-200 rounded-lg"
+              className="w-full p-3 text-sm bg-neutral-50 border-gray-200 rounded-lg"
               placeholder="Email address"
               type="email"
               id="email"
@@ -41,7 +44,7 @@ export default function Contact(){
           <div>
             <label className="sr-only" for="phone">Phone</label>
             <input
-              className="w-full p-3 text-sm border-gray-200 rounded-lg"
+              className="w-full p-3 text-sm bg-neutral-50 border-gray-200 rounded-lg"
               placeholder="Phone Number"
               type="tel"
               id="phone"
@@ -75,7 +78,7 @@ export default function Contact(){
         <div>
           <label className="sr-only" for="message">Message</label>
           <textarea
-            className="w-full p-3 text-sm border-gray-200 rounded-lg"
+            className="w-full bg-neutral-50 p-3 text-sm border-gray-200 rounded-lg"
             placeholder="Message"
             rows="8"
             id="message"
