@@ -73,26 +73,27 @@ export default function Navbar() {
         {expanded && (
           <div className={" md:hidden"}>
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <Link  href="/#">
               <a
                 className="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                href="/#">
+               >
                 Home
-              </a>
-              <a
+              </a></Link>
+              <Link  href="#about"><a
                 className="text-gray-800 dark:text-white block px-3 py-2 rounded-md text-base font-medium"
-                href="/#">
-                Gallery
-              </a>
-              <a
+                >
+                About
+              </a></Link>
+              <Link  href="#FAQ"><a
                 className="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                href="/#">
-                Content
-              </a>
-              <a
+                >
+                FAQ
+              </a></Link>
+              <Link  href="#contact"><a
                 className="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
                 href="/#">
                 Contact
-              </a>
+              </a></Link>
             </div>
           </div>
         )}

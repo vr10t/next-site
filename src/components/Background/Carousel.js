@@ -9,7 +9,7 @@ function BgCarousel() {
   // const imageClasses=""
   return (
     <div id="" className="h-auto  w-auto max-w-screen bg-gray-50">
-      <Carousel className="" fade controls={true} indicators={false}>
+      <Carousel className="" fade pause={false} controls={false} indicators={false}>
         <Carousel.Item>
           <div className="flex flex-col">
             <div className=" max-w-screen  w-auto h-screen">
@@ -23,7 +23,7 @@ function BgCarousel() {
               />
             </div>
 
-            <Caption text="AVAILABLE 24/7" />
+            <Caption className="shadow" text="TRUSTED BY THOUSANDS" />
           </div>
         </Carousel.Item>
         <Carousel.Item>
@@ -38,7 +38,7 @@ function BgCarousel() {
                 layout="fill"
               />
             </div>
-            <Caption text="FAST AND RELIABLE" />
+            <Caption text="AVAILABLE 24/7" />
           </div>
         </Carousel.Item>
         <Carousel.Item>
@@ -53,7 +53,7 @@ function BgCarousel() {
                 layout="fill"
               />
             </div>
-            <Caption text="TRUSTED BY THOUSANDS" />
+            <Caption text="CHEAP FARES" />
           </div>
         </Carousel.Item>
         <Carousel.Item>
@@ -68,7 +68,7 @@ function BgCarousel() {
                 layout="fill"
               />
             </div>
-            <Caption text="CHEAP FARES" />
+            <Caption text="FAST AND RELIABLE" />
           </div>
         </Carousel.Item>
       </Carousel>

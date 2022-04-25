@@ -1,31 +1,62 @@
 @keyframes caption-r {
   0% {
-    left: 10%;
+    transform: translatey(-100px);
+    transform: translatex(20px);
     opacity: 0;
+  }
   
+ 
+  30% {
+    transform: translatey(0px);
+    transform: translatex(0px);
+    opacity: 1;
+  }
+  
+  80% {
+    transform: translatey(0px);
+    transform: translatex(0px);
+    opacity: 1;
   }
   100% {
-    left: -24rem;
-    opacity: 1;
+    transform: translatey(0px);
+    transform: translatex(0px);
+    opacity: 0;
   }
 }
 @keyframes caption-l {
   0% {
-    left: -10%;
+    transform: translatex(100px);
+    transform: translatey(-20px);
+    opacity: 0;
+  }
   
+ 
+  30% {
+    transform: translatex(0px);
+    transform: translatey(10px);
+    opacity: 1;
+  }
+  
+  80% {
+    transform: translatex(-100px);
+    transform: translatey(-10px);
+    opacity: 1;
   }
   100% {
-    left: 0%;
+    transform: translatex(0px);
+    transform: translatey(10px);
+    opacity: 0;
   }
 }
 .aniL{
-  /* animation-name: caption-l;
-  animation-duration: 1.2s;
-  animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1); */
+  animation-name: caption-l;
+  animation-duration: 7s;
+  animation-timing-function:ease-in-out;
 }
 
 .aniR{
-  /* animation-name: caption-r;
-  animation-duration: 1.2s; */
+  animation-name: caption-r;
+  animation-duration: 7s;
+  animation-timing-function: ease-in-out;
 }
 
