@@ -13,7 +13,7 @@ function BgCarousel() {
       <Carousel className="" fade pause={false} controls={false} indicators={false}>
         <Carousel.Item>
           <div className="flex flex-col">
-            <div className=" max-w-screen  w-auto h-96">
+            <div className=" max-w-screen  w-auto h-96 lg:h-screen">
               <Image
                 placeholder="blur"
                 blurDataURL="/vercel.svg"
@@ -29,7 +29,7 @@ function BgCarousel() {
         </Carousel.Item>
         <Carousel.Item>
           <div className="flex flex-col">
-            <div className=" max-w-screen  w-auto   h-96">
+            <div className=" max-w-screen  w-auto   h-96 lg:h-screen">
               <Image
                 placeholder="blur"
                 blurDataURL="/vercel.svg"
@@ -44,7 +44,7 @@ function BgCarousel() {
         </Carousel.Item>
         <Carousel.Item>
           <div className="flex flex-col">
-            <div className=" max-w-screen  w-auto   h-96">
+            <div className=" max-w-screen  w-auto   h-96 lg:h-screen">
               <Image
                 placeholder="blur"
                 blurDataURL="/vercel.svg"
@@ -59,7 +59,7 @@ function BgCarousel() {
         </Carousel.Item>
         <Carousel.Item>
           <div className="flex flex-col">
-            <div className=" max-w-screen  w-auto   h-96">
+            <div className=" max-w-screen  w-auto   h-96 lg:h-screen">
               <Image
                 placeholder="blur"
                 blurDataURL="/vercel.svg"

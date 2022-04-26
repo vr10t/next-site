@@ -3,7 +3,7 @@ import Footer from './Footer/Footer';
 import Header from './Header/Header.js';
 import Reviews from './Testimonials/Testimonials';
 import Welcome from './Welcome/Welcome';
-import FAQ from "../../pages/FAQ"
+import FAQ from "./FAQ/FAQ"
 import Contact from './Contact/Contact'
 import Link from 'next/link';
 import Form from "./Modal/Form";

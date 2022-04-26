@@ -1,10 +1,10 @@
-export default function Features(props,{children}) {
+const Features=(props) => {
   return (
     <div className="relative">
       <dt>
-        <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white">
+        <div className="absolute flex items-center justify-center h-12 w-12 rounded-md text-3xl bg-orange-500 text-white">
           
-           <span>{children}</span> 
+           <span>{props.icon} </span> 
           
         </div>
         <p className="ml-16 text-lg leading-6 font-medium text-gray-900">
@@ -17,3 +17,4 @@ export default function Features(props,{children}) {
     </div>
   );
 }
+export default Features

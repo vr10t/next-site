@@ -1,4 +1,4 @@
-import Question from "../src/components/FAQ/Question";
+import Question from "./Question";
 
 export default function FAQ() {
   return (
@@ -9,6 +9,12 @@ export default function FAQ() {
             <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
               Frequently Asked Questions...
             </h2>{" "}
+            <p className="max-w-lg mt-8  text-gray-500">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Aspernatur praesentium natus sapiente commodi. Aliquid sunt
+                tempore iste repellendus explicabo dignissimos placeat, autem
+                harum dolore reprehenderit quis! Quo totam dignissimos earum.
+              </p>
           </div>
         </div>
       </div>

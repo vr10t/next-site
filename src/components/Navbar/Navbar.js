@@ -46,7 +46,7 @@ export default function Navbar() {
                       </a>
                     </Link>
                   </div>
-                  <h1 className="flex col-end-7 pl-20 my-auto">(123) 456-78-90</h1>
+                  <h3 className="flex col-end-7 pl-20 my-auto">(123) 456-78-90</h3>
                 </div>
               </div>
             </div>

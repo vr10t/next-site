@@ -1,8 +1,4 @@
-import ServicesItem from "../ServicesItem/ServicesItem";
-import { FaMapMarkedAlt } from "@react-icons/all-files/fa/FaMapMarkedAlt";
-import { FaPlaneDeparture } from "@react-icons/all-files/fa/FaPlaneDeparture";
-import { FaRoute } from "@react-icons/all-files/fa/FaRoute";
-import { FaTaxi } from "@react-icons/all-files/fa/FaTaxi";
+import Services from "../Services/Services";
 import Features from "./Features";
 import Image from "next/image";
 
@@ -52,28 +48,7 @@ export default function Welcome() {
           </h5>
         </div>
       </div>
-      <div className="max-w-screen md:mx-10 grid md:grid-cols-2 lg:grid-cols-4">
-        <ServicesItem
-          title="Address Pickup"
-          text="We always pick up our clients on time, 24/7 availability."
-          icon={<FaMapMarkedAlt className="" />}
-        />
-        <ServicesItem
-          title="Airport Transfer"
-          text="GetCab specialized in 24 hours airport transfer service."
-          icon={<FaPlaneDeparture className="" />}
-        />
-        <ServicesItem
-          title="Long Distance"
-          text="We offer you a long distance taxi service to anywhere."
-          icon={<FaRoute className="" />}
-        />
-        <ServicesItem
-          title="Taxi Tours"
-          text="We offer taxi tours of various durations and complexity."
-          icon={<FaTaxi className="" />}
-        />
-      </div>
+      <Services />
       <Features />
     </div>
   );

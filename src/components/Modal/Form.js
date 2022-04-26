@@ -48,7 +48,7 @@ export default function Form() {
         </div>
       </div>
       <div className="m-4 justify-center flex">
-        <form>
+        <form action="https://formspree.io/f/xoqrkbwb" method="POST">
           <div className="grid max-w-2xl left-1/2 ">
             <h1 className="text-center font-bold ">Book a Ride</h1>
             <div className="md:grid mx-4 xl:grid-cols-2 lg:gap-4 md:float-right">
@@ -142,15 +142,15 @@ export default function Form() {
                 </div>
               </div>
             </div>
-            <div className="flex px-16 mt-4 flex-row">
+            <div className="flex px-8 lg:px-16 mt-4 flex-row">
               <input
                 name="tos"
                 id="tos"
                 required={true}
-                className="p-4 mt-2 scale-150 "
+                className=" lg:p-4 mt-2 scale-150 "
                 type="checkbox"
               />
-              <label className="px-2 lg:indent-2" for="tos">
+              <label className=" px-2 lg:indent-2" for="tos">
                 By using this form you agree with the storage and handling of
                 your data by this website.
               </label>

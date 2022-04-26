@@ -102,6 +102,11 @@ export default function Footer() {
           Copyright © 2022
         </div>
       </footer>
+      <style jsx>{`
+        a.hover{
+          color:red;}
+          `}
+      </style>
     </div>
   );
 }

@@ -1,6 +1,9 @@
 
 
 export default function Contact(){
+  function handleSubmit(e){
+    e.preventDefault()
+  }
     return (
 
 
@@ -13,7 +16,7 @@ export default function Contact(){
   <div className="grid grid-cols-1 gap-x-16 gap-y-8 lg:grid-cols-5">
     <div className="lg:py-12 lg:col-span-2">
       <p className="max-w-xl text-lg">
-      If you would like to contact us please use the form below:
+      We would love the hear from you. If you have any enquiries or suggestions, please use the form attached.
       </p>
 
       <div className="mt-8">
@@ -24,20 +27,21 @@ export default function Contact(){
     </div>
 
     <div className="p-8 bg-neutral-50 rounded-lg shadow-md lg:p-12 lg:col-span-3">
-      <form action="" className="space-y-4">
+      <form action="https://formspree.io/f/mvolvklo" method="POST"  className="space-y-4">
         <div>
-          <label className="sr-only" for="name">Name</label>
-          <input className="w-full bg-neutral-50 p-3 text-sm border-gray-200 rounded-lg" placeholder="Name" type="text" id="name" />
+          <label className="sr-only" aria-required for="name">Name</label>
+          <input required className="w-full bg-neutral-50 p-3 text-sm border-gray-200 rounded-lg" placeholder="Name" type="text" name="Name" id="name" />
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="sr-only" for="email">Email</label>
-            <input
+            <label aria-required className="sr-only" for="email">Email</label>
+            <input required
               className="w-full p-3 text-sm bg-neutral-50 border-gray-200 rounded-lg"
               placeholder="Email address"
               type="email"
               id="email"
+              name="Email"
             />
           </div>
 
@@ -48,40 +52,22 @@ export default function Contact(){
               placeholder="Phone Number"
               type="tel"
               id="phone"
+              name="Phone"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 text-center sm:grid-cols-3">
-          <div>
-            <input className="sr-only" id="option1" type="radio" tabindex="-1" />
-            <label for="option1" className="block w-full p-3 border border-gray-200 rounded-lg" tabindex="0">
-              <span className="text-sm font-medium"> Option 1 </span>
-            </label>
-          </div>
-
-          <div>
-            <input className="sr-only" id="option2" type="radio" tabindex="-1" />
-            <label for="option2" className="block w-full p-3 border border-gray-200 rounded-lg" tabindex="0">
-              <span className="text-sm font-medium"> Option 2 </span>
-            </label>
-          </div>
-
-          <div>
-            <input className="sr-only" id="option3" type="radio" tabindex="-1" />
-            <label for="option3" className="block w-full p-3 border border-gray-200 rounded-lg" tabindex="0">
-              <span className="text-sm font-medium"> Option 3 </span>
-            </label>
-          </div>
-        </div>
+        
 
         <div>
-          <label className="sr-only" for="message">Message</label>
+          <label  aria-required className="sr-only" for="message">Message</label>
           <textarea
+          required
             className="w-full bg-neutral-50 p-3 text-sm border-gray-200 rounded-lg"
             placeholder="Message"
             rows="8"
             id="message"
+            name="Message"
           ></textarea>
         </div>
 

@@ -1,9 +1,9 @@
 /* This example requires Tailwind CSS v2.0+ */
 import React from "react";
-import HiGlobeAlt from "@react-icons/all-files/hi/HiGlobeAlt";
-import HiScale from "@react-icons/all-files/hi/HiScale";
-import HiLightningBolt from "@react-icons/all-files/hi/HiLightningBolt";
-import HiAnnotation from "@react-icons/all-files/hi/HiAnnotation";
+import {HiGlobeAlt} from "@react-icons/all-files/hi/HiGlobeAlt";
+import{ HiScale} from "@react-icons/all-files/hi/HiScale";
+import {HiLightningBolt} from "@react-icons/all-files/hi/HiLightningBolt";
+import {HiAnnotation} from "@react-icons/all-files/hi/HiAnnotation";
 
 import Feature from "./Feature";
 
@@ -13,7 +13,7 @@ export default function Example() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="lg:text-center">
           <h2 className="text-base text-orange-600 font-semibold tracking-wide uppercase">
-            Why choose us
+          PROFESSIONAL STANDARDS
           </h2>
           <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
             Easy to use, better service
@@ -28,24 +28,24 @@ export default function Example() {
           <dl className="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
             <Feature
               name="Competitive rates "
-              description="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.">
-              {()=> <HiGlobeAlt  className="h-6 z-10 bg-green-500 text-white text-7xl w-6" />}
-            </Feature>
+              description="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione."
+              icon={<HiGlobeAlt  />} />
+               
+            
             <Feature
               name="No hidden fees"
-              description="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.">
-             {()=> <HiScale />}
-            </Feature>
+              description="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione."
+              icon={ <HiScale />} />
             <Feature
               name="Quick response"
-              description="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.">
-               {/* <HiLightningBolt /> */}
-            </Feature>
+              description="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione."
+              icon={ <HiLightningBolt /> } />
+            
             <Feature
               name="Mobile notifications"
-              description="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.">
-              {/* <HiAnnotation /> */}
-            </Feature>
+              description="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione."
+              icon={ <HiAnnotation /> } />
+            
           </dl>
         </div>
       </div>
