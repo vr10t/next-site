@@ -4,6 +4,10 @@ import Caption from "./CarouselItem";
 import styles from "./Carousel.module.scss";
 import Link from "next/link";
 import Image from "next/image";
+import bg2 from "../../../public/bg-2.jpg"
+import slider1 from "../../../public/slider1.jpg"
+import slider2 from "../../../public/slider2.jpg"
+import slider3 from "../../../public/slider3.jpg"
 
 import ButtonPhat from "../Buttons/ButtonPhat";
 function BgCarousel() {
@@ -15,10 +19,9 @@ function BgCarousel() {
           <div className="flex flex-col">
             <div className=" max-w-screen  w-auto h-96 lg:h-screen">
               <Image
-                placeholder="blur"
-                blurDataURL="/vercel.svg"
+                
                 className="relative  object-cover"
-                src="/slider1.jpg"
+                src={slider1}
                 alt="..."
                 layout="fill"
               />
@@ -31,10 +34,9 @@ function BgCarousel() {
           <div className="flex flex-col">
             <div className=" max-w-screen  w-auto   h-96 lg:h-screen">
               <Image
-                placeholder="blur"
-                blurDataURL="/vercel.svg"
+               
                 className="relative object-cover"
-                src="/bg-2.jpg"
+                src={bg2}
                 alt="..."
                 layout="fill"
               />
@@ -46,10 +48,9 @@ function BgCarousel() {
           <div className="flex flex-col">
             <div className=" max-w-screen  w-auto   h-96 lg:h-screen">
               <Image
-                placeholder="blur"
-                blurDataURL="/vercel.svg"
+               
                 className="relative object-cover"
-                src="/slider2.jpg"
+                src={slider2}
                 alt="..."
                 layout="fill"
               />
@@ -61,10 +62,9 @@ function BgCarousel() {
           <div className="flex flex-col">
             <div className=" max-w-screen  w-auto   h-96 lg:h-screen">
               <Image
-                placeholder="blur"
-                blurDataURL="/vercel.svg"
+              
                 className="relative object-cover"
-                src="/slider3.jpg"
+                src={slider3}
                 alt="..."
                 layout="fill"
               />

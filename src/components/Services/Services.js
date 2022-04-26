@@ -7,7 +7,7 @@ import { FaTaxi } from "@react-icons/all-files/fa/FaTaxi";
 export default function Services(){
     return(
       <>
-        <div className="lg:text-center">
+        <div className="lg:text-center mx-4">
           <h2 className="text-base text-orange-600 font-semibold tracking-wide uppercase">
             Our benefits
           </h2>

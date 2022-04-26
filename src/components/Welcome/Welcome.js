@@ -1,6 +1,7 @@
 import Services from "../Services/Services";
 import Features from "./Features";
 import Image from "next/image";
+import promo6 from "../../../public/promo-6.webp"
 
 // import tailwindcss from 'tailwindcss'
 export default function Welcome() {
@@ -18,7 +19,7 @@ export default function Welcome() {
 
       <div className=" px-4  py-16 sm:flex flex-col items-center lg:flex-row">
         <div className="lg:block hidden rounded-xl mx-4  lg:w-2/5  justify-start">
-          <Image className="rounded-xl" src="/promo-6.webp" alt="..." width={1000} height={1300} />
+          <Image className="rounded-xl" src={promo6} alt="..." width={1000} height={1300} />
         </div>
         <div className="max-w-screen md:ml-4  w-fit lg:w-1/2 lg:justify-end">
           <h2 className="mb-4 ">

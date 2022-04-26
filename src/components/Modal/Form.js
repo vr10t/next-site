@@ -10,6 +10,7 @@ import InputField from "./InputField2";
 import { useState } from "react";
 import Image from "next/image";
 import styles from "./Form.module.css";
+import bg2 from "../../../public/bg-2.jpg"
 import dynamic from "next/dynamic";
 const HCaptcha = dynamic(() => import("@hcaptcha/react-hcaptcha"));
 
@@ -41,7 +42,7 @@ export default function Form() {
         <div className="mt-4 ">
           <Image
             className="rounded-xl "
-            src="/bg-2.jpg"
+            src={bg2}
             width={4000}
             height={3000}
           />
