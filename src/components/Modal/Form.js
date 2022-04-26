@@ -135,6 +135,7 @@ export default function Form() {
                 />
                 <div className="mt-4 pt-1 ">
                   <HCaptcha
+                    required={true}
                     sitekey="63ecdeb2-95ea-4c7a-9e95-02195a81d5c5"
                     onVerify={(token, ekey) =>
                       handleVerificationSuccess(token, ekey)
@@ -158,7 +159,7 @@ export default function Form() {
             </div>
             
             <button
-              type="button"
+              type="submit"
               className="flex mx-6 align-middle py-3 relative mt-9 h-16 xl:w-full bg-gradient-to-r hover:to-rose-600 hover:from-orange-500 from-orange-400  to-rose-500  rounded-full text-stone-50 text-xl justify-center  shadow-md font-bold transition-all duration-1000 ease-in-out ">
               Book Now!
             </button>
