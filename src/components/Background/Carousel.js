@@ -9,7 +9,7 @@ import ButtonPhat from "../Buttons/ButtonPhat";
 function BgCarousel() {
   // const imageClasses=""
   return (
-    <div id="" className="h-auto  w-auto max-w-screen bg-gray-50">
+    <div id="" className="h-auto  w-auto max-w-screen bg-stone-100">
       <Carousel className="" fade pause={false} controls={false} indicators={false}>
         <Carousel.Item>
           <div className="flex flex-col">
