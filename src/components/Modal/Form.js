@@ -38,7 +38,7 @@ export default function Form() {
           Our taxis commit to make your trips unique by best answering your
           needs.
         </h5>
-        <div className="mt-4">
+        <div className="mt-4 ">
           <Image
             className="rounded-xl "
             src="/bg-2.jpg"

@@ -6,7 +6,7 @@ export default function ButtonPhat(props){
         <div className="mt-4 ">
         <button
           type={props.type}
-          className={` ${clr} inline-flex items-center justify-center w-full px-5 py-3  rounded-lg sm:w-auto`}
+          className={` ${clr} scale-90 md:scale-100 inline-flex items-center justify-center w-full px-5 py-3  rounded-lg sm:w-auto`}
         >
           <span className="font-medium"> {props.text} </span>
 
