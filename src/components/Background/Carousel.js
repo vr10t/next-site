@@ -22,6 +22,7 @@ function BgCarousel() {
                 
                 className="relative  object-cover"
                 src={slider1}
+                placeholder="blur"
                 alt="..."
                 layout="fill"
               />
@@ -34,7 +35,7 @@ function BgCarousel() {
           <div className="flex flex-col">
             <div className=" max-w-screen  w-auto   h-96 lg:h-screen">
               <Image
-               
+               placeholder="blur"
                 className="relative object-cover"
                 src={bg2}
                 alt="..."
@@ -48,7 +49,7 @@ function BgCarousel() {
           <div className="flex flex-col">
             <div className=" max-w-screen  w-auto   h-96 lg:h-screen">
               <Image
-               
+               placeholder="blur"
                 className="relative object-cover"
                 src={slider2}
                 alt="..."
@@ -62,7 +63,7 @@ function BgCarousel() {
           <div className="flex flex-col">
             <div className=" max-w-screen  w-auto   h-96 lg:h-screen">
               <Image
-              
+              placeholder="blur"
                 className="relative object-cover"
                 src={slider3}
                 alt="..."
