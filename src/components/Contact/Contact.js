@@ -74,7 +74,7 @@ export default function Contact(){
         <div className="mt-4">
           <button
             type="submit"
-            className="inline-flex items-center justify-center w-full px-5 py-3 text-white hover:bg-orange-500 transition-all duration-500 bg-orange-400 rounded-lg sm:w-auto"
+            className="inline-flex items-center justify-center w-full px-5 py-3 text-white hover:bg-sky-500 transition-all duration-500 bg-sky-400 rounded-lg sm:w-auto"
           >
             <span className="font-medium"> Send Enquiry </span>
 

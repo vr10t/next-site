@@ -32,7 +32,7 @@ export default function Form() {
         <h3>Looking for a taxi?</h3>
 
         <h1
-          className={` ${styles.textAni} text-5xl text-orange-500  font-bold `}>
+          className={` ${styles.textAni} text-5xl text-sky-500  font-bold `}>
           Make your booking
         </h1>
         <h5>
@@ -160,7 +160,7 @@ export default function Form() {
             
             <button
               type="submit"
-              className="flex mx-6 align-middle py-3 relative mt-9 h-16 xl:w-full bg-gradient-to-r hover:to-rose-600 hover:from-orange-500 from-orange-400  to-rose-500  rounded-full text-stone-50 text-xl justify-center  shadow-md font-bold transition-all duration-1000 ease-in-out ">
+              className="flex mx-6 align-middle py-3 relative mt-9 h-16 xl:w-full bg-gradient-to-r hover:to-cyan-400 hover:from-sky-600 from-sky-500  to-cyan-400  rounded-full text-stone-50 text-xl justify-center  shadow-md font-bold transition-all duration-1000 ease-in-out ">
               Book Now!
             </button>
           </div>

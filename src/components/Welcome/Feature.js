@@ -2,7 +2,7 @@ const Features=(props) => {
   return (
     <div className="relative">
       <dt>
-        <div className="absolute flex items-center justify-center h-12 w-12 rounded-md text-3xl bg-orange-500 text-white">
+        <div className="absolute flex items-center justify-center h-12 w-12 rounded-md text-3xl bg-sky-500 text-white">
           
            <span>{props.icon} </span> 
           

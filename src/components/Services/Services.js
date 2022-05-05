@@ -8,7 +8,7 @@ export default function Services(){
     return(
       <>
         <div className="lg:text-center mx-4">
-          <h2 className="text-base text-orange-600 font-semibold tracking-wide uppercase">
+          <h2 className="text-base text-sky-600 font-semibold tracking-wide uppercase">
             Our benefits
           </h2>
           <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">

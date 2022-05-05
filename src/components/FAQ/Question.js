@@ -1,9 +1,9 @@
 
 export default function Question(props) {
     return (
-        <details className="p-6   border-l-4 shadow-sm border-orange-500  bg-gray-50 group" closed>
+        <details className="p-6   border-l-4 shadow-sm border-sky-500  bg-gray-50 group" closed>
     <summary className="flex items-center justify-between cursor-pointer">
-      <h5 className="text-lg font-medium hover:text-orange-500 text-gray-900">
+      <h5 className="text-lg font-medium hover:text-sky-500 text-gray-900">
         {props.q}
       </h5>
 

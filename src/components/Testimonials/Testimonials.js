@@ -22,7 +22,7 @@ export default function Reviews() {
             </div>
 
             <a
-              className="inline-flex no-underline items-center flex-shrink-0 px-5 py-3 mt-8 font-medium text-amber-600 border border-amber-600 rounded-full sm:mt-0 lg:mt-8 hover:bg-amber-600 hover:text-white"
+              className="inline-flex no-underline items-center flex-shrink-0 px-5 py-3 mt-8 font-medium text-cyan-600 border border-cyan-600 rounded-full sm:mt-0 lg:mt-8 hover:bg-cyan-600 hover:text-white"
               href="/">
               Read all reviews
               <svg

@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <div className="shadow ">
-      <footer className="text-center text-white bg-rose-600">
+      <footer className="text-center text-white bg-gradient-to-br from-cyan-600 to-sky-700">
         <div className="p-4">
           <section className="mb-4 ">
             <p>
