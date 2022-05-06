@@ -1,17 +1,23 @@
-import { useState } from "react";
+import { useRef, useState, useMemo , useEffect, useCallback} from "react";
 import { supabase } from "../../utils/supabaseClient";
 import Layout from "./layout";
 
-export default function Auth() {
+export default function Auth(props) {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
-
+  const [closeModal,setCloseModal]= useState(false)
+  const [showModal,setShowModal] = useState(true)
+let success= false
+  useMemo(()=> {
+    setShowModal(!showModal)
+  },[props.show])
+ 
   const handleLogin = async (email) => {
     try {
       setLoading(true);
       const { error } = await supabase.auth.signIn({ email });
       if (error) throw error;
-      alert("Check your email for the login link!");
+      success=true
     } catch (error) {
       alert(error.error_description || error.message);
     } finally {
@@ -19,8 +25,34 @@ export default function Auth() {
     }
   };
 
+  function handleCloseModal(ev){
+    
+    if(ev.target.id=='modal'){
+      console.log(showModal)
+      setShowModal(false)
+    }
+   
+  }
+
   return (
     <>
+   {success&& <div
+  className="fixed top-20 z-50 p-4 text-green-700 border rounded border-green-900/10 bg-green-50"
+  role="alert"
+>
+  <strong className="text-lg font-medium"> Check your email for the login link! </strong>
+</div>}
+    {showModal&&
+    <div onClick={handleCloseModal} className=" transition-all  absolute  -top-20" >
+        <div id="modal"
+         
+          className=" fixed flex justify-center w-full h-[120vh] z-[9999] bg-black bg-opacity-50 ">
+          <div className=" relative top-44 "> 
+          
+           
+           
+       
+   
       <div className="flex flex-col w-full max-w-md px-4 py-8 bg-gradient-to-br from-cyan-100 via-sky-100 to-fuchsia-200 rounded-lg shadow sm:px-6 md:px-8 lg:px-10">
         <div className="self-center mb-6 text-xl font-light text-gray-600 sm:text-2xl ">
         Create a new account
@@ -98,6 +130,10 @@ export default function Auth() {
           </a>
         </div> */}
       </div>
+      </div>
+        </div>
+        </div>
+        }
     </>
   );
 }

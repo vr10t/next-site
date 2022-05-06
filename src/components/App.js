@@ -9,13 +9,15 @@ import Link from 'next/link';
 import Form from "./Modal/Form";
 import { useState, useEffect } from 'react'
 import { supabase } from '../../utils/supabaseClient'
-// import Auth from '../../pages/Auth'
+import Auth from './Auth'
 // import Account from '../components/Account'
 function App() {
+  const [showModal, setShowModal] = useState(false);
+  const [session, setSession] = useState(null)
   function handleClick(){
     return <Link href="/ " />
   }
-  const [session, setSession] = useState(null)
+  
 
   useEffect(() => {
     setSession(supabase.auth.session())
@@ -24,18 +26,33 @@ function App() {
       setSession(session)
     })
   }, [])
+  function handleLogin() {
+    console.log(showModal)
+    setShowModal(!showModal);
+  }
+  
   return (
 
-    <div className='transition-all ease-in-out delay-150 duration-300'>
+    <div >
  
-      <Header />
+      <Header >
       {/* {!session ? '': <div className="container" style={{ padding: '50px 0 100px 0' }}>
        <Account key={session.user.id} session={session} />
     </div>} */}
+   
+    <button
+                   
+                    onClick={handleLogin}>
+                    <a>
+                   {session?session.user.id:'Login'}
+                    </a>
+                  </button> 
+    </Header>
+    
+        <Auth show={showModal}/>
+    
       <Form  />
       <Welcome />
-      <button onClick={handleClick} className="fixed inline-flex float-right mr-20 w-12 h-12 text-center  z-10 bg-orange-500  text-white rounded-full text-7xl" >&#708;
-</button>
       <Reviews />
       <FAQ />
       <Contact />

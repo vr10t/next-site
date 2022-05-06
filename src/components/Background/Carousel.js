@@ -80,7 +80,7 @@ function BgCarousel() {
             <a className="no-underline text-white">
               <ButtonPhat
                 
-                clr="bg-orange-500 hover:bg-orange-600 transition-all duration-500 ease-in-out  "
+                clr="bg-sky-500 hover:bg-sky-600 transition-all duration-500 ease-in-out  "
                 text="Learn More"
               />
             </a>

@@ -135,6 +135,7 @@ export default function Form() {
                 />
                 <div className="mt-4 pt-1 ">
                   <HCaptcha
+                  
                     required={true}
                     sitekey="63ecdeb2-95ea-4c7a-9e95-02195a81d5c5"
                     onVerify={(token, ekey) =>

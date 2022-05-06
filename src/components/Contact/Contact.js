@@ -9,7 +9,7 @@ export default function Contact(){
 
 
 <section id="contact" className="bg-gray-100">
-<h1 className="relative  px-4 md:ml-10   pt-20 font-bold text-4xl sm:text-5xl  ">
+<h1 className="relative text-gray-900 px-4 md:ml-10   pt-20 font-bold text-4xl sm:text-5xl  ">
           Contact us...
         </h1>
 <div className="max-w-screen-xl px-4 py-16 mx-auto sm:px-6 lg:px-8">

@@ -23,7 +23,7 @@ export default function Footer() {
               <div className="mb-4 flex flex-col ">
                 <h5 className="text-uppercase">Address</h5>
 
-                <h7 className="text-stone-400">
+                <h7 className="text-cyan-200">
                   123, Lorem Street, Hemel Hempstead, Beds, HP1 ABC
                 </h7>
               </div>
@@ -33,21 +33,21 @@ export default function Footer() {
 
                 <section className="mb-2 flex justify-center ">
                   <a
-                    className="float-left mt-2 mx-2 text-4xl text-stone-400"
+                    className="float-left mt-2 mx-2 text-4xl text-cyan-200"
                     href="#!"
                     role="button">
                     <FaFacebook />
                   </a>
 
                   <a
-                    className="float-left mt-2 mx-2 text-4xl text-stone-400"
+                    className="float-left mt-2 mx-2 text-4xl text-cyan-200"
                     href="#!"
                     role="button">
                     <FaTwitter />
                   </a>
 
                   <a
-                    className="float-left mt-2 mx-2 text-4xl text-stone-400"
+                    className="float-left mt-2 mx-2 text-4xl text-cyan-200"
                     href="#!"
                     role="button">
                     <FaInstagram />
@@ -60,12 +60,12 @@ export default function Footer() {
 
                 <ul className="list-unstyled mb-0">
                   <li>
-                    <a href="#!" className="text-stone-400">
+                    <a href="#!" className="text-cyan-200">
                       (123) 456-78-90{" "}
                     </a>
                   </li>
                   <li>
-                    <a href="#!" className="text-stone-400">
+                    <a href="#!" className="text-cyan-200">
                       contact@example.com
                     </a>
                   </li>
@@ -77,17 +77,17 @@ export default function Footer() {
                 <ul className="list-unstyled mb-0">
                   <li>
                     <Link href="/terms-conditions">
-                      <a className="text-stone-400">Terms of Service </a>
+                      <a className="text-cyan-200">Terms of Service </a>
                     </Link>
                   </li>
                   <li>
                     <Link href="/privacy">
-                      <a className="text-stone-400">Privacy Policy</a>
+                      <a className="text-cyan-200">Privacy Policy</a>
                     </Link>
                   </li>
                   <li>
                     <Link href="#FAQ">
-                      <a className="text-stone-400">FAQ</a>
+                      <a className="text-cyan-200">FAQ</a>
                     </Link>
                   </li>
                 </ul>

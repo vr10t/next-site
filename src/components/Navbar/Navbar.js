@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Auth from "../Auth";
-export default function Navbar() {
+export default function Navbar({ children}) {
   const [expanded, setExpanded] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+ 
   function handleClick() {
     setExpanded(!expanded);
   }
-  function handleLogin() {
-    setShowModal(!showModal);
-  }
+ 
 
   return (
     <div>
@@ -50,14 +48,12 @@ export default function Navbar() {
                       </a>
                     </Link>
                   </div>
-                  <h3 className="flex col-end-4 -right-20 pl-20 my-auto">
+                  <h3 className="hidden lg:flex w-max md:col-end-4 -right-20 pl-20 my-auto">
                     (123) 456-78-90
                   </h3>
-                  <button
-                    className="flex col-end-7 relative top-1 -right-20 text-xl"
-                    onClick={handleLogin}>
-                    <a> Login </a>
-                  </button>
+                  <div className="flex col-end-5  text-stone-800 ml-10 px-3 py-2 rounded-md text-lg font-bold" >
+                  {children}
+                  </div>
                 </div>
               </div>
             </div>
@@ -106,21 +102,14 @@ export default function Navbar() {
                   Contact
                 </a>
               </Link>
+              <div  className="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+                  {children}
+                  </div>
             </div>
           </div>
         )}
       </nav>
-      {showModal && (
-        <div className="absolute  -top-20" onClick={handleLogin}>
-        <div
-         
-          className=" fixed flex justify-center w-full h-[120vh] z-[9999] bg-black bg-opacity-50 ">
-          <div className=" relative top-44">
-            <Auth className=" h-32" />
-          </div>
-        </div>
-        </div>
-      )}
+     
     </div>
   );
 }

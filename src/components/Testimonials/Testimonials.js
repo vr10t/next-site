@@ -9,7 +9,7 @@ export default function Reviews() {
         <div className="px-4 py-16 mx-auto max-w-screen-2xl sm:px-6 lg:px-8">
           <div className="items-end justify-between sm:flex">
             <div className="max-w-xl">
-              <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
+              <h2 className="text-4xl text-gray-900 font-bold tracking-tight sm:text-5xl">
                 Read trusted reviews from our customers
               </h2>
 
