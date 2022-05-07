@@ -13,7 +13,7 @@ export default function Reviews() {
                 Read trusted reviews from our customers
               </h2>
 
-              <p className="max-w-lg mt-8  text-gray-500">
+              <p className="max-w-lg mt-8  text-gray-700">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 Aspernatur praesentium natus sapiente commodi. Aliquid sunt
                 tempore iste repellendus explicabo dignissimos placeat, autem

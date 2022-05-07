@@ -22,7 +22,7 @@ export default function Welcome() {
           <Image className="rounded-xl" src={promo6} alt="..." width={1000} height={1300} />
         </div>
         <div className="max-w-screen md:ml-4  w-fit lg:w-1/2 lg:justify-end">
-          <h1 className="mb-10 text-3xl xl:text-center text-gray-900 font-bold tracking-tight sm:text-4xl">
+          <h1 className="mb-10 text-3xl xl:text-center text-sky-700 font-bold tracking-tight sm:text-4xl">
             {" "}
             Most Trusted Cab Taxi Company in Hemel Hempstead
           </h1>
@@ -33,14 +33,14 @@ export default function Welcome() {
             </p>
           </h3>
           <h5 className="mb-4">
-            <p className="mb-4 text-gray-500">
+            <p className="mb-4 text-gray-700">
               We have over 100 experienced minicab drivers fully licenced and
               PCO registered covering all London Postcodes and London Airports.
               These include London City Airport, London Gatwick Airport, London
               Heathrow Airport, London Luton Airport and London Stansted
               Airport.
             </p>
-            <p className="mb-4 text-gray-500">
+            <p className="mb-4 text-gray-700">
               We care deeply about the reliable service that our
               clients get, whenever you book. Whether your booking is made
               online or by phone your journey is important to us and we will

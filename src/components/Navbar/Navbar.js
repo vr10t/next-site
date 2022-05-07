@@ -11,7 +11,7 @@ export default function Navbar({ children}) {
 
   return (
     <div>
-      <nav className=" relative bg-gradient-to-r from-cyan-500 to-sky-800  z-10 shadow-lg ">
+      <nav className=" relative bg-gradient-to-r from-cyan-600 to-sky-900  z-10 shadow-lg ">
         <div className="max-w-7xl  mx-auto px-8">
           <div className="flex items-center justify-between h-16">
             <div className=" flex items-center">
@@ -28,32 +28,33 @@ export default function Navbar({ children}) {
                 <div className="ml-10 grid grid-cols-3 col-end-2">
                   <div className="my-auto">
                     <a
-                      className=" no-underline text-stone-800  px-3 py-2 rounded-md text-md font-medium"
+                      className=" no-underline text-slate-50  px-3 py-2 rounded-md text-md font-medium"
                       href="/#">
                       Home
                     </a>
                     <Link href="#about">
-                      <a className="text-stone-800  no-underline px-3 py-2 rounded-md text-md font-medium">
+                      <a className="text-slate-50  no-underline px-3 py-2 rounded-md text-md font-medium">
                         About
                       </a>
                     </Link>
                     <Link href="#FAQ">
-                      <a className="text-stone-800 no-underline px-3 py-2 rounded-md text-md font-medium">
+                      <a className="text-slate-50 no-underline px-3 py-2 rounded-md text-md font-medium">
                         FAQ
                       </a>
                     </Link>
                     <Link href="#contact">
-                      <a className="text-stone-800 no-underline px-3 py-2 rounded-md text-md font-medium">
+                      <a className="text-slate-50 no-underline px-3 py-2 rounded-md text-md font-medium">
                         Contact
                       </a>
                     </Link>
                   </div>
-                  <h3 className="hidden lg:flex w-max md:col-end-4 -right-20 pl-20 my-auto">
+                  <h3 className="hidden text-slate-50 lg:flex w-max md:col-end-4 -right-20 pl-20 my-auto">
                     (123) 456-78-90
                   </h3>
-                  <div className="flex col-end-5  text-stone-800 ml-10 px-3 py-2 rounded-md text-lg font-bold" >
+                  <div className="flex col-end-5   text-slate-50 ml-10 px-3 py-2 rounded-md text-lg font-bold" >
                   {children}
                   </div>
+                  <div className=""></div>
                 </div>
               </div>
             </div>
@@ -78,31 +79,31 @@ export default function Navbar({ children}) {
           </div>
         </div>
         {expanded && (
-          <div className={" md:hidden"}>
+          <div className={"  transition-all duration-1000 ease-in-out md:hidden"}>
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               <Link href="/#">
-                <a className="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+                <a className="text-slate-50 no-underline block px-3 py-2 rounded-md text-base font-medium">
                   Home
                 </a>
               </Link>
               <Link href="#about">
-                <a className="text-gray-800 dark:text-white block px-3 py-2 rounded-md text-base font-medium">
+                <a className="text-slate-50 no-underline block px-3 py-2 rounded-md text-base font-medium">
                   About
                 </a>
               </Link>
               <Link href="#FAQ">
-                <a className="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+                <a className="text-slate-50 no-underline block px-3 py-2 rounded-md text-base font-medium">
                   FAQ
                 </a>
               </Link>
               <Link href="#contact">
                 <a
-                  className="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                  className="text-slate-50 no-underline block px-3 py-2 rounded-md text-base font-medium"
                   href="/#">
                   Contact
                 </a>
               </Link>
-              <div  className="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+              <div  className="flex flex-col text-lg text-slate-50 no-underline px-3 py-4 rounded-md  font-medium">
                   {children}
                   </div>
             </div>

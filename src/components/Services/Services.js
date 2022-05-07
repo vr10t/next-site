@@ -8,13 +8,13 @@ export default function Services(){
     return(
       <>
         <div className="lg:text-center mx-4">
-          <h2 className="text-base text-sky-600 font-semibold tracking-wide uppercase">
+          <h2 className="text-base text-sky-700 font-semibold tracking-wide uppercase">
             Our benefits
           </h2>
           <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
             Find out why people choose us
           </p>
-          <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+          <p className="mt-4 max-w-2xl text-xl text-gray-700 lg:mx-auto">
             Lorem ipsum dolor sit amet consect adipisicing elit. Possimus magnam
             voluptatum cupiditate veritatis in accusamus quisquam.
           </p>

@@ -34,7 +34,7 @@ export default function Review(props){
           </div>
 
           <div className="mt-4">
-            <h5 className="text-xl font-bold text-cyan-600 sm:text-2xl">{props.title}</h5>
+            <h5 className="text-xl font-bold text-slate-800 sm:text-2xl">{props.title}</h5>
 
             <p className="mt-4 text-gray-600">
               {props.review}

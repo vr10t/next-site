@@ -6,7 +6,7 @@ export default function InputField(props) {
         {props.icon} {props.label}
       </label>
       <input
-        className={`flex md:my-2 mx-1 w-full h-16 xl:w-72 ${styles.bgAni} hover:from-sky-600 hover:to-cyan-500 bg-gradient-to-r from-sky-500 to-cyan-400  rounded-full text-white shadow-md  font-bold placeholder-white md:indent-2 px-4 `}
+        className={`flex md:my-2 mx-1 w-full h-16 xl:w-72 ${styles.bgAni} hover:to-sky-800 hover:from-cyan-700 bg-gradient-to-r to-sky-700 from-cyan-600  rounded-full text-white shadow-md  font-bold placeholder-white md:indent-2 px-4 `}
         name={props.name}
         required={props.required}
         type={props.type}

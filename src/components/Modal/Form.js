@@ -7,32 +7,35 @@ import { FaMapPin } from "@react-icons/all-files/fa/FaMapPin";
 import { BsClockFill } from "@react-icons/all-files/bs/BsClockFill";
 
 import InputField from "./InputField2";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./Form.module.css";
-import bg2 from "../../../public/bg-2.jpg"
+import bg2 from "../../../public/bg-2.jpg";
 import dynamic from "next/dynamic";
 const HCaptcha = dynamic(() => import("@hcaptcha/react-hcaptcha"));
 
-
 export default function Form() {
-  const [state, setState] = useState("");
+  const [canLoad, setCanLoad]= useState(false)
 
   let date = new Date();
-  var day = date.getDate();
-  var month = date.getMonth() + 1;
-  var year = date.getFullYear();
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
 
   if (month < 10) month = "0" + month;
   if (day < 10) day = "0" + day;
-  var today = year + "-" + month + "-" + day;
+  let today = year + "-" + month + "-" + day;
+  
+  
+  useEffect(()=>setTimeout(() => (
+    setCanLoad(true)
+    ), 10000),[])
   return (
     <div className=" grid grid-cols-1 lg:grid-cols-2 z-10 bg-stone-100   ">
       <div className="px-5 mt-4">
         <h3>Looking for a taxi?</h3>
 
-        <h1
-          className={` ${styles.textAni} text-5xl text-sky-500  font-bold `}>
+        <h1 className={` ${styles.textAni} text-5xl text-sky-700  font-bold `}>
           Make your booking
         </h1>
         <h5>
@@ -40,12 +43,7 @@ export default function Form() {
           needs.
         </h5>
         <div className="mt-4 ">
-          <Image
-            className="rounded-xl "
-            src={bg2}
-            width={4000}
-            height={3000}
-          />
+          <Image className="rounded-xl " src={bg2} width={4000} height={3000} />
         </div>
       </div>
       <div className="m-4 justify-center flex">
@@ -134,14 +132,13 @@ export default function Form() {
                   placeholder="Type in your destination"
                 />
                 <div className="mt-4 pt-1 ">
-                  <HCaptcha
-                  
+                  {canLoad&&<HCaptcha
                     required={true}
                     sitekey="63ecdeb2-95ea-4c7a-9e95-02195a81d5c5"
                     onVerify={(token, ekey) =>
                       handleVerificationSuccess(token, ekey)
                     }
-                  />
+                  />}
                 </div>
               </div>
             </div>
@@ -153,15 +150,15 @@ export default function Form() {
                 className=" lg:p-4 mt-2 scale-150 "
                 type="checkbox"
               />
-              <label className=" px-2 lg:indent-2" for="tos">
+              <label className=" text-gray-700 px-2 lg:indent-2" for="tos">
                 By using this form you agree with the storage and handling of
                 your data by this website.
               </label>
             </div>
-            
+
             <button
               type="submit"
-              className="flex mx-6 align-middle py-3 relative mt-9 h-16 xl:w-full bg-gradient-to-r hover:to-cyan-400 hover:from-sky-600 from-sky-500  to-cyan-400  rounded-full text-stone-50 text-xl justify-center  shadow-md font-bold transition-all duration-1000 ease-in-out ">
+              className="flex mx-6 align-middle py-3 relative mt-9 h-16 xl:w-full bg-gradient-to-r hover:from-cyan-700 hover:to-sky-800 to-sky-700  from-cyan-600  rounded-full text-stone-50 text-xl justify-center  shadow-md font-bold transition-all duration-1000 ease-in-out ">
               Book Now!
             </button>
           </div>
