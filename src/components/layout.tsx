@@ -4,13 +4,19 @@ import App from './App'
 import Link from 'next/link'
 import Navbar from './Navbar/Navbar'
 import Footer from './Footer/Footer'
+import { ReactNode } from 'react'
 
-const name = 'Your Name'
-export const siteTitle = 'Next.js Sample Website'
 
-export default function Layout({ children }) {
-  return (
-    <div className="">
+type Props = {
+  children: ReactNode;
+  title?: string;
+};
+
+ const Layout = ({
+  children,
+  title = 'TypeScript Next.js Stripe Example',
+}: Props) => (
+    <>
       <Head>
         <link rel="icon" href="/favicon.ico" />
         <meta
@@ -18,11 +24,11 @@ export default function Layout({ children }) {
           content="Learn how to build a personal website using Next.js"
         />
         
-        <meta name="og:title" content={siteTitle} />
+        <meta name="og:title" content={'yaas'} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <header className="">
-        <Navbar />
+        <Navbar>{children}</Navbar>
       </header>
       <main>{children}</main>
       
@@ -30,6 +36,7 @@ export default function Layout({ children }) {
         <Footer />
         </div>
       
-    </div>
+    </>
   )
-}
+  ;
+  export default Layout

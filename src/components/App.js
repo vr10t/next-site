@@ -14,9 +14,7 @@ import Auth from "./Auth";
 function App() {
   const [showModal, setShowModal] = useState(false);
   const [session, setSession] = useState(null);
-  function handleClick() {
-    return <Link href="/ " />;
-  }
+ 
 
   useEffect(() => {
     setSession(supabase.auth.session());

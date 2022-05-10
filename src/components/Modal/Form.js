@@ -43,7 +43,7 @@ export default function Form() {
           needs.
         </h5>
         <div className="mt-4 ">
-          <Image className="rounded-xl " src={bg2} width={4000} height={3000} />
+          <Image className="rounded-xl " src={bg2} width={4000} height={3000} alt="..." />
         </div>
       </div>
       <div className="m-4 justify-center flex">
