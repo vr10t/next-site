@@ -2,9 +2,11 @@ import Head from 'next/head'
 import Image from 'next/image'
 import App from './App'
 import Link from 'next/link'
-import Navbar from './Navbar/Navbar'
+import Navbar from './Navbar/V2'
+
 import Footer from './Footer/Footer'
 import { ReactNode } from 'react'
+import { propTypes } from 'react-bootstrap/esm/Image'
 
 
 type Props = {
@@ -21,15 +23,15 @@ type Props = {
         <link rel="icon" href="/favicon.ico" />
         <meta
           name="description"
-          content="Learn how to build a personal website using Next.js"
+          content="Airport Transfer service from Airports Taxi Transfers. Book your private airport transfers online, for a reliable transportation service at competitive, all inclusive prices."
         />
         
-        <meta name="og:title" content={'yaas'} />
+        <meta name="og:title" content={title} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      <header className="">
-        <Navbar>{children}</Navbar>
-      </header>
+      
+        <Navbar />
+     
       <main>{children}</main>
       
         <div className="">

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import CustomDonationInput from './CustomDonationInput';
 
-import {total} from '../../utils/payments'
+import {TOTAL, increaseTOTAL} from "../../utils/get-total"
 
 import getStripe from '../../utils/getStripe';
 import { fetchPostJSON } from '../../utils/api-helpers';
@@ -10,6 +10,7 @@ import { formatAmountForDisplay } from '../../utils/stripe-helpers';
 import * as config from '../../config';
 
 const CheckoutForm = () => {
+  
   const [loading, setLoading] = useState(false);
 //   const [input, setInput] = useState({
 //     customDonation: Math.round(config.MAX_AMOUNT / config.AMOUNT_STEP),
@@ -27,7 +28,7 @@ const CheckoutForm = () => {
     setLoading(true);
     // Create a Checkout Session.
     const response = await fetchPostJSON('/api/checkout_sessions', {
-      amount: total,
+      amount: 33,
     });
 
     if (response.statusCode === 500) {
@@ -59,18 +60,19 @@ const CheckoutForm = () => {
         // min={config.MIN_AMOUNT}
         // max={config.MAX_AMOUNT}
         // step={config.AMOUNT_STEP}
-        value={22}
+        value={33}
         currency={config.CURRENCY}
         // onChange={handleInputChange}
       />
       {/* <StripeTestCards /> */}
+      <button onClick={()=>{increaseTOTAL(1)}}>[{TOTAL}]</button>
       <button
         className=" bg-red-600 w-full h-full"
         type="submit"
         disabled={loading}
         
       >
-        Pay {formatAmountForDisplay(total, config.CURRENCY)}
+        Pay {formatAmountForDisplay(33, config.CURRENCY)}
       </button>
     </form>
   );

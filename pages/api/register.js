@@ -1,4 +1,4 @@
-import { supabase } from "../../../utils/supabaseClient"
+import { supabase } from "../../utils/supabaseClient"
 
 export default async function registerUser(req, res) {
   // destructure the e-mail and password received in the request body.

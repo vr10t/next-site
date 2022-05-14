@@ -1,5 +1,5 @@
 
-import Form from '../Modal/Form';
+import Form from '../Booking/Form';
 
 import Navbar from '../Navbar/Navbar.js';
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import Auth from "../Auth";
+import Auth from "../SignUp";
 export default function Navbar({ children}) {
   const [expanded, setExpanded] = useState(false);
  

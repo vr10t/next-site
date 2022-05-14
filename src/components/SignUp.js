@@ -95,7 +95,7 @@ export default function Auth(props) {
                     </div>
                     <div className="flex flex-col mb-6">
                       <div className="flex relative ">
-                        <span className="rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">
+                        <span className="rounded-l-md inline-flex  items-center px-3  bg-sky-500  text-gray-50 shadow-sm text-sm">
                   <svg
                     width="15"
                     height="15"
@@ -110,7 +110,7 @@ export default function Auth(props) {
                   type="password"
                   id="password"
                   
-                  className=" rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  className=" rounded-r-lg flex-1 appearance-none focus-ring-full w-full py-2 px-4 bg-gradient-to-r from-sky-400 to-cyan-500 text-stone-50 placeholder-gray-50 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600 "
                   placeholder="Your password"
                 />
                       </div>

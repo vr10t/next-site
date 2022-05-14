@@ -12,10 +12,13 @@ import Image from "next/image";
 import styles from "./Form.module.css";
 import bg2 from "../../../public/bg-2.jpg";
 import dynamic from "next/dynamic";
+import getAddress from '../../../utils/get-address'
 const HCaptcha = dynamic(() => import("@hcaptcha/react-hcaptcha"));
 
 export default function Form() {
   const [canLoad, setCanLoad]= useState(false)
+  const [term, setTerm]= useState('')
+
 
   let date = new Date();
   let day = date.getDate();
@@ -30,6 +33,10 @@ export default function Form() {
   useEffect(()=>setTimeout(() => (
     setCanLoad(true)
     ), 10000),[])
+    function handleChange(e){
+      setTerm(e.target.value);
+      getAddress()
+    }
   return (
     <div className=" grid grid-cols-1 lg:grid-cols-2 z-10 bg-stone-100   ">
       <div className="px-5 mt-4">
@@ -47,7 +54,7 @@ export default function Form() {
         </div>
       </div>
       <div className="m-4 justify-center flex">
-        <form action="https://formspree.io/f/xoqrkbwb" method="POST">
+        <form autocomplete="off" action="https://formspree.io/f/xoqrkbwb" method="POST">
           <div className="grid max-w-2xl left-1/2 ">
             <h1 className="text-center font-bold ">Book a Ride</h1>
             <div className="md:grid mx-4 xl:grid-cols-2 lg:gap-4 md:float-right">
@@ -112,6 +119,8 @@ export default function Form() {
                   placeholder="Number of passangers"
                 />
                 <InputField
+                value={term}
+                onChange={handleChange}
                   icon={
                     <FaMapMarkerAlt className="pt-1 text-3xl text-stone-800 justify-start" />
                   }

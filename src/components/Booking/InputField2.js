@@ -14,6 +14,8 @@ export default function InputField(props) {
         defaultValue={props.defaultValue}
         min={props.min}
         max={props.max}
+        value={props.value}
+        onChange={props.onChange}
       />
     </>
   );

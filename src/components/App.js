@@ -6,13 +6,15 @@ import Welcome from "./Welcome/Welcome";
 import FAQ from "./FAQ/FAQ";
 import Contact from "./Contact/Contact";
 import Link from "next/link";
-import Form from "./Modal/Form";
+import Form from "./Booking/V3";
 import { useState, useEffect } from "react";
 import { supabase } from "../../utils/supabaseClient";
-import Auth from "./Auth";
+import SignUp from "./SignUp";
+import SignIn from "./SignIn"
 // import Account from '../components/Account'
 function App() {
-  const [showModal, setShowModal] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
+  const [showSignin, setShowSignin] = useState(false)
   const [session, setSession] = useState(null);
  
 
@@ -23,12 +25,12 @@ function App() {
       setSession(session);
     });
   }, []);
-  function handleLogin() {
-    console.log(showModal);
-    setShowModal(!showModal);
+  function handleSignup() {
+    console.log(showSignup);
+    setShowSignup(!showSignup);
   }
   function handleSignin(){
-
+  !session&& setShowSignin(!showSignin)
   }
 
   return (
@@ -38,17 +40,18 @@ function App() {
        <Account key={session.user.id} session={session} />
     </div>} */}
 
-        <button onClick={handleSignin}>
-          <a>{session ? session.user.id : "Sign up"}</a>
+        <button className="flex mx-2 my-2 md:my-auto shadow-md align-middle py-1 relative  h-10 w-24  bg-gradient-to-r hover:to-cyan-600 hover:from-sky-500 from-sky-400  to-cyan-500  rounded-full text-stone-50 text-lg justify-center   font-bold transition-all duration-1000 ease-in-out " onClick={handleSignin}>
+          <a>{session ? session.user.id : "Login"}</a>
         </button>
         {!session && (
-          <button onClick={handleLogin}>
-            <a>Login</a>
+          <button className="flex mx-2  shadow-md align-middle py-1 relative  h-10 w-24  bg-sky-50  rounded-full text-gray-900 tracking-tight text-lg justify-center   font-bold transition-all duration-1000 ease-in-out " onClick={handleSignup}>
+            <a>Sign Up</a>
           </button>
         )}
       </Header>
 
-      <Auth show={showModal} />
+      <SignUp show={showSignup} />
+      <SignIn show={showSignin} />
 
       <Form />
       <Welcome />
