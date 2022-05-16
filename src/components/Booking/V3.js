@@ -40,7 +40,22 @@ const Index = () => {
     
     });
     console.log(payload)
-   
+    
+    // const res = await fetch("/api/login", {
+    //   body: JSON.stringify({
+    //     email: ev.target.email.value,
+    //     password: ev.target.password.value,
+    //   }),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   method: "POST",
+    // })
+
+    // const {user, error} = await res.json()
+
+    // if(user) router.push(`/`)
+    // if (error) alert(error)
    
     // console.log("payload", payload);
     // Place your API call here to submit your payload.

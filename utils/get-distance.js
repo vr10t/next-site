@@ -1,14 +1,26 @@
 import distance from 'hpsweb-google-distance'
-export default function getDistance(){
-    distance
+import {useState,useContext,createContext} from 'react'
+const ResultContext=createContext()
+export default function getDistance(origin,destination){
+
+  
+  distance.apiKey="AIzaSyBcBdvwP0z8pM4bU87H7kvtefQYDFBpQzQ"
+   distance
     .get({
-      origin: "San Francisco, CA",
-      destination: "San Diego, CA",
+      origin: `${origin}`,
+      destination: `${destination}`,
+      units: "imperial"
     })
     .then(function (data) {
-      console.log(data);
+     
+      return data
+  
+      
     })
     .catch(function (err) {
       console.log(err);
+      alert("Please provide a valid route")
     });
+  // return distance.then((data)=>data)
+    
 }

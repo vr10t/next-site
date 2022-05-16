@@ -1,10 +1,20 @@
 import Layout from "../src/components/layout"
+import Popup from "../src/components/Booking/Popup"
+import {supabase} from "../utils/supabaseClient"
+import getDistance from "../utils/get-distance"
+import Input from "../src/components/Maps"
+
 
 export default function Booking(){
+ 
 
 
     return(
         <Layout>
+        
+      <button onClick={()=>getDistance()}>hit</button>
+      <Input  />
+      
         <div>
   <h2 className="sr-only">Steps</h2>
 
