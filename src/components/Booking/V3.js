@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useRef } from "react";
 import { FaMapMarkerAlt } from "@react-icons/all-files/fa/FaMapMarkerAlt";
 import { BsFillPersonFill } from "@react-icons/all-files/bs/BsFillPersonFill";
@@ -7,19 +7,26 @@ import { BsFillPersonPlusFill } from "@react-icons/all-files/bs/BsFillPersonPlus
 import { BsCalendarFill } from "@react-icons/all-files/bs/BsCalendarFill";
 import { FaMapPin } from "@react-icons/all-files/fa/FaMapPin";
 import { BsClockFill } from "@react-icons/all-files/bs/BsClockFill";
-
-import InputField from "./InputField2";
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import styles from "./Form.module.css";
-import bg2 from "../../../public/bg-2.jpg";
 import dynamic from "next/dynamic";
-import getAddress from "../../../utils/get-address";
-const HCaptcha = dynamic(() => import("@hcaptcha/react-hcaptcha"));
+import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import { useAppContext } from "../../context/state";
+
+import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
+
+const PlacesAutocomplete = dynamic(() => import("react-places-autocomplete"));
+// const HCaptcha = dynamic(() => import("@hcaptcha/react-hcaptcha"));
 
 const Index = () => {
-  // let form = useRef(null);
-  const [form,setForm]= useState(null)
+  const { data, setData } = useAppContext();
+  useCallback(() => {}, [onSubmit]);
+  const [origin, setOrigin] = useState("");
+  const [destination, setDestination] = useState("");
+
+
   let date = new Date();
   let day = date.getDate();
   let month = date.getMonth() + 1;
@@ -28,149 +35,250 @@ const Index = () => {
   if (month < 10) month = "0" + month;
   if (day < 10) day = "0" + day;
   let today = year + "-" + month + "-" + day;
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setForm(event.target)
-   let form_data
-    let payload = {};
-   
-    form_data = new FormData(form);
-    form_data.forEach(function (value, key) {
-      payload[key] = value;
-    
-    });
-    console.log(payload)
-    
-    // const res = await fetch("/api/login", {
-    //   body: JSON.stringify({
-    //     email: ev.target.email.value,
-    //     password: ev.target.password.value,
-    //   }),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   method: "POST",
-    // })
+  const router = useRouter();
 
-    // const {user, error} = await res.json()
+  const validationSchema = Yup.object().shape({
+    location: Yup.string(),
+    // .required('Title is required'),
+    destination: Yup.string(),
+    // .required('First Name is required'),
+    passengers: Yup.number()
+      .required("Last name is required")
+      .positive()
+      .integer(),
+    date: Yup.string().required("Date of Birth is required"),
 
-    // if(user) router.push(`/`)
-    // if (error) alert(error)
+    time: Yup.string().required("Email is required"),
+  });
+  const formOptions = { resolver: yupResolver(validationSchema) };
+
+  // get functions to build form with useForm() hook
+  const { register, handleSubmit, reset, formState } = useForm(formOptions);
+  const { errors } = formState;
+   function onSubmit(e) {
+    
+    JSON.stringify(e, null, 4);
+    let formData= Object.assign(e, {location: origin,destination: destination})
+    
    
-    // console.log("payload", payload);
-    // Place your API call here to submit your payload.
+      setData(formData),
+      
+      
+    console.log(formData);
+    window.sessionStorage.removeItem("BOOKING_DATA")
+    router.push("/booking")
+    return false;
+  }
+  const handleChangeOrigin = (e) => {
+    setOrigin(e);
   };
+
+  const handleSelectOrigin = (e) => {
+    geocodeByAddress(e)
+      .then((results) => getLatLng(results[0]))
+      .then((latLng) => {
+        console.log("Success", latLng);
+      })
+      .catch((error) => console.error("Error", error));
+    setOrigin(e);
+    console.log("origin:", origin);
+  };
+  const handleChangeDestination = (e) => {
+    setDestination(e);
+  };
+  const handleSelectDestination = (e) => {
+    geocodeByAddress(e)
+      .then((results) => getLatLng(results[0]))
+      .then((latLng) => {
+        console.log("Success", latLng);
+      })
+      .catch((error) => console.error("Error", error));
+    setDestination(e);
+    console.log("destination:", destination);
+  };
+
+  
   return (
     <div className="relative -top-64 z-[999999] w-max justify-center mx-auto bg-none py-4 ">
-      <form id="booking" onSubmit={handleSubmit}>
+      <form id="booking" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-rows-1 md:grid-rows-2 gap-2 justify-center">
           <div className="flex flex-col gap-2 lg:flex-row ">
             <div className="flex flex-row rounded-lg mx-2 border-1 border-gray-900">
               {" "}
               <span className="inline-flex  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadow-sm text-lg">
-                <label
-                  htmlFor="location"
-                  className="sr-only ">
+                <label htmlFor="location" className="sr-only ">
                   From
                 </label>
                 <FaMapMarkerAlt />
               </span>
-              <input
-                className=" border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-100"
-                name="location"
-                type="text"
-                required="true"
-                placeholder="From..."
-                
-                
-              />
+              <PlacesAutocomplete
+                value={origin}
+                onChange={handleChangeOrigin}
+                onSelect={handleSelectOrigin}>
+                {({
+                  getInputProps,
+                  suggestions,
+                  getSuggestionItemProps,
+                  loading,
+                }) => (
+                  <div>
+                    <input
+                      {...register("location")}
+                      {...getInputProps({
+                        id: "location",
+                        className:
+                          "truncate border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-100",
+                        name: "location",
+                        type: "text",
+                        required: "true",
+                        placeholder: "From...",
+                      })}
+                    />
+                    <div className="absolute bg-gray-50 w-max  ">
+                      {loading && <div>Loading...</div>}
+                      {suggestions.map((suggestion) => {
+                        const className = suggestion.active
+                          ? "bg-gray-200 py-2 px-4 max-w-sm"
+                          : "bg-gray-50 py-2 px-4 max-w-sm";
+                        // inline style for demonstration purpose
+                        const style = suggestion.active
+                          ? { backgroundColor: "rgb(229 231 235)", cursor: "pointer" }
+                          : { backgroundColor: "rgb(249 250 251)", cursor: "pointer" };
+                        return (
+                          <div
+                            {...getSuggestionItemProps(suggestion, {
+                              className,
+                              style,
+                            })}>
+                            <span>{suggestion.description}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </PlacesAutocomplete>
             </div>
+
             <div className="flex flex-row rounded-lg mx-2 border-1 border-gray-900">
               {" "}
               <span className="inline-flex  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadow-sm text-lg">
-                <label
-                  htmlFor="destination"
-                  className="sr-only ">
+                <label htmlFor="destination" className="sr-only ">
                   To
                 </label>
                 <FaMapPin />
               </span>
-              <input
-                className=" border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600"
-                name="destination"
-                required="true"
-                type="text"
-                placeholder="To..."
-                
-              />
+              <PlacesAutocomplete
+                value={destination}
+                onChange={handleChangeDestination}
+                onSelect={handleSelectDestination}>
+                {({
+                  getInputProps,
+                  suggestions,
+                  getSuggestionItemProps,
+                  loading,
+                }) => (
+                  <div>
+                    <input
+                      {...register("destination")}
+                      {...getInputProps({
+                        id: "destination",
+                        className: " truncate border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-100",
+                        name: "destination",
+                        type: "text",
+                        required: "true",
+                        placeholder: "To...",
+                      })}
+                    />
+                    <div className="absolute bg-gray-50 w-max  ">
+                      {loading && <div>Loading...</div>}
+                      {suggestions.map((suggestion) => {
+                        const className = suggestion.active
+                          ? "bg-gray-200 py-2 px-4 max-w-sm"
+                          : "bg-gray-50 py-2 px-4 max-w-sm";
+                        // inline style for demonstration purpose
+                        const style = suggestion.active
+                          ? { backgroundColor: "rgb(229 231 235)", cursor: "pointer" }
+                          : { backgroundColor: "rgb(249 250 251)", cursor: "pointer" };
+                        return (
+                          <div
+                            {...getSuggestionItemProps(suggestion, {
+                              className,
+                              style,
+                            })}>
+                            <span>{suggestion.description}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </PlacesAutocomplete>
             </div>
+
             <div className="flex flex-row rounded-lg mx-2 border-1 border-gray-900">
               {" "}
               <span className="inline-flex  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadow-sm text-lg">
-                <label
-                  htmlFor="passangers"
-                  className="sr-only ">
+                <label htmlFor="passangers" className="sr-only ">
                   Passangers
                 </label>
                 <BsFillPersonPlusFill />
               </span>
               <input
+                {...register("passengers")}
+                id="passengers"
                 className=" border-0 rounded-r-md flex-1 appearance-none focus-ring-full md:w-44 py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600"
-                name="passangers"
+                name="passengers"
                 required="true"
                 type="number"
                 placeholder="Passengers"
-               
                 min="1"
                 max="16"
-               
               />
             </div>
           </div>
           <div className="flex flex-col gap-2 lg:flex-row">
-          <div className="flex flex-row rounded-lg mx-2 border-1 border-gray-900">
+            <div className="flex flex-row rounded-lg mx-2 border-1 border-gray-900">
               {" "}
               <span className="inline-flex  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadow-sm text-lg">
-                <label
-                  htmlFor="date"
-                  className="sr-only ">
+                <label htmlFor="date" className="sr-only ">
                   From
                 </label>
                 <BsCalendarFill />
               </span>
               <input
+                {...register("date")}
+                id="date"
                 className=" border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600"
                 name="date"
                 required="true"
                 type="date"
                 placeholder={today}
                 defaultValue={today}
-                
               />
-               
-              
             </div>
             <div className="flex flex-row rounded-lg mx-2 border-1 border-gray-900">
-            <span className="inline-flex border-x-2  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadow-sm text-lg">
-                <label
-                  htmlFor="time"
-                  className="sr-only ">
+              <span className="inline-flex border-x-2  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadow-sm text-lg">
+                <label htmlFor="time" className="sr-only ">
                   Time
                 </label>
                 <BsClockFill />
               </span>
               <input
+                {...register("time")}
+                id="time"
                 className=" border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600"
                 name="time"
                 required="true"
                 type="time"
                 placeholder=""
                 defaultValue=""
-                
-              /></div>
+              />
+            </div>
             <div className="flex flex-row rounded-lg mx-2">
               <button
                 type="submit"
+               
                 className=" shadow-sm py-2 px-4  w-full lg:w-64  rounded-full bg-sky-500 text-stone-50 text-xl   font-bold transition-all duration-1000 ease-in-out  ">
                 Search
               </button>

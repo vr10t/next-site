@@ -44,7 +44,7 @@ export default function Input(props) {
    };
    
    function handleGetDistance(){
-    distance.apiKey="AIzaSyBcBdvwP0z8pM4bU87H7kvtefQYDFBpQzQ"
+    distance.apiKey=process.env.NEXT_PUBLIC_GOOGLE_API_KEY
     distance
      .get({
        origin: `${origin}`,

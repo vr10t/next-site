@@ -4,7 +4,7 @@ const ResultContext=createContext()
 export default function getDistance(origin,destination){
 
   
-  distance.apiKey="AIzaSyBcBdvwP0z8pM4bU87H7kvtefQYDFBpQzQ"
+  distance.apiKey=process.env.GOOGLE_API_KEY
    distance
     .get({
       origin: `${origin}`,

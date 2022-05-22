@@ -17,7 +17,7 @@ function BgCarousel() {
       <Carousel className="" fade interval={10000} pause={false} controls={false} indicators={false}>
         <Carousel.Item>
           <div className="flex flex-col">
-            <div className=" max-w-screen  w-auto h-96 lg:h-screen">
+            <div className=" relative max-w-screen  w-auto h-96 lg:h-screen">
               <Image
                 
                 className="relative  object-cover"
@@ -33,7 +33,7 @@ function BgCarousel() {
         </Carousel.Item>
         <Carousel.Item>
           <div className="flex flex-col">
-            <div className=" max-w-screen  w-auto   h-96 lg:h-screen">
+            <div className=" relative max-w-screen  w-auto   h-96 lg:h-screen">
               <Image
                placeholder="blur"
                 className="relative object-cover"
@@ -47,7 +47,7 @@ function BgCarousel() {
         </Carousel.Item>
         <Carousel.Item>
           <div className="flex flex-col">
-            <div className=" max-w-screen  w-auto   h-96 lg:h-screen">
+            <div className=" relative max-w-screen  w-auto   h-96 lg:h-screen">
               <Image
                placeholder="blur"
                 className="relative object-cover"
@@ -61,7 +61,7 @@ function BgCarousel() {
         </Carousel.Item>
         <Carousel.Item>
           <div className="flex flex-col">
-            <div className=" max-w-screen  w-auto   h-96 lg:h-screen">
+            <div className=" relative max-w-screen  w-auto   h-96 lg:h-screen">
               <Image
               placeholder="blur"
                 className="relative object-cover"
