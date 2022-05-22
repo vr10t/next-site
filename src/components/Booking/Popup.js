@@ -1,21 +1,15 @@
 export default function Popup(){
     return(
-        <div className="p-8 bg-white border border-blue-100 shadow-lg rounded-2xl" role="alert">
+        <div className="p-8  bg-white border border-blue-100 shadow-lg rounded-2xl" role="alert">
   <div className="items-center sm:flex">
     <span className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-white bg-blue-400 rounded-full">
-      <svg className="w-3 h-3" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-        <path
-          clip-rule="evenodd"
-          d="M18 3a1 1 0 00-1.447-.894L8.763 6H5a3 3 0 000 6h.28l1.771 5.316A1 1 0 008 18h1a1 1 0 001-1v-4.382l6.553 3.276A1 1 0 0018 15V3z"
-          fill-rule="evenodd"
-        />
-      </svg>
+      
     </span>
 
-    <p className="mt-3 text-lg font-medium sm:mt-0 sm:ml-3">You've got a new message</p>
+    <p className="mt-3 text-2xl font-medium text-center tracking-tight sm:mt-0 sm:ml-3">Make bookings easier</p>
   </div>
 
-  <p className="mt-4 text-gray-500">
+  <p className="mt-4 text-gray-700">
     Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam ea quo unde vel adipisci blanditiis voluptates eum.
     Nam, cum minima?
   </p>

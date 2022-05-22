@@ -12,7 +12,7 @@ import Image from "next/image";
 import styles from "./Form.module.css";
 import bg2 from "../../../public/bg-2.jpg";
 import dynamic from "next/dynamic";
-import getAddress from '../../../utils/get-address'
+
 const HCaptcha = dynamic(() => import("@hcaptcha/react-hcaptcha"));
 
 export default function Form() {
