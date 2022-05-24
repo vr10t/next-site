@@ -1,6 +1,6 @@
 export default function Receipt() {
   return (
-      <div className="flex w-72">
+      <div className="flex relative float-right sm:mr-16 -top-56 sm:-top-44  w-64 h-64">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       data-name="Layer 1"

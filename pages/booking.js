@@ -10,6 +10,12 @@ import Layout from "../src/components/layout";
 import Announcement from "../src/components/Announcement";
 import Receipt from "../src/components/Svg/Receipt";
 import Summary from "../src/components/Booking/Summary";
+import { FaMapMarkerAlt } from "@react-icons/all-files/fa/FaMapMarkerAlt";
+import { FaCheck } from "@react-icons/all-files/fa/FaCheck";
+import { FaMapPin } from "@react-icons/all-files/fa/FaMapPin";
+import { BsCalendarFill } from "@react-icons/all-files/bs/BsCalendarFill";
+import { FaCreditCard} from "@react-icons/all-files/fa/FaCreditCard"
+import { BsFillPersonFill } from "@react-icons/all-files/bs/BsFillPersonFill";
 
 export default function Booking() {
   const [distanceResults, setDistanceResults] = useState("");
@@ -21,11 +27,12 @@ export default function Booking() {
   let tripPrice = 0;
   const [tripDistance, setTripDistance] = useState("loading...");
   const [totalTripPrice, setTotalTripPrice] = useState("loading...");
-  const [showBanner,setShowBanner]= useState(true)
-
+  const [showBanner, setShowBanner] = useState(true);
+  const [showSummary, setShowSummary] = useState(false);
+  const completed = "mx-auto py-2 text-sky-500 ";
+  const uncompleted = "mx-auto py-2 text-gray-500 ";
   useEffect(() => {
     console.log(session);
-   
   }, []);
   useEffect(() => {
     // allow other functions to execute, otherwise component mounts before the variables update
@@ -46,8 +53,8 @@ export default function Booking() {
         setDataToParsedData(parsedData);
         console.log(data);
         console.log("data is set to parsedData");
-        // handleGetDistance(parsedData.location, parsedData.destination);
-        // data.distance = distanceResults.distance;
+        handleGetDistance(parsedData.location, parsedData.destination);
+        data.distance = distanceResults.distance;
       } else {
         //if no booking data is saved, get distance and save data
         handleGetDistance(data.location, data.destination);
@@ -61,7 +68,10 @@ export default function Booking() {
   }, []);
 
   useEffect(() => {
-    Object.assign(data, { distance: distanceResults.distance });
+    Object.assign(data, {
+      distance: distanceResults.distance,
+      duration: distanceResults.duration,
+    });
 
     calculatePrice();
     console.log("distanceResults:", distanceResults, "data:", data);
@@ -76,6 +86,7 @@ export default function Booking() {
       })
       .then((data) => {
         setDistanceResults(data);
+        console.log(data);
       })
       .catch(function (err) {
         console.log(err);
@@ -90,6 +101,7 @@ export default function Booking() {
     data.date = obj.date;
     data.time = obj.time;
     data.distance = obj.distance;
+    data.duration = obj.duration;
   }
   function calculatePrice() {
     try {
@@ -112,120 +124,101 @@ export default function Booking() {
     data.price_per_mile = farePrice.toString();
     data.total_trip_price = tripPrice;
   }
-  
-  
 
   return (
     <Layout>
-     {!session &&showBanner&&  <Announcement onClick={()=>setShowBanner(false)} className="fixed" />}
-      <div>
-        <h2 className="sr-only">Steps</h2>
+      {!session && showBanner && (
+        <Announcement onClick={() => setShowBanner(false)} className="fixed" />
+      )}
 
+      <div className="flex flex-col md:flex-row bg-gray-50">
         <div>
-          <div className="overflow-hidden bg-gray-200 rounded-full">
-            <div className="w-12 h-2 bg-blue-500 rounded-full"></div>
+          {showSummary && (
+            <div>
+              <div className=" z-[10] -top-10  absolute lg:relative left-0 h-screen lg:h-max overflow-auto">
+                <Summary
+                  location={data.location}
+                  destination={data.destination}
+                  passengers={data.passengers}
+                  date={data.date}
+                  time={data.time}
+                  price={data.total_trip_price}
+                  distance={data.distance}
+                  duration={data.duration}
+                />
+              </div>
+            </div>
+          )}
+
+          <div
+            onClick={() => setShowSummary(!showSummary)}
+            className="lg:hidden z-[11] h-20 fixed bottom-0   flex justify-center w-screen shadow-sm border-sky-600  bg-sky-600 ">
+            <div className="grid grid-cols-4 absolute px-4 bg-gray-50 w-screen left-0 bottom-20 text-4xl">
+              <div className={data.location&&data.destination ? completed : uncompleted}>
+                {data.location&&data.destination ? <FaCheck className="text-sm float-right" /> : ""}
+                <FaMapMarkerAlt className="px-1" />
+              </div>
+              <div className={data.date&&data.time ? completed : uncompleted}>
+                {data.date&&data.time ? <FaCheck className="text-sm float-right" /> : ""}
+                <BsCalendarFill className="px-1" />
+              </div>
+              <div className={data.account ? completed : uncompleted}>
+                {data.account ? <FaCheck className="text-sm float-right" /> : ""}
+                <BsFillPersonFill className="px-1" />
+              </div>
+              <div className={data.payment ? completed : uncompleted}>
+                {data.payment ? <FaCheck className="text-sm float-right" /> : ""}
+                <FaCreditCard  className="px-1"/>
+              </div>
+             
+            </div>
+
+            <button
+              onClick=""
+              disabled={true}
+              className="flex items-center my-2 mx-4 justify-center rounded-lg w-full text-center  h-16  text-2xl font-medium text-gray-50 bg-sky-500 disabled:bg-gray-400">
+              Book Now
+            </button>
           </div>
+        </div>
+        <div className="">
+          <section>
+            <details
+              className="p-6   border-y-2 shadow-sm border-sky-600  bg-gray-50 group"
+              open>
+              <summary className="flex items-center justify-between cursor-pointer">
+                <h5 className="text-lg font-medium hover:text-sky-600 text-gray-900">
+                  jefjikneflk
+                </h5>
 
-          <ol className="grid grid-cols-3 mt-4 text-sm font-medium text-gray-500">
-            <li className="flex items-center justify-start text-blue-600">
-              <span className="hidden sm:inline"> Details </span>
+                <span className="flex-shrink-0 ml-1.5 p-1.5 text-gray-900 bg-white rounded-full sm:p-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="flex-shrink-0 w-5 h-5  transition duration-300 group-open:-rotate-45"
+                    viewBox="0 0 20 20"
+                    fill="currentColor">
+                    <path
+                      fillRule="evenodd"
+                      d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </summary>
 
-              <svg
-                className="w-6 h-6 sm:w-5 sm:h-5 sm:ml-2"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2">
-                <path
-                  strokeLinecap="round"
-                  stroke-linejoin="round"
-                  d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
-                />
-              </svg>
-            </li>
-
-            <li className="flex items-center justify-center text-sky-600">
-              <span className="hidden sm:inline"> Address </span>
-
-              <svg
-                className="w-6 h-6 sm:w-5 sm:h-5 sm:ml-2"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2">
-                <path
-                  strokeLinecap="round"
-                  stroke-linejoin="round"
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  stroke-linejoin="round"
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-            </li>
-
-            <li className="flex items-center justify-end">
-              <span className="hidden sm:inline"> Payment </span>
-
-              <svg
-                className="w-6 h-6 sm:w-5 sm:h-5 sm:ml-2"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2">
-                <path
-                  strokeLinecap="round"
-                  stroke-linejoin="round"
-                  d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                />
-              </svg>
-            </li>
-          </ol>
-          
+              <p className="mt-4 leading-relaxed text-gray-700">asfkasdfm;la</p>
+            </details>
+          </section>
         </div>
       </div>
-      <div className="flex">
-        <div>
 
-{/* <Summary 
-  location={data.location}
-  destination={data.destination}
-  passenger={data.passengers}
-  date={data.date}
-  time={data.time}
-  
-/> */}
-        </div>
-      </div>
-      {"location: "}
-          {data.location}
-          {"destination: "}
-          {data.destination}
-          {"passengers: "}
-          {data.passengers}
-          {"date: "}
-          {data.date}
-          {"time: "}
-          {data.time}
-          {"distance: "}
-          {tripDistance}
-          {"price: £"}
-          {totalTripPrice}
-          <button
-            onClick={() => {
-              setTripDistance(data.distance);
-              setTotalTripPrice(data.total_trip_price);
-            }}>
-            Update
-          </button>
-      
-       
-     
+      <button
+        onClick={() => {
+          setTripDistance(data.distance);
+          setTotalTripPrice(data.total_trip_price);
+        }}>
+        Update
+      </button>
     </Layout>
   );
 }

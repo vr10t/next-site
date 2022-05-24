@@ -7,6 +7,7 @@ import { BsFillPersonPlusFill } from "@react-icons/all-files/bs/BsFillPersonPlus
 import { BsCalendarFill } from "@react-icons/all-files/bs/BsCalendarFill";
 import { FaMapPin } from "@react-icons/all-files/fa/FaMapPin";
 import { BsClockFill } from "@react-icons/all-files/bs/BsClockFill";
+import {FaCrosshairs} from "@react-icons/all-files/fa/FaCrosshairs"
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -14,8 +15,9 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useAppContext } from "../../context/state";
-
+import Map from  "../Map"
 import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
+import { getURL } from "next/dist/shared/lib/utils";
 
 const PlacesAutocomplete = dynamic(() => import("react-places-autocomplete"));
 // const HCaptcha = dynamic(() => import("@hcaptcha/react-hcaptcha"));
@@ -96,10 +98,61 @@ const Index = () => {
     setDestination(e);
     console.log("destination:", destination);
   };
-
+  function getLocation(){
+    navigator.geolocation.getCurrentPosition(showPosition);
+  }
+  
+  function showPosition(position) {
+    console.log( "Latitude: " + position.coords.latitude +
+    "<br>Longitude: " + position.coords.longitude)
+    reverseGeocode(position.coords.latitude,position.coords.longitude)
+    
+  }
+  async function reverseGeocode(lat,long){
+    
+  try{
+    let res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`)
+    let data = await res.json()
+    console.log(data.results[0].formatted_address)
+    setOrigin(data.results[0].formatted_address)
+   
+  }
+     catch (err) {
+      alert(err.message)
+    }
+    
+  }
+  function revealPosition(e){
+    console.log(e)
+  }
+  function handlePermission() {
+    navigator.permissions.query({name:'geolocation'}).then(function(result) {
+      if (result.state == 'granted') {
+        report(result.state);
+        
+      } else if (result.state == 'prompt') {
+        report(result.state);
+       
+        navigator.geolocation.getCurrentPosition(revealPosition);
+      } else if (result.state == 'denied') {
+        report(result.state);
+        
+      }
+      result.addEventListener('change', function() {
+        report(result.state);
+      });
+    });
+  }
+  
+  function report(state) {
+    console.log('Permission ' + state);
+  }
+  useEffect(()=>{
+    handlePermission();
+  },[])
   
   return (
-    <div className="relative -top-64 z-[999999] w-max justify-center mx-auto bg-none py-4 ">
+    <div className="relative  z-[999999] w-max justify-center mx-auto bg-none py-4 ">
       <form id="booking" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-rows-1 md:grid-rows-2 gap-2 justify-center">
           <div className="flex flex-col gap-2 lg:flex-row ">
@@ -130,16 +183,17 @@ const Index = () => {
                           "truncate border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-100",
                         name: "location",
                         type: "text",
-                        required: "true",
+                        // required: "true",
                         placeholder: "From...",
                       })}
                     />
-                    <div className="absolute bg-gray-50 w-max  ">
+                    
+                    <div className="absolute bg-gray-50 w-max max-w-xs ">
                       {loading && <div>Loading...</div>}
                       {suggestions.map((suggestion) => {
                         const className = suggestion.active
-                          ? "bg-gray-200 py-2 px-4 max-w-sm"
-                          : "bg-gray-50 py-2 px-4 max-w-sm";
+                          ? "bg-gray-200 py-2 px-4 max-w-xs"
+                          : "bg-gray-50 py-2 px-4 max-w-xs";
                         // inline style for demonstration purpose
                         const style = suggestion.active
                           ? { backgroundColor: "rgb(229 231 235)", cursor: "pointer" }
@@ -158,8 +212,10 @@ const Index = () => {
                   </div>
                 )}
               </PlacesAutocomplete>
+              
             </div>
-
+            <span className="flex absolute text-gray-700 w-6 right-5 my-3  ">
+                    <button onClick={getLocation} ><FaCrosshairs /></button></span>
             <div className="flex flex-row rounded-lg mx-2 border-1 border-gray-900">
               {" "}
               <span className="inline-flex  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadow-sm text-lg">
@@ -194,8 +250,8 @@ const Index = () => {
                       {loading && <div>Loading...</div>}
                       {suggestions.map((suggestion) => {
                         const className = suggestion.active
-                          ? "bg-gray-200 py-2 px-4 max-w-sm"
-                          : "bg-gray-50 py-2 px-4 max-w-sm";
+                          ? "bg-gray-200 py-2 px-4 max-w-xs"
+                          : "bg-gray-50 py-2 px-4 max-w-xs";
                         // inline style for demonstration purpose
                         const style = suggestion.active
                           ? { backgroundColor: "rgb(229 231 235)", cursor: "pointer" }
