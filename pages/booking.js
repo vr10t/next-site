@@ -130,12 +130,13 @@ export default function Booking() {
   }
 
   return (
+    <>
     <Layout>
       {!session && showBanner && (
         <Announcement onClick={() => setShowBanner(false)} className="fixed" />
       )}
 
-      <div className="flex flex-col md:flex-row bg-gray-50">
+      <div className="absolute top-32 w-screen m-0 max-w-screen bg-red-400 left-0 overflow-x-none flex flex-col md:flex-row bg-gray-50">
         <div>
           {showSummary && (
             <div className=" flex  lg:hidden">
@@ -201,9 +202,9 @@ export default function Booking() {
           </div>
         </div>
         <div className="">
-          <section>
+          <section className="max-w-screen w-96">
             <details
-              className="p-6   border-y-2 shadow-sm border-sky-600  bg-gray-50 group"
+              className="p-6  w-96 border-y-2 shadow-sm border-sky-600  bg-gray-50 group"
               open>
               <summary className="flex items-center justify-between cursor-pointer">
                 <h5 className="text-lg font-medium hover:text-sky-600 text-gray-900">
@@ -230,7 +231,7 @@ export default function Booking() {
           </section>
         </div>
       </div>
-
+<div className="h-96"></div>
       <button
         onClick={() => {
           setTripDistance(data.distance);
@@ -239,5 +240,7 @@ export default function Booking() {
         Update
       </button>
     </Layout>
+    <div className="h-44"></div>
+</>
   );
 }

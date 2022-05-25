@@ -3,7 +3,7 @@ import {BsX} from "@react-icons/all-files/bs/BsX"
 export default function Announcement(props) {
    
   return (
-    <div className={`flex flex-col  justify-center items-center gap-2 sm:flex-row  shadow-md text-white py-2  bg-orange-300 sm:justify-between   sm:px-6 lg:px-8`}>
+    <div className={`fixed w-screen top-20 flex flex-col  justify-center items-center gap-2 sm:flex-row  shadow-md text-white py-2  bg-orange-300 sm:justify-between   sm:px-6 lg:px-8`}>
       <button onClick={props.onClick} className="sm:hidden float-right absolute flex self-end   px-2 text-2xl" ><BsX /></button>
       <p className="font-medium sm:my-2 mx-auto text-lg text-center sm:text-left">
         Sign up now and enjoy hassle free bookings!

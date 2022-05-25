@@ -21,7 +21,7 @@ export default function Summary(props) {
           </h2>
           <Receipt className="" />
           <div className="">
-            <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto  mt-5 p-4 lg:p-4 font-bold text-4xl text-sky-600">
+            <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto  mt-5 p-4 lg:p-4 font-bold text-4xl text-sky-500">
               {" "}
               <div className="mt-5  truncate hover:text-ellipsis max-w-[8rem]">
                 <label className="sr-only ">Distance</label> <FaRoute />
@@ -33,7 +33,7 @@ export default function Summary(props) {
                 {props.distance}
               </div>
             </div>
-            <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto  lg:p-4 text-4xl  text-sky-600">
+            <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto  lg:p-4 text-4xl  text-sky-500">
               {" "}
               <div className=" font-bold"><BsWatch /></div>
               <div className="col-span-2">
@@ -43,7 +43,7 @@ export default function Summary(props) {
             </div>{" "}
           </div>
           <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto bg-gray-200 mt-5 p-4 lg:p-4 rounded-2xl">
-            <div className="col-span-1 text-3xl text-sky-600 my-auto">
+            <div className="col-span-1 text-3xl text-sky-500 my-auto">
               {" "}
               <FaMapMarkerAlt />
             </div>
@@ -60,7 +60,7 @@ export default function Summary(props) {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto bg-gray-200 mt-5 p-4 lg:p-4 rounded-2xl">
-            <div className="col-span-1 text-3xl text-sky-600 my-auto">
+            <div className="col-span-1 text-3xl text-sky-500 my-auto">
               {" "}
               <FaMapPin />
             </div>
@@ -77,7 +77,7 @@ export default function Summary(props) {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto bg-gray-200 mt-5 p-4 lg:p-4 rounded-2xl">
-            <div className="col-span-1 text-3xl text-sky-600 my-auto">
+            <div className="col-span-1 text-3xl text-sky-500 my-auto">
               {" "}
               <BsFillPersonPlusFill />
             </div>
@@ -92,7 +92,7 @@ export default function Summary(props) {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto bg-gray-200 mt-5 p-4 lg:p-4 rounded-2xl">
-            <div className="col-span-1 text-3xl text-sky-600 my-auto">
+            <div className="col-span-1 text-3xl text-sky-500 my-auto">
               {" "}
               <BsCalendarFill />
             </div>
@@ -107,7 +107,7 @@ export default function Summary(props) {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto bg-gray-200 mt-5 p-4 lg:p-4 rounded-2xl">
-            <div className="col-span-1 text-3xl text-sky-600 my-auto">
+            <div className="col-span-1 text-3xl text-sky-500 my-auto">
               {" "}
               <BsClockFill />
             </div>
