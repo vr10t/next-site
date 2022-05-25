@@ -9,10 +9,10 @@ import { FaRoute } from "@react-icons/all-files/fa/FaRoute";
 import Receipt from "../Svg/Receipt";
 export default function Summary(props) {
   return (
-    <div className="flex relative w-screen lg:w-full lg:float-left ">
+    <div className="flex relative bg-gradient-to-br from-gray-50 to-gray-100 shadow-2xl lg:rounded-xl bg-clip-content w-screen  lg:w-full lg:float-left ">
       <div className="w-full mt-24  lg:mt-16 lg:max-w-lg">
-        <div className="bg-gradient-to-br from-gray-50 to-gray-100 shadow-2xl rounded-3xl">
-          <h2 className="relative top-[13rem] text-left ml-16 text-gray-800 text-3xl font-bold ">
+        <div className="">
+          <h2 className="lg:relative lg:top-[13rem] text-left ml-16 text-gray-800 text-3xl font-bold ">
             Summary
           </h2>
           <Receipt className="" />

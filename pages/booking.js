@@ -16,6 +16,7 @@ import { FaMapPin } from "@react-icons/all-files/fa/FaMapPin";
 import { BsCalendarFill } from "@react-icons/all-files/bs/BsCalendarFill";
 import { FaCreditCard} from "@react-icons/all-files/fa/FaCreditCard"
 import { BsFillPersonFill } from "@react-icons/all-files/bs/BsFillPersonFill";
+import {FaAngleUp} from "@react-icons/all-files/fa/FaAngleUp"
 
 export default function Booking() {
   const [distanceResults, setDistanceResults] = useState("");
@@ -29,11 +30,14 @@ export default function Booking() {
   const [totalTripPrice, setTotalTripPrice] = useState("loading...");
   const [showBanner, setShowBanner] = useState(true);
   const [showSummary, setShowSummary] = useState(false);
+  const summaryClassNames=showSummary?"fixed flex top-20 rotate-180 w-screen text-gray-800 text-3xl justify-center bg-white h-8":"fixed flex bottom-32 w-screen text-gray-800 text-3xl justify-center bg-gray-100 h-8"
   const completed = "mx-auto py-2 text-sky-500 ";
   const uncompleted = "mx-auto py-2 text-gray-500 ";
   useEffect(() => {
     console.log(session);
+    console.log(window.innerWidth)
   }, []);
+ 
   useEffect(() => {
     // allow other functions to execute, otherwise component mounts before the variables update
     setTimeout(() => {
@@ -134,8 +138,8 @@ export default function Booking() {
       <div className="flex flex-col md:flex-row bg-gray-50">
         <div>
           {showSummary && (
-            <div>
-              <div className=" z-[10] -top-10  absolute lg:relative left-0 h-screen lg:h-max overflow-auto">
+            <div className=" flex  lg:hidden">
+              <div className=" z-[10] top-20  fixed lg:relative left-0 h-[80vh] lg:h-max overflow-auto">
                 <Summary
                   location={data.location}
                   destination={data.destination}
@@ -149,11 +153,26 @@ export default function Booking() {
               </div>
             </div>
           )}
+          <div className="hidden lg:flex">
+              <div className=" z-[10] -top-10  absolute lg:relative left-0 h-screen lg:h-max overflow-auto">
+                <Summary
+                  location={data.location}
+                  destination={data.destination}
+                  passengers={data.passengers}
+                  date={data.date}
+                  time={data.time}
+                  price={data.total_trip_price}
+                  distance={data.distance}
+                  duration={data.duration}
+                />
+              </div>
+            </div>
 
           <div
             onClick={() => setShowSummary(!showSummary)}
             className="lg:hidden z-[11] h-20 fixed bottom-0   flex justify-center w-screen shadow-sm border-sky-600  bg-sky-600 ">
-            <div className="grid grid-cols-4 absolute px-4 bg-gray-50 w-screen left-0 bottom-20 text-4xl">
+            <div className={summaryClassNames}><FaAngleUp /></div>
+            <div className="grid grid-cols-4 absolute px-4 bg-gray-100 w-screen left-0 bottom-20 text-4xl">
               <div className={data.location&&data.destination ? completed : uncompleted}>
                 {data.location&&data.destination ? <FaCheck className="text-sm float-right" /> : ""}
                 <FaMapMarkerAlt className="px-1" />

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import CustomDonationInput from './CustomDonationInput';
 
-import {TOTAL, increaseTOTAL} from "../../utils/get-total"
+
 
 import getStripe from '../../utils/getStripe';
 import { fetchPostJSON } from '../../utils/api-helpers';
@@ -65,7 +65,7 @@ const CheckoutForm = () => {
         // onChange={handleInputChange}
       />
       {/* <StripeTestCards /> */}
-      <button onClick={()=>{increaseTOTAL(1)}}>[{TOTAL}]</button>
+      {/* <button onClick={()=>{increaseTOTAL(1)}}>[{TOTAL}]</button> */}
       <button
         className=" bg-red-600 w-full h-full"
         type="submit"
