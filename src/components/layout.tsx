@@ -6,7 +6,7 @@ import Navbar from './Navbar/V2'
 
 import Footer from './Footer/Footer'
 import { ReactNode } from 'react'
-import { propTypes } from 'react-bootstrap/esm/Image'
+
 
 
 type Props = {
