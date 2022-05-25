@@ -6,18 +6,19 @@ import { BsCalendarFill } from "@react-icons/all-files/bs/BsCalendarFill";
 import { FaMapPin } from "@react-icons/all-files/fa/FaMapPin";
 import { BsClockFill } from "@react-icons/all-files/bs/BsClockFill";
 import { FaRoute } from "@react-icons/all-files/fa/FaRoute";
+import {BsWatch} from "@react-icons/all-files/bs/BsWatch"
 import Receipt from "../Svg/Receipt";
 export default function Summary(props) {
   return (
     <div className="flex relative bg-gradient-to-br from-gray-50 to-gray-100 shadow-2xl lg:rounded-xl bg-clip-content w-screen  lg:w-full lg:float-left ">
       <div className="w-full mt-24  lg:mt-16 lg:max-w-lg">
         <div className="">
-          <h2 className="lg:relative lg:top-[13rem] text-left ml-16 text-gray-800 text-3xl font-bold ">
+          <h2 className="lg:relative lg:top-[13rem] text-left justify-center flex lg:block lg:ml-16 text-gray-800 text-3xl font-bold ">
             Summary
           </h2>
           <Receipt className="" />
           <div className="">
-            <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto  mt-5 p-4 lg:p-4 font-bold text-5xl text-gray-800">
+            <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto  mt-5 p-4 lg:p-4 font-bold text-4xl text-sky-600">
               {" "}
               <div className="mt-5  truncate hover:text-ellipsis max-w-[8rem]">
                 <label className="sr-only ">Distance</label> <FaRoute />
@@ -29,9 +30,9 @@ export default function Summary(props) {
                 {props.distance}
               </div>
             </div>
-            <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto  lg:p-4 text-2xl  text-gray-800">
+            <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto  lg:p-4 text-4xl  text-sky-600">
               {" "}
-              <div className=" font-bold">Est. trip time</div>
+              <div className=" font-bold"><BsWatch /></div>
               <div className="col-span-2">
                 <hr className="  border-b-4 border-t-0 border-dashed border-gray-400 mt-10" />
               </div>
@@ -39,7 +40,7 @@ export default function Summary(props) {
             </div>{" "}
           </div>
           <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto bg-gray-200 mt-5 p-4 lg:p-4 rounded-2xl">
-            <div className="col-span-1 text-3xl text-gray-800 my-auto">
+            <div className="col-span-1 text-3xl text-sky-600 my-auto">
               {" "}
               <FaMapMarkerAlt />
             </div>
@@ -56,7 +57,7 @@ export default function Summary(props) {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto bg-gray-200 mt-5 p-4 lg:p-4 rounded-2xl">
-            <div className="col-span-1 text-3xl text-gray-800 my-auto">
+            <div className="col-span-1 text-3xl text-sky-600 my-auto">
               {" "}
               <FaMapPin />
             </div>
@@ -73,7 +74,7 @@ export default function Summary(props) {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto bg-gray-200 mt-5 p-4 lg:p-4 rounded-2xl">
-            <div className="col-span-1 text-3xl text-gray-800 my-auto">
+            <div className="col-span-1 text-3xl text-sky-600 my-auto">
               {" "}
               <BsFillPersonPlusFill />
             </div>
@@ -88,7 +89,7 @@ export default function Summary(props) {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto bg-gray-200 mt-5 p-4 lg:p-4 rounded-2xl">
-            <div className="col-span-1 text-3xl text-gray-800 my-auto">
+            <div className="col-span-1 text-3xl text-sky-600 my-auto">
               {" "}
               <BsCalendarFill />
             </div>
@@ -103,7 +104,7 @@ export default function Summary(props) {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto bg-gray-200 mt-5 p-4 lg:p-4 rounded-2xl">
-            <div className="col-span-1 text-3xl text-gray-800 my-auto">
+            <div className="col-span-1 text-3xl text-sky-600 my-auto">
               {" "}
               <BsClockFill />
             </div>
