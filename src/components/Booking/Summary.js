@@ -9,6 +9,9 @@ import { FaRoute } from "@react-icons/all-files/fa/FaRoute";
 import {BsWatch} from "@react-icons/all-files/bs/BsWatch"
 import Receipt from "../Svg/Receipt";
 export default function Summary(props) {
+  function handleClick(){
+    console.log("click")
+  }
   return (
     <div className="flex relative bg-gradient-to-br from-gray-50 to-gray-100 shadow-2xl lg:rounded-xl bg-clip-content w-screen  lg:w-full lg:float-left ">
       <div className="w-full mt-24  lg:mt-16 lg:max-w-lg">
@@ -134,7 +137,7 @@ export default function Summary(props) {
           </div>
           <div className="h-10"></div>
           <button
-            onClick=""
+            onClick={handleClick}
             disabled={true}
             className="lg:flex hidden justify-center rounded-lg w-5/6 h-max m-auto p-4  text-3xl font-medium text-gray-50 bg-sky-500 disabled:bg-gray-400">
             Book Now

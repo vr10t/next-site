@@ -22,7 +22,7 @@ import { getURL } from "next/dist/shared/lib/utils";
 const PlacesAutocomplete = dynamic(() => import("react-places-autocomplete"));
 // const HCaptcha = dynamic(() => import("@hcaptcha/react-hcaptcha"));
 
-const Index = () => {
+const Form = () => {
   const { data, setData } = useAppContext();
   useCallback(() => {}, [onSubmit]);
   const [origin, setOrigin] = useState("");
@@ -183,7 +183,7 @@ const Index = () => {
                           "truncate border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-100",
                         name: "location",
                         type: "text",
-                        // required: "true",
+                        required: true,
                         placeholder: "From...",
                       })}
                     />
@@ -242,7 +242,7 @@ const Index = () => {
                         className: " truncate border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-100",
                         name: "destination",
                         type: "text",
-                        required: "true",
+                        required: true,
                         placeholder: "To...",
                       })}
                     />
@@ -285,7 +285,7 @@ const Index = () => {
                 id="passengers"
                 className=" border-0 rounded-r-md flex-1 appearance-none focus-ring-full md:w-44 py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600"
                 name="passengers"
-                required="true"
+                required={true}
                 type="number"
                 placeholder="Passengers"
                 min="1"
@@ -307,7 +307,7 @@ const Index = () => {
                 id="date"
                 className=" border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600"
                 name="date"
-                required="true"
+                required={true}
                 type="date"
                 placeholder={today}
                 defaultValue={today}
@@ -325,7 +325,7 @@ const Index = () => {
                 id="time"
                 className=" border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600"
                 name="time"
-                required="true"
+                required={true}
                 type="time"
                 placeholder=""
                 defaultValue=""
@@ -345,4 +345,4 @@ const Index = () => {
     </div>
   );
 };
-export default Index;
+export default Form;

@@ -193,7 +193,7 @@ export default function Booking() {
             </div>
 
             <button
-              onClick=""
+              
               disabled={true}
               className="flex items-center my-2 mx-4 justify-center rounded-lg w-full text-center  h-16  text-2xl font-medium text-gray-50 bg-sky-500 disabled:bg-gray-400">
               Book Now
