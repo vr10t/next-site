@@ -223,7 +223,7 @@ export default function Booking() {
               <div className="w-full bg-gray-100 tracking-wider font-medium text-lg text-gray-600">
                 CHOOSE YOUR SERVICE
               </div>
-              <button className="group min-w-fit flex gap-4 items-center appearance-none bg-fuchsia-300 w-full p-4 my-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44">
+              <button className="group min-w-fit flex gap-4 items-center appearance-none bg-gray-50 w-full p-4 my-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44">
                 <div className="w-20 h-20 sm:w-32 min-w-max sm:h-32 bg-gray-300">
                   <div className="w-20 h-20 sm:w-32 sm:h-32"></div>
                 </div>
