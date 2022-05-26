@@ -144,7 +144,7 @@ export default function Booking() {
         )}
 
         <div className="static justify-center  mt-64 w-[95vw] sm:w-[97vw] mx-auto lg:  max-w-screen bg-red-400 overflow-x-none flex flex-col lg:flex-row  ">
-        <div className="absolute top-56 bg-gray-100 w-full h-32 flex items-center justify-center z-[8] text-4xl font-medium text-center text-gray-800">Youre almost there!</div>
+        <div className="absolute top-56 bg-gray-100 w-[95vw] lg:w-[97vw] mx-auto h-32 flex items-center justify-center z-[8] text-4xl font-medium text-center text-gray-800">Youre almost there!</div>
           <div>
             {showSummary && (
               <div className=" flex  lg:hidden">
@@ -166,7 +166,7 @@ export default function Booking() {
 
             <div
               onClick={() => setShowSummary(!showSummary)}
-              className="lg:hidden z-[11] h-20 fixed bottom-0   flex justify-center w-screen shadow-sm border-sky-600  bg-sky-600 ">
+              className="lg:hidden z-[11] h-20 fixed bottom-0 left-0  flex justify-center w-screen   bg-gray-100 ">
               <div className={summaryClassNames}>
                 <FaAngleUp />
               </div>
@@ -288,7 +288,7 @@ export default function Booking() {
               </div>
             </section>
             <section className="">
-              <button className="group min-w-fit flex gap-4 items-center appearance-none bg-green-500 w-full p-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44">
+              <button className="group min-w-fit flex gap-4 items-center appearance-none bg-emerald-200 w-full p-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44">
                 <div className="w-20 h-20 sm:w-32 min-w-max sm:h-32 bg-gray-300">
                   <div className="w-20 h-20 sm:w-32 sm:h-32"></div>
                 </div>
