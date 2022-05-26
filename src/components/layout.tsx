@@ -16,7 +16,7 @@ type Props = {
 
  const Layout = ({
   children,
-  title = 'TypeScript Next.js Stripe Example',
+  title 
 }: Props) => (
     <>
       <Head>
@@ -31,7 +31,7 @@ type Props = {
       </Head>
       
         <Navbar />
-     
+     <div className="h-32 bg-transparent"></div>
       <main>{children}</main>
       
         <div className="">

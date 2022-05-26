@@ -10,7 +10,7 @@ export default function Navbar() {
 
   return (
     <header className="shadow-sm">
-      <div className="max-w-screen-xl h-20 p-4 mx-auto fixed bg-white w-screen z-10 ">
+      <div className="max-w-screen h-20 p-4 mx-auto items-center flex fixed bg-gray-50 w-screen z-10 ">
         <div className="flex items-center justify-between space-x-4 lg:space-x-10">
           <div className="flex lg:w-0 lg:flex-1">
             <span className="md:flex  w-20 h-10 bg-gray-200 rounded-lg"></span>
@@ -39,9 +39,9 @@ export default function Navbar() {
             </Link>
           </nav>
 
-          <div className="items-center justify-end flex-1 hidden space-x-4 md:flex">
+          <div className="items-end justify-end flex-1 hidden space-x-4 md:flex">
             <Link href="/signin">
-              <a className="px-5 py-2 no-underline text-sm font-medium text-gray-500 bg-gray-100 rounded-lg shadow-md hover:bg-slate-300 hover:text-gray-500">
+              <a className="px-5 py-2 no-underline text-md font-medium text-gray-800 bg-gray-50   hover:text-gray-500">
                 Log in
               </a>
             </Link>

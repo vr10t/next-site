@@ -152,7 +152,7 @@ const Form = () => {
   },[])
   
   return (
-    <div className="relative  z-[999999] w-max justify-center mx-auto bg-none py-4 ">
+    <div className="relative  z-[9] w-max justify-center mx-auto bg-none py-4 ">
       <form id="booking" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-rows-1 md:grid-rows-2 gap-2 justify-center">
           <div className="flex flex-col gap-2 lg:flex-row ">
