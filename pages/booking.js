@@ -143,7 +143,8 @@ export default function Booking() {
           />
         )}
 
-        <div className="static  mt-64 w-[90vw]  lg:w-full  max-w-screen bg-red-400 left-0 overflow-x-none flex flex-col md:flex-row ">
+        <div className="static justify-center  mt-64 w-[95vw] sm:w-[97vw] mx-auto lg:  max-w-screen bg-red-400 overflow-x-none flex flex-col lg:flex-row  ">
+        <div className="absolute top-56 bg-gray-100 w-full h-32 flex items-center justify-center z-[8] text-4xl font-medium text-center text-gray-800">Youre almost there!</div>
           <div>
             {showSummary && (
               <div className=" flex  lg:hidden">
@@ -215,10 +216,10 @@ export default function Booking() {
               </button>
             </div>
           </div>
-          <div className="w-[90vw] lg:w-full ml-4 max-w-screen ">
+          <div className=" lg:w-full mx-4 max-w-screen ">
             <section className="">
               <div
-                className="p-6  w-[90vw] lg:w-full border-y-2 shadow-sm border-gray-400  bg-gray-50 group"
+                className="p-6   lg:w-full border-y-2 shadow-sm border-gray-400  bg-gray-50 group"
                 open>
                 <div className="flex items-center justify-between cursor-pointer">
                   <div className="w-full">
@@ -304,7 +305,7 @@ export default function Booking() {
             </section>
           </div>
           <div className="hidden lg:flex">
-              <div className=" z-[8] -top-10  absolute lg:relative right-0 float-right h-screen lg:h-full min-w-max overflow-auto">
+              <div className=" z-[7] -top-10  absolute lg:relative right-0 float-right h-screen lg:h-full min-w-max overflow-auto">
                 <Summary
                   location={data.location}
                   destination={data.destination}

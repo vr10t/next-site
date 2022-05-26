@@ -10,7 +10,7 @@ export default function Announcement(props) {
       </p>
     
       <button
-        className=" h-12  sm:mr-20 relative  w-max sm:my-0  px-4  text-md font-medium text-center text-white transition bg-blue-400 rounded-lg sm:mt-0 hover:bg-slate-500/90 active:text-emerald-100 focus:outline-none focus:ring"
+        className="h-8 sm:h-10  sm:mr-20 relative  w-max sm:my-0  px-4  text-md font-medium text-center text-white transition bg-blue-400 rounded-lg sm:mt-0 hover:bg-slate-500/90 active:text-emerald-100 focus:outline-none focus:ring"
         >
     
         Get Started 
