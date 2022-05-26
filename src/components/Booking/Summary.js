@@ -43,7 +43,7 @@ export default function Summary(props) {
             </div>{" "}
           </div>
           <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto bg-gray-200 mt-5 p-4 lg:p-4 rounded-2xl">
-            <div className="col-span-1 text-3xl text-sky-500 my-auto">
+            <div className="col-span-1 text-3xl text-gray-800 my-auto">
               {" "}
               <FaMapMarkerAlt />
             </div>
@@ -60,7 +60,7 @@ export default function Summary(props) {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto bg-gray-200 mt-5 p-4 lg:p-4 rounded-2xl">
-            <div className="col-span-1 text-3xl text-sky-500 my-auto">
+            <div className="col-span-1 text-3xl text-gray-800 my-auto">
               {" "}
               <FaMapPin />
             </div>
@@ -77,7 +77,7 @@ export default function Summary(props) {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto bg-gray-200 mt-5 p-4 lg:p-4 rounded-2xl">
-            <div className="col-span-1 text-3xl text-sky-500 my-auto">
+            <div className="col-span-1 text-3xl text-gray-800 my-auto">
               {" "}
               <BsFillPersonPlusFill />
             </div>
@@ -92,7 +92,7 @@ export default function Summary(props) {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto bg-gray-200 mt-5 p-4 lg:p-4 rounded-2xl">
-            <div className="col-span-1 text-3xl text-sky-500 my-auto">
+            <div className="col-span-1 text-3xl text-gray-800 my-auto">
               {" "}
               <BsCalendarFill />
             </div>
@@ -107,7 +107,7 @@ export default function Summary(props) {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-2 px-4  w-5/6 m-auto bg-gray-200 mt-5 p-4 lg:p-4 rounded-2xl">
-            <div className="col-span-1 text-3xl text-sky-500 my-auto">
+            <div className="col-span-1 text-3xl text-gray-800 my-auto">
               {" "}
               <BsClockFill />
             </div>

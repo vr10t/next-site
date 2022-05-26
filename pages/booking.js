@@ -133,6 +133,7 @@ export default function Booking() {
   function handleLogin() {
     console.log("login");
   }
+  const handleSelectPayment= (e)=>{console.log(e.target.value)}
   return (
     <>
       <Layout>
@@ -143,8 +144,10 @@ export default function Booking() {
           />
         )}
 
-        <div className="static justify-center  mt-64 w-[95vw] sm:w-[97vw] mx-auto lg:  max-w-screen bg-red-400 overflow-x-none flex flex-col lg:flex-row  ">
-        <div className="absolute top-56 bg-gray-100 w-[95vw] lg:w-[97vw] mx-auto h-32 flex items-center justify-center z-[8] text-4xl font-medium text-center text-gray-800">Youre almost there!</div>
+        <div className="static justify-center  mt-64 w-[95vw] sm:w-[97vw] mx-auto lg:  max-w-screen bg-gray-100 overflow-x-none flex flex-col lg:flex-row  ">
+          <div className="absolute top-56 bg-gray-100 w-[95vw] lg:w-[97vw] mx-auto h-32 flex items-center justify-center z-[8] text-4xl font-medium text-center text-gray-800">
+            Youre almost there!
+          </div>
           <div>
             {showSummary && (
               <div className=" flex  lg:hidden">
@@ -162,7 +165,6 @@ export default function Booking() {
                 </div>
               </div>
             )}
-           
 
             <div
               onClick={() => setShowSummary(!showSummary)}
@@ -211,13 +213,40 @@ export default function Booking() {
 
               <button
                 disabled={true}
-                className="flex items-center my-2 mx-4 justify-center rounded-lg w-full text-center  h-16  text-2xl font-medium text-gray-50 bg-sky-500 disabled:bg-gray-400">
+                className="flex items-center my-2 mx-12 justify-center rounded-lg w-full text-center  h-16  text-2xl font-medium text-gray-50 bg-sky-500 disabled:bg-gray-400">
                 Book Now
               </button>
             </div>
           </div>
           <div className=" lg:w-full mx-4 max-w-screen ">
             <section className="">
+              <div className="w-full bg-gray-100 tracking-wider font-medium text-lg text-gray-600">
+                CHOOSE YOUR SERVICE
+              </div>
+              <button className="group min-w-fit flex gap-4 items-center appearance-none bg-fuchsia-300 w-full p-4 my-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44">
+                <div className="w-20 h-20 sm:w-32 min-w-max sm:h-32 bg-gray-300">
+                  <div className="w-20 h-20 sm:w-32 sm:h-32"></div>
+                </div>
+                <div className="flex flex-col text-left gap-2 max-w-md max-h-full">
+                  <p className="text-lg">Item name</p>
+                  <p className="text-sm max-h-32 overflow-auto">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Sunt distinctio earum repellat quaerat voluptatibus placeat
+                    nam, commodi optio pariatur{" "}
+                  </p>
+                </div>
+                <div className="flex flex-col items-center justify-center">
+                  <p>Icons</p>
+                  <p>Icons</p>
+                  <p>Icons</p>
+                </div>
+              </button>
+              
+            </section>
+            <section className="">
+              <div className="w-full bg-gray-100 tracking-wider font-medium text-lg text-gray-600">
+                PASSENGER DETAILS
+              </div>
               <div
                 className="p-6   lg:w-full border-y-2 shadow-sm border-gray-400  bg-gray-50 group"
                 open>
@@ -288,36 +317,31 @@ export default function Booking() {
               </div>
             </section>
             <section className="">
-              <button className="group min-w-fit flex gap-4 items-center appearance-none bg-emerald-200 w-full p-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44">
-                <div className="w-20 h-20 sm:w-32 min-w-max sm:h-32 bg-gray-300">
-                  <div className="w-20 h-20 sm:w-32 sm:h-32"></div>
-                </div>
-                    <div className="flex flex-col text-left gap-2 max-w-md max-h-full">
-                      <p className="text-lg">Name of the thing</p>
-                      <p className="text-sm max-h-32 overflow-auto">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt distinctio earum repellat quaerat voluptatibus placeat nam, commodi optio pariatur </p>
-                    </div>
-                    <div className="flex flex-col items-center justify-center">
-                  <p>Icons</p>
-                  <p>Icons</p>
-                  <p>Icons</p>
-                    </div>
-              </button>
+              <div className="w-full bg-gray-100 tracking-wider font-medium text-lg text-gray-600">
+                PAYMENT
+              </div>
+              <div className="p-6   lg:w-full  shadow-sm border-gray-400  bg-gray-50 group">
+                <select className="rounded-lg flex-1 appearance-none border-0 w-full py-2 px-4 bg-gray-50 text-gray-600 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-500 " onChange={handleSelectPayment}>
+                  <option className="" >Cash</option>
+                  <option className="appearance-none rounded-b-md">Card</option>
+                </select>
+              </div>
             </section>
           </div>
           <div className="hidden lg:flex">
-              <div className=" z-[7] -top-10  absolute lg:relative right-0 float-right h-screen lg:h-full min-w-max overflow-auto">
-                <Summary
-                  location={data.location}
-                  destination={data.destination}
-                  passengers={data.passengers}
-                  date={data.date}
-                  time={data.time}
-                  price={data.total_trip_price}
-                  distance={data.distance}
-                  duration={data.duration}
-                />
-              </div>
+            <div className=" z-[7] -top-10  absolute lg:relative right-0 float-right h-screen lg:h-full min-w-max overflow-auto">
+              <Summary
+                location={data.location}
+                destination={data.destination}
+                passengers={data.passengers}
+                date={data.date}
+                time={data.time}
+                price={data.total_trip_price}
+                distance={data.distance}
+                duration={data.duration}
+              />
             </div>
+          </div>
         </div>
         <div className="h-96"></div>
         <button
