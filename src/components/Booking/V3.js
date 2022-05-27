@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useAppContext } from "../../context/state";
-import Map from  "../Map.tsx"
+import Map from  "../Map.js"
 import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
 import { getURL } from "next/dist/shared/lib/utils";
 import { Loader } from "@googlemaps/js-api-loader";

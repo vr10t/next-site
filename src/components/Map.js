@@ -2,7 +2,7 @@ import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import { useState, useRef, useEffect } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 export default function Map() {
-  const googleApiKey: string = process.env.NEXT_PUBLIC_GOOGLE_API_KEY!;
+  const googleApiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
   const loader = new Loader({
     apiKey: googleApiKey,
     version: "weekly",
@@ -10,14 +10,10 @@ export default function Map() {
   });
   loader.load();
   const ref = useRef<HTMLDivElement>(null);
-  const [map, setMap] = useState<google.maps.Map>();
-  interface MapProps extends google.maps.MapOptions {
-    style: { [key: string]: string };
-    onClick?: (e: google.maps.MapMouseEvent) => void;
-    onIdle?: (map: google.maps.Map) => void;
-  }
+  const [map, setMap] = useState();
+ 
 
-  const Map: React.FC<MapProps> = ({
+  const Map = ({
     onClick,
     onIdle,
     children,
@@ -29,7 +25,7 @@ export default function Map() {
       setMap(new window.google.maps.Map(ref.current, {}));
     }
   }, [ref, map]);
-  const render = (status: Status) => {
+  const render = (status) => {
     return <div ref={ref} style={style} />;
   };
   useDeepCompareEffectForMaps(() => {
