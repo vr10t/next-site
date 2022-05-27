@@ -25,33 +25,34 @@ export default function Map() {
       setMap(new window.google.maps.Map(ref.current, {}));
     }
   }, [ref, map]);
-  const render = (status) => {
-    return <div ref={ref} style={style} />;
-  };
-  useDeepCompareEffectForMaps(() => {
-    if (map) {
-      map.setOptions(options);
-    }
-  }, [map, options]);
-  useEffect(() => {
-    if (map) {
-      ["click", "idle"].forEach((eventName) =>
-        google.maps.event.clearListeners(map, eventName)
-      );
+  // const render = (status) => {
+  //   return <div ref={ref} style={style} />;
+   // };
+  // useDeepCompareEffectForMaps(() => {
+  //   if (map) {
+  //     map.setOptions(options);
+  //   }
+  // }, [map, options]);
+  // useEffect(() => {
+  //   if (map) {
+  //     ["click", "idle"].forEach((eventName) =>
+  //       google.maps.event.clearListeners(map, eventName)
+  //     );
   
-      if (onClick) {
-        map.addListener("click", onClick);
-      }
+  //     if (onClick) {
+  //       map.addListener("click", onClick);
+  //     }
   
-      if (onIdle) {
-        map.addListener("idle", () => onIdle(map));
-      }
-    }
-  }, [map, onClick, onIdle]);
+  //     if (onIdle) {
+  //       map.addListener("idle", () => onIdle(map));
+  //     }
+  //   }
+  // }, [map, onClick, onIdle]);
 
   return (
-    <Wrapper apiKey={googleApiKey} libraries={["places"]} render={render}>
-     <Map />
-    </Wrapper>
+    // <Wrapper apiKey={googleApiKey} >
+    //  <Map />
+    // </Wrapper>
+    <div ></div>
   );
 }

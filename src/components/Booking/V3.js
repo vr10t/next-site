@@ -31,11 +31,11 @@ const Form = () => {
     version: "weekly",
     libraries: ["places"]
   });
-  // loader
-  // .load()
-  // .then(()=>{
-  //   setMapsLoaded(true)}
-  // )
+  loader
+  .load()
+  .then(()=>{
+    setMapsLoaded(true)}
+  )
   const { data, setData } = useAppContext();
   useCallback(() => {}, [onSubmit]);
   const [origin, setOrigin] = useState("");
