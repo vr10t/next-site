@@ -5,7 +5,7 @@ import useSWR from "swr";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useCallback, useState } from "react";
 import { useAppContext, useAuthContext } from "../src/context/state";
-import distance from "hpsweb-google-distance";
+
 import Layout from "../src/components/layout";
 import Announcement from "../src/components/Announcement";
 import Receipt from "../src/components/Svg/Receipt";
@@ -17,6 +17,14 @@ import { BsCalendarFill } from "@react-icons/all-files/bs/BsCalendarFill";
 import { FaCreditCard } from "@react-icons/all-files/fa/FaCreditCard";
 import { BsFillPersonFill } from "@react-icons/all-files/bs/BsFillPersonFill";
 import { FaAngleUp } from "@react-icons/all-files/fa/FaAngleUp";
+import { FaMoneyBill } from "@react-icons/all-files/fa/FaMoneyBill";
+import {FaUsers} from "@react-icons/all-files/fa/FaUsers"
+import {FaSuitcase } from "@react-icons/all-files/fa/FaSuitcase"
+import Link from "next/link";
+import Image from "next/image";
+import { Loader } from '@googlemaps/js-api-loader';
+
+
 
 export default function Booking() {
   const [distanceResults, setDistanceResults] = useState("");
@@ -35,9 +43,27 @@ export default function Booking() {
     : "fixed flex  bottom-32 w-screen text-gray-50 text-3xl justify-center bg-sky-500 h-8";
   const completed = "mx-auto py-2 text-sky-500 ";
   const uncompleted = "mx-auto py-2 text-gray-500 ";
+  const serviceSelected="ring-2 ring-sky-400 bg-sky-400"
+  let service
+  const loader = new Loader({
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
+    version: "weekly",
+    libraries: ["places"]
+  });
+  loader
+  .load()
+  .then((google) => {
+   service = new google.maps.DistanceMatrixService();
+    console.log(service)
+  })
+  .catch(e => {
+   console.log(e)
+  });
+  
   useEffect(() => {
     console.log(session);
     console.log(window.innerWidth);
+    // console.log(service)
   }, []);
 
   useEffect(() => {
@@ -58,7 +84,7 @@ export default function Booking() {
         //set booking details to saved data from sessionStorage
         setDataToParsedData(parsedData);
         console.log(data);
-        console.log("data is set to parsedData");
+        console.log("data is set to parsedData",parsedData.location, parsedData.destination);
         handleGetDistance(parsedData.location, parsedData.destination);
         data.distance = distanceResults.distance;
       } else {
@@ -83,22 +109,37 @@ export default function Booking() {
     console.log("distanceResults:", distanceResults, "data:", data);
   }, [distanceResults]);
   function handleGetDistance(location, destination) {
-    distance.apiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
-    distance
-      .get({
-        origin: `${location}`,
-        destination: `${destination}`,
-        units: "imperial",
-      })
-      .then((data) => {
-        setDistanceResults(data);
-        console.log(data);
-      })
-      .catch(function (err) {
-        console.log(err);
-        //TODO: implement better alert
-        alert("Please provide a valid route");
-      });
+    // distance.apiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
+    // distance
+    //   .get({
+    //     origin: `${location}`,
+    //     destination: `${destination}`,
+    //     units: "imperial",
+    //   })
+    //   .then((data) => {
+    //     setDistanceResults(data);
+    //     console.log(data);
+    //   })
+    //   .catch(function (err) {
+    //     console.log(err);
+    //     //TODO: implement better alert
+    //     alert("Please provide a valid route");
+    //   });
+      service.getDistanceMatrix(
+        {
+          origins: [location],
+          destinations: [destination],
+          travelMode: google.maps.TravelMode.DRIVING,
+          unitSystem: google.maps.UnitSystem.IMPERIAL,
+          avoidTolls: true,
+        }, callback);
+      
+      function callback(response, status) {
+        console.log(response.rows[0].elements[0])
+        let distance=response.rows[0].elements[0].distance.text
+        let duration=response.rows[0].elements[0].duration.text
+        setDistanceResults({distance:distance,duration:duration})
+      }
   }
   function setDataToParsedData(obj) {
     data.location = obj.location;
@@ -133,7 +174,14 @@ export default function Booking() {
   function handleLogin() {
     console.log("login");
   }
-  const handleSelectPayment= (e)=>{console.log(e.target.value)}
+  const handleSelectPayment = (e) => {
+    console.log(e.target.value);
+  };
+  const handleSelectService = (e) => {
+    e.target.class=serviceSelected
+    console.log(e.target.class)
+
+  }
   return (
     <>
       <Layout>
@@ -223,30 +271,36 @@ export default function Booking() {
               <div className="w-full bg-gray-100 tracking-wider font-medium text-lg text-gray-600">
                 CHOOSE YOUR SERVICE
               </div>
-              <button className="group min-w-fit flex gap-4 items-center appearance-none bg-gray-50 w-full p-4 my-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44">
-                <div className="w-20 h-20 sm:w-32 min-w-max sm:h-32 bg-gray-300">
-                  <div className="w-20 h-20 sm:w-32 sm:h-32"></div>
+              
+              <a group  id="serviceStandard" onClick={handleSelectService}  className="group min-w-fit flex gap-4 items-center appearance-none bg-gray-50 w-full p-4 my-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44">
+                <div className="w-20 h-20 sm:w-32 min-w-max sm:h-32 ">
+                  <div className="w-20 h-20 sm:w-32 flex items-center sm:h-32">
+                    <Image src="/standard.webp" width="220px" height="90px" />
+                  </div>
                 </div>
-                <div className="flex flex-col text-left gap-2 max-w-md max-h-full">
-                  <p className="text-lg">Item name</p>
-                  <p className="text-sm max-h-32 overflow-auto">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Sunt distinctio earum repellat quaerat voluptatibus placeat
-                    nam, commodi optio pariatur{" "}
-                  </p>
+                <div className="flex flex-col text-left gap-2 w-full max-w-xl max-h-full">
+                  <p className="text-lg">Standard</p>
+                  <ul className="hidden  text-sm xs:flex flex-col max-h-32 overflow-auto text-gray-500">
+                  Includes: 
+                  
+                  <li className="flex overflow-clip "><FaCheck className="text-green-400 text-md pr-2 min-w-max " /> Free cancelation up to 24 hours before pickup</li>
+                  <li className="flex overflow-clip"><FaCheck className="text-green-400 text-md pr-2 min-w-max " />  Taxes & Fees included</li>
+                  <li className="flex overflow-clip"><FaCheck className="text-green-400 text-md pr-2 min-w-max" />  60 min. Free Waiting Time</li>
+                  </ul>
                 </div>
                 <div className="flex flex-col items-center justify-center">
-                  <p>Icons</p>
-                  <p>Icons</p>
-                  <p>Icons</p>
+                  <p><FaUsers className="text-sky-400" />3</p>
+                  <p><FaSuitcase className="text-sky-400"/>2</p>
+                  
                 </div>
-              </button>
-              
+              </a>
             </section>
             <section className="">
-              <div className="w-full bg-gray-100 tracking-wider font-medium text-lg text-gray-600">
-                PASSENGER DETAILS
+              <div className="w-full inline-flex bg-gray-100 tracking-wider font-medium text-lg text-gray-600">
+                PASSENGER DETAILS<p className="mx-8 justify-center"> or </p><Link  href="/signin"><a className=" text-lg hover:text-sky-400 flex ">SIGN IN</a></Link>
+                {/* <div>or </div> */}
               </div>
+             
               <div
                 className="p-6   lg:w-full border-y-2 shadow-sm border-gray-400  bg-gray-50 group"
                 open>
@@ -321,9 +375,11 @@ export default function Booking() {
                 PAYMENT
               </div>
               <div className="p-6   lg:w-full  shadow-sm border-gray-400  bg-gray-50 group">
-                <select className="rounded-lg flex-1 appearance-none border-0 w-full py-2 px-4 bg-gray-50 text-gray-600 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-500 " onChange={handleSelectPayment}>
-                  <option className="" >Cash</option>
-                  <option className="appearance-none rounded-b-md">Card</option>
+                <select
+                  className="rounded-lg flex-1 appearance-none border-0 w-full py-2 px-4 bg-gray-50 text-gray-600 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-500 "
+                  onChange={handleSelectPayment}>
+                  <option className=""><FaMoneyBill />Cash</option>
+                  <option className="appearance-none rounded-b-md"><FaCreditCard/> Card</option>
                 </select>
               </div>
             </section>

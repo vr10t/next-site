@@ -15,14 +15,27 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useAppContext } from "../../context/state";
-import Map from  "../Map"
+import Map from  "../Map.tsx"
 import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
 import { getURL } from "next/dist/shared/lib/utils";
+import { Loader } from "@googlemaps/js-api-loader";
+
 
 const PlacesAutocomplete = dynamic(() => import("react-places-autocomplete"));
 // const HCaptcha = dynamic(() => import("@hcaptcha/react-hcaptcha"));
 
 const Form = () => {
+  const [mapsLoaded, setMapsLoaded]= useState(false)
+  const loader = new Loader({
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
+    version: "weekly",
+    libraries: ["places"]
+  });
+  // loader
+  // .load()
+  // .then(()=>{
+  //   setMapsLoaded(true)}
+  // )
   const { data, setData } = useAppContext();
   useCallback(() => {}, [onSubmit]);
   const [origin, setOrigin] = useState("");
@@ -60,8 +73,8 @@ const Form = () => {
    function onSubmit(e) {
     
     JSON.stringify(e, null, 4);
-    let formData= Object.assign(e, {location: origin,destination: destination})
-    
+    let formData= e;
+    Object.assign(formData, {location: origin,destination: destination})
    
       setData(formData),
       
@@ -152,11 +165,14 @@ const Form = () => {
   },[])
   
   return (
-    <div className="relative  z-[9] w-max justify-center mx-auto bg-none py-4 ">
+    <div className="relative  z-[9]  justify-center mx-auto bg-none py-4 w-full">
+    {mapsLoaded&&
+    <Map>asasa  </Map>
+    }
       <form id="booking" onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid grid-rows-1 md:grid-rows-2 gap-2 justify-center">
-          <div className="flex flex-col gap-2 lg:flex-row ">
-            <div className="flex flex-row rounded-lg mx-2 border-1 border-gray-900">
+        <div className="grid grid-rows-1 md:grid-rows-2 gap-2 justify-center ">
+          <div className="flex flex-col gap-2 lg:flex-row w-96 ">
+            <div className="flex flex-row rounded-lg mx-2 ">
               {" "}
               <span className="inline-flex  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadow-sm text-lg">
                 <label htmlFor="location" className="sr-only ">
@@ -164,10 +180,11 @@ const Form = () => {
                 </label>
                 <FaMapMarkerAlt />
               </span>
-              <PlacesAutocomplete
+              {mapsLoaded &&<PlacesAutocomplete
                 value={origin}
                 onChange={handleChangeOrigin}
-                onSelect={handleSelectOrigin}>
+                onSelect={handleSelectOrigin}
+                searchOptions={{componentRestrictions:{country:"gb"}}}>
                 {({
                   getInputProps,
                   suggestions,
@@ -180,7 +197,7 @@ const Form = () => {
                       {...getInputProps({
                         id: "location",
                         className:
-                          "truncate border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-100",
+                          "truncate border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-96 py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-100",
                         name: "location",
                         type: "text",
                         required: true,
@@ -191,18 +208,20 @@ const Form = () => {
                     <div className="absolute bg-gray-50 w-max max-w-xs ">
                       {loading && <div>Loading...</div>}
                       {suggestions.map((suggestion) => {
-                        const className = suggestion.active
+                        let className = suggestion.active
                           ? "bg-gray-200 py-2 px-4 max-w-xs"
                           : "bg-gray-50 py-2 px-4 max-w-xs";
                         // inline style for demonstration purpose
-                        const style = suggestion.active
+                        let style = suggestion.active
                           ? { backgroundColor: "rgb(229 231 235)", cursor: "pointer" }
                           : { backgroundColor: "rgb(249 250 251)", cursor: "pointer" };
+                          let key=suggestion.value
                         return (
                           <div
                             {...getSuggestionItemProps(suggestion, {
                               className,
                               style,
+                              key
                             })}>
                             <span>{suggestion.description}</span>
                           </div>
@@ -211,7 +230,7 @@ const Form = () => {
                     </div>
                   </div>
                 )}
-              </PlacesAutocomplete>
+              </PlacesAutocomplete>}
               
             </div>
             <span className="flex absolute text-gray-700 w-6 right-5 my-3  ">
@@ -224,10 +243,11 @@ const Form = () => {
                 </label>
                 <FaMapPin />
               </span>
-              <PlacesAutocomplete
+              {mapsLoaded &&<PlacesAutocomplete
                 value={destination}
                 onChange={handleChangeDestination}
-                onSelect={handleSelectDestination}>
+                onSelect={handleSelectDestination}
+                searchOptions={{componentRestrictions:{country:"gb"}}}>
                 {({
                   getInputProps,
                   suggestions,
@@ -239,7 +259,7 @@ const Form = () => {
                       {...register("destination")}
                       {...getInputProps({
                         id: "destination",
-                        className: " truncate border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-100",
+                        className: " truncate border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-96 py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-100",
                         name: "destination",
                         type: "text",
                         required: true,
@@ -269,7 +289,7 @@ const Form = () => {
                     </div>
                   </div>
                 )}
-              </PlacesAutocomplete>
+              </PlacesAutocomplete>}
             </div>
 
             <div className="flex flex-row rounded-lg mx-2 border-1 border-gray-900">
@@ -283,7 +303,7 @@ const Form = () => {
               <input
                 {...register("passengers")}
                 id="passengers"
-                className=" border-0 rounded-r-md flex-1 appearance-none focus-ring-full md:w-44 py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600"
+                className=" w-96 border-0 rounded-r-md flex-1 appearance-none focus-ring-full md:w-44 py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600"
                 name="passengers"
                 required={true}
                 type="number"
@@ -305,7 +325,7 @@ const Form = () => {
               <input
                 {...register("date")}
                 id="date"
-                className=" border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600"
+                className=" border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-96 py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600"
                 name="date"
                 required={true}
                 type="date"
@@ -323,7 +343,7 @@ const Form = () => {
               <input
                 {...register("time")}
                 id="time"
-                className=" border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600"
+                className=" border-0 rounded-r-md flex-1 appearance-none focus-ring-full w-96 py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600"
                 name="time"
                 required={true}
                 type="time"
