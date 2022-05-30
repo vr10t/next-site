@@ -26,7 +26,11 @@ import Image from "next/image";
 import { Loader } from "@googlemaps/js-api-loader";
 import { Tooltip } from "flowbite-react";
 import { Dropdown } from "flowbite-react";
-import{ Datepicker} from "flowbite-react"
+import {FaEnvelope} from "@react-icons/all-files/fa/FaEnvelope"
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
+
 
 export default function Booking() {
   const [distanceResults, setDistanceResults] = useState("");
@@ -47,9 +51,27 @@ export default function Booking() {
   const uncompleted = "mx-auto py-2 text-gray-500 ";
   const [serviceSelected, setServiceSelected] = useState(null);
   const selectedServiceClass = "ring-2 ring-sky-400 bg-sky-400";
-  const [paymentMethod, setPaymentMethod]=useState(null)
+  const [paymentMethod, setPaymentMethod] = useState(null);
   const [canSubmit, setCanSubmit] = useState(false);
   let service;
+  const validationSchema = Yup.object().shape({
+    
+    name: Yup.string()
+        .required('Name is required'),
+    dob: Yup.string()
+        .required('Phone number is required')
+        .matches(/^(((\+44\s?\d{4}|\(?0\d{4}\)?)\s?\d{3}\s?\d{3})|((\+44\s?\d{3}|\(?0\d{3}\)?)\s?\d{3}\s?\d{4})|((\+44\s?\d{2}|\(?0\d{2}\)?)\s?\d{4}\s?\d{4}))(\s?\#(\d{4}|\d{3}))?$/, 'Phone number is invalid'),
+    email: Yup.string()
+        .required('Email is required')
+        .email('Email is invalid'),
+    acceptTerms: Yup.bool()
+        .oneOf([true], 'Accept Ts & Cs is required')
+});
+const formOptions = { resolver: yupResolver(validationSchema) };
+
+// get functions to build form with useForm() hook
+const { register, handleSubmit, reset, formState } = useForm(formOptions);
+const { errors } = formState;
   const loader = new Loader({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
     version: "weekly",
@@ -147,8 +169,8 @@ export default function Booking() {
     data.duration = obj.duration;
     data.total_trip_price = obj.total_trip_price;
     data.service = obj.service;
-    data.payment=obj.payment;
-    data.session=obj.session;
+    data.payment = obj.payment;
+    data.session = obj.session;
   }
   function calculatePrice() {
     try {
@@ -176,13 +198,12 @@ export default function Booking() {
     console.log("login");
   }
   const handleSelectPayment = (e) => {
-    if(e.target.innerText!==undefined){
-      console.log(e.target.innerText)
-      setPaymentMethod(e.target.innerText)
-      data.payment = e.target.innerText
+    if (e.target.innerText !== undefined) {
+      console.log(e.target.innerText);
+      setPaymentMethod(e.target.innerText);
+      data.payment = e.target.innerText;
+      window.sessionStorage.setItem("BOOKING_DATA", JSON.stringify(data));
     }
-    
-    
   };
   const handleSelectService = (e) => {
     if (e.target.id !== "") {
@@ -196,6 +217,11 @@ export default function Booking() {
   function handleBooking() {
     console.log("booked");
   }
+  function onSubmit(data) {
+    // display form data on success
+    alert('SUCCESS!! :-)\n\n' + JSON.stringify(data, null, 4));
+    return false;
+}
   return (
     <>
       <Layout>
@@ -328,18 +354,18 @@ export default function Booking() {
                   </ul>
                 </div>
                 <div className="flex flex-col justify-center items-center">
-                  <p>
+                  <div>
                     <Tooltip style="light" content="Passengers">
                       <FaUsers className="text-sky-400" />
                     </Tooltip>
                     3
-                  </p>
-                  <p>
+                  </div>
+                  <div>
                     <Tooltip style="light" content="Luggage">
                       <FaSuitcase className="text-sky-400" />
                     </Tooltip>
                     2
-                  </p>
+                  </div>
                   <input
                     className="hidden"
                     id="serviceStandard"
@@ -389,39 +415,35 @@ export default function Booking() {
                 </div>
               </label>
             </form>
-            <section className="">
-              <div className="inline-flex w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
-                PASSENGER DETAILS<p className="justify-center mx-8"> or </p>
+            <section onClick={handleSubmit(onSubmit)} className="">
+              <div className="flex items-stretch w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
+              <p className="grow" > PASSENGER DETAILS</p><p className="self-end mr-2 text-sm"> or </p>
                 <Link href="/signin">
-                  <a className="flex text-lg hover:text-sky-400">SIGN IN</a>
+                  <a className="self-end text-sm text-sky-600 hover:text-sky-400">Sign In</a>
                 </Link>
                 {/* <div>or </div> */}
               </div>
 
               <div
                 className="p-6 bg-gray-50 border-gray-400 shadow-sm lg:w-full border-y-2 group"
-                open>
+                >
                 <div className="flex justify-between items-center cursor-pointer">
                   <div className="w-full">
                     <form onSubmit={handleLogin} autoComplete="off">
                       <div className="flex relative mb-2 w-full shadow-sm">
-                        <span className="inline-flex items-center px-3 text-sm text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm">
-                          <svg
-                            width="15"
-                            height="15"
-                            fill="currentColor"
-                            viewBox="0 0 1792 1792"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1792 710v794q0 66-47 113t-113 47h-1472q-66 0-113-47t-47-113v-794q44 49 101 87 362 246 497 345 57 42 92.5 65.5t94.5 48 110 24.5h2q51 0 110-24.5t94.5-48 92.5-65.5q170-123 498-345 57-39 100-87zm0-294q0 79-49 151t-122 123q-376 261-468 325-10 7-42.5 30.5t-54 38-52 32.5-57.5 27-50 9h-2q-23 0-50-9t-57.5-27-52-32.5-54-38-42.5-30.5q-91-64-262-182.5t-205-142.5q-62-42-117-115.5t-55-136.5q0-78 41.5-130t118.5-52h1472q65 0 112.5 47t47.5 113z"></path>
-                          </svg>
+                        <span className="inline-flex items-center px-3 text-lg text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm">
+                          <BsFillPersonFill />
                         </span>
-                        <input
-                          name="email"
-                          type="email"
-                          id="email"
+                        <input onClick={(e)=>console.log(e)}
+                        onKeyDownCapture={(e)=>{console.log(e)}}
+                        {...register('name')}
+                          name="name"
+                          type="text"
+                          id="name"
                           className="flex-1 px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-sky-500"
-                          placeholder="Your email"
+                          placeholder="Your full name"
                         />
+                        <div className="invalid-feedback">{errors.title?.message}</div>
                       </div>
 
                       <div className="flex relative mb-2 w-full shadow-sm">
@@ -471,19 +493,22 @@ export default function Booking() {
               <div className="w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
                 PAYMENT
               </div>
-              <div className="p-6 bg-gray-50 border-gray-400 shadow-sm lg:w-full group">
-                <Dropdown label="Payment Method" >
-                  <Dropdown.Item onClick={handleSelectPayment} className="!z-[2]">
+              <div className="flex justify-center p-6 bg-gray-50 border-gray-400 shadow-sm lg:w-full">
+                <Dropdown  label="Payment Method" size="xl" >
+                  <Dropdown.Item
+                    onClick={handleSelectPayment}
+                    className="!z-[2]">
                     <FaMoneyBill className="inline-flex gap-4 text-lg" />
                     <p className="inline-flex ml-2 font-semibold">Cash</p>
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={handleSelectPayment} className="rounded-b-md appearance-none">
-                    <FaCreditCard className="inline-flex gap-4 text-lg" />{" "}
-                    <p className="inline-flex ml-1 font-semibold">Card</p>
+                  <Dropdown.Item
+                    onClick={handleSelectPayment}
+                    className="rounded-b-md appearance-none">
+                    <FaCreditCard className="inline-flex gap-4 text-lg" />
+                    <p className="inline-flex ml-2 font-semibold">Card</p>
                   </Dropdown.Item>
                 </Dropdown>
               </div>
-             
             </section>
           </div>
           <div className="hidden lg:flex">
