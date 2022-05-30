@@ -9,7 +9,7 @@ import { BsClockFill } from "@react-icons/all-files/bs/BsClockFill";
 import InputField from "./InputField2";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import styles from "./Form.module.css";
+import styles from "./Form.module.scss";
 import bg2 from "../../../public/bg-2.jpg";
 import dynamic from "next/dynamic";
 

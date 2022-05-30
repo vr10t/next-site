@@ -21,15 +21,15 @@ export default function Footer() {
           <section className="text-center ">
             <div className="grid sm:grid-cols-2 md:grid-cols-4">
               <div className="mb-4 flex flex-col ">
-                <h5 className="text-uppercase">Address</h5>
+                <p className="text-uppercase">Address</p>
 
-                <h7 className="text-gray-50">
+                <p className="text-gray-50">
                   123, Lorem Street, Hemel Hempstead, Beds, HP1 ABC
-                </h7>
+                </p>
               </div>
 
               <div className="mb-4 flex flex-col">
-                <h5 className="text-uppercase">Social</h5>
+                <p className="text-uppercase">Social</p>
 
                 <section className="mb-2 flex justify-center ">
                   <a
@@ -56,7 +56,7 @@ export default function Footer() {
               </div>
 
               <div className="mb-4 flex flex-col">
-                <h5 className="text-uppercase">Contact</h5>
+                <p className="text-uppercase">Contact</p>
 
                 <ul className="list-unstyled mb-0">
                   <li>
@@ -72,7 +72,7 @@ export default function Footer() {
                 </ul>
               </div>
               <div className="mb-4 flex flex-col">
-                <h5 className="text-uppercase">Useful Links</h5>
+                <p className="text-uppercase">Useful Links</p>
 
                 <ul className="list-unstyled mb-0">
                   <li>

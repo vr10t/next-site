@@ -18,13 +18,15 @@ import { FaCreditCard } from "@react-icons/all-files/fa/FaCreditCard";
 import { BsFillPersonFill } from "@react-icons/all-files/bs/BsFillPersonFill";
 import { FaAngleUp } from "@react-icons/all-files/fa/FaAngleUp";
 import { FaMoneyBill } from "@react-icons/all-files/fa/FaMoneyBill";
-import {FaUsers} from "@react-icons/all-files/fa/FaUsers"
-import {FaSuitcase } from "@react-icons/all-files/fa/FaSuitcase"
+import { FaUsers } from "@react-icons/all-files/fa/FaUsers";
+import { FaSuitcase } from "@react-icons/all-files/fa/FaSuitcase";
+import { FaTaxi } from "@react-icons/all-files/fa/FaTaxi";
 import Link from "next/link";
 import Image from "next/image";
-import { Loader } from '@googlemaps/js-api-loader';
-
-
+import { Loader } from "@googlemaps/js-api-loader";
+import { Tooltip } from "flowbite-react";
+import { Dropdown } from "flowbite-react";
+import{ Datepicker} from "flowbite-react"
 
 export default function Booking() {
   const [distanceResults, setDistanceResults] = useState("");
@@ -43,23 +45,25 @@ export default function Booking() {
     : "fixed flex  bottom-32 w-screen text-gray-50 text-3xl justify-center bg-sky-500 h-8";
   const completed = "mx-auto py-2 text-sky-500 ";
   const uncompleted = "mx-auto py-2 text-gray-500 ";
-  const serviceSelected="ring-2 ring-sky-400 bg-sky-400"
-  let service
+  const [serviceSelected, setServiceSelected] = useState(null);
+  const selectedServiceClass = "ring-2 ring-sky-400 bg-sky-400";
+  const [paymentMethod, setPaymentMethod]=useState(null)
+  const [canSubmit, setCanSubmit] = useState(false);
+  let service;
   const loader = new Loader({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
     version: "weekly",
-    libraries: ["places"]
+    libraries: ["places"],
   });
   loader
-  .load()
-  .then((google) => {
-   service = new google.maps.DistanceMatrixService();
-    console.log(service)
-  })
-  .catch(e => {
-   console.log(e)
-  });
-  
+    .load()
+    .then((google) => {
+      service = new google.maps.DistanceMatrixService();
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+
   useEffect(() => {
     console.log(session);
     console.log(window.innerWidth);
@@ -84,13 +88,16 @@ export default function Booking() {
         //set booking details to saved data from sessionStorage
         setDataToParsedData(parsedData);
         console.log(data);
-        console.log("data is set to parsedData",parsedData.location, parsedData.destination);
+        console.log(
+          "data is set to parsedData",
+          parsedData.location,
+          parsedData.destination
+        );
         handleGetDistance(parsedData.location, parsedData.destination);
         data.distance = distanceResults.distance;
       } else {
         //if no booking data is saved, get distance and save data
         handleGetDistance(data.location, data.destination);
-
         window.sessionStorage.setItem("BOOKING_DATA", JSON.stringify(data));
       }
     } catch (error) {
@@ -104,42 +111,31 @@ export default function Booking() {
       distance: distanceResults.distance,
       duration: distanceResults.duration,
     });
-
+    window.sessionStorage.setItem("BOOKING_DATA", JSON.stringify(data));
     calculatePrice();
     console.log("distanceResults:", distanceResults, "data:", data);
   }, [distanceResults]);
   function handleGetDistance(location, destination) {
-    // distance.apiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
-    // distance
-    //   .get({
-    //     origin: `${location}`,
-    //     destination: `${destination}`,
-    //     units: "imperial",
-    //   })
-    //   .then((data) => {
-    //     setDistanceResults(data);
-    //     console.log(data);
-    //   })
-    //   .catch(function (err) {
-    //     console.log(err);
-    //     //TODO: implement better alert
-    //     alert("Please provide a valid route");
-    //   });
-      service.getDistanceMatrix(
-        {
-          origins: [location],
-          destinations: [destination],
-          travelMode: google.maps.TravelMode.DRIVING,
-          unitSystem: google.maps.UnitSystem.IMPERIAL,
-          avoidTolls: true,
-        }, callback);
-      
-      function callback(response, status) {
-        console.log(response.rows[0].elements[0])
-        let distance=response.rows[0].elements[0].distance.text
-        let duration=response.rows[0].elements[0].duration.text
-        setDistanceResults({distance:distance,duration:duration})
+    service.getDistanceMatrix(
+      {
+        origins: [location],
+        destinations: [destination],
+        travelMode: google.maps.TravelMode.DRIVING,
+        unitSystem: google.maps.UnitSystem.IMPERIAL,
+        avoidTolls: true,
+      },
+      callback
+    );
+
+    function callback(response, status) {
+      if (status === "OK") {
+        let distance = response.rows[0].elements[0].distance.text;
+        let duration = response.rows[0].elements[0].duration.text;
+        setDistanceResults({ distance: distance, duration: duration });
+      } else {
+        console.log(response, status);
       }
+    }
   }
   function setDataToParsedData(obj) {
     data.location = obj.location;
@@ -149,6 +145,10 @@ export default function Booking() {
     data.time = obj.time;
     data.distance = obj.distance;
     data.duration = obj.duration;
+    data.total_trip_price = obj.total_trip_price;
+    data.service = obj.service;
+    data.payment=obj.payment;
+    data.session=obj.session;
   }
   function calculatePrice() {
     try {
@@ -170,17 +170,31 @@ export default function Booking() {
     tripPrice = farePrice * distanceInMiles;
     data.price_per_mile = farePrice.toString();
     data.total_trip_price = tripPrice;
+    window.sessionStorage.setItem("BOOKING_DATA", JSON.stringify(data));
   }
   function handleLogin() {
     console.log("login");
   }
   const handleSelectPayment = (e) => {
-    console.log(e.target.value);
+    if(e.target.innerText!==undefined){
+      console.log(e.target.innerText)
+      setPaymentMethod(e.target.innerText)
+      data.payment = e.target.innerText
+    }
+    
+    
   };
   const handleSelectService = (e) => {
-    e.target.class=serviceSelected
-    console.log(e.target.class)
-
+    if (e.target.id !== "") {
+      setServiceSelected(e.target.id);
+      data.service = e.target.id;
+      console.log(data.service);
+      window.sessionStorage.setItem("BOOKING_DATA", JSON.stringify(data));
+    }
+    //
+  };
+  function handleBooking() {
+    console.log("booked");
   }
   return (
     <>
@@ -198,8 +212,8 @@ export default function Booking() {
           </div>
           <div>
             {showSummary && (
-              <div className=" flex  lg:hidden">
-                <div className=" z-[10] top-20  fixed lg:relative left-0 h-[80vh] lg:h-max overflow-auto">
+              <div className="flex lg:hidden">
+                <div className=" z-[21] top-20  fixed lg:relative left-0 h-[80vh] lg:h-max overflow-auto">
                   <Summary
                     location={data.location}
                     destination={data.destination}
@@ -209,24 +223,26 @@ export default function Booking() {
                     price={data.total_trip_price}
                     distance={data.distance}
                     duration={data.duration}
+                    onClick={handleBooking}
+                    disabled={!canSubmit}
                   />
                 </div>
               </div>
             )}
 
-            <div
-              onClick={() => setShowSummary(!showSummary)}
-              className="lg:hidden z-[11] h-20 fixed bottom-0 left-0  flex justify-center w-screen   bg-gray-100 ">
-              <div className={summaryClassNames}>
+            <div className="lg:hidden z-[22] h-20 fixed bottom-0 left-0  flex justify-center w-screen   bg-gray-100 ">
+              <div
+                onClick={() => setShowSummary(!showSummary)}
+                className={summaryClassNames}>
                 <FaAngleUp />
               </div>
-              <div className="grid grid-cols-4 absolute px-4 bg-gray-100 w-screen left-0 bottom-20 text-4xl">
+              <div className="grid absolute left-0 bottom-20 grid-cols-5 px-4 w-screen text-4xl bg-gray-100">
                 <div
                   className={
                     data.location && data.destination ? completed : uncompleted
                   }>
                   {data.location && data.destination ? (
-                    <FaCheck className="text-sm float-right" />
+                    <FaCheck className="float-right text-sm" />
                   ) : (
                     ""
                   )}
@@ -235,15 +251,23 @@ export default function Booking() {
                 <div
                   className={data.date && data.time ? completed : uncompleted}>
                   {data.date && data.time ? (
-                    <FaCheck className="text-sm float-right" />
+                    <FaCheck className="float-right text-sm" />
                   ) : (
                     ""
                   )}
                   <BsCalendarFill className="px-1" />
                 </div>
+                <div className={data.service ? completed : uncompleted}>
+                  {data.date && data.time ? (
+                    <FaCheck className="float-right text-sm" />
+                  ) : (
+                    ""
+                  )}
+                  <FaTaxi className="px-1" />
+                </div>
                 <div className={data.account ? completed : uncompleted}>
                   {data.account ? (
-                    <FaCheck className="text-sm float-right" />
+                    <FaCheck className="float-right text-sm" />
                   ) : (
                     ""
                   )}
@@ -251,7 +275,7 @@ export default function Booking() {
                 </div>
                 <div className={data.payment ? completed : uncompleted}>
                   {data.payment ? (
-                    <FaCheck className="text-sm float-right" />
+                    <FaCheck className="float-right text-sm" />
                   ) : (
                     ""
                   )}
@@ -260,55 +284,128 @@ export default function Booking() {
               </div>
 
               <button
-                disabled={true}
-                className="flex items-center my-2 mx-12 justify-center rounded-lg w-full text-center  h-16  text-2xl font-medium text-gray-50 bg-sky-500 disabled:bg-gray-400">
+                data-bs-t
+                onClick={handleBooking}
+                disabled={!canSubmit}
+                className="flex justify-center items-center mx-12 my-2 w-full h-16 text-2xl font-medium text-center text-gray-50 bg-sky-500 rounded-lg disabled:bg-gray-400">
                 Book Now
               </button>
             </div>
           </div>
-          <div className=" lg:w-full mx-4 max-w-screen ">
-            <section className="">
-              <div className="w-full bg-gray-100 tracking-wider font-medium text-lg text-gray-600">
+          <div className="mx-4 lg:w-full max-w-screen">
+            <form onClick={handleSelectService} className="">
+              <div className="w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
                 CHOOSE YOUR SERVICE
               </div>
-              
-              <a group  id="serviceStandard" onClick={handleSelectService}  className="group min-w-fit flex gap-4 items-center appearance-none bg-gray-50 w-full p-4 my-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44">
-                <div className="w-20 h-20 sm:w-32 min-w-max sm:h-32 ">
-                  <div className="w-20 h-20 sm:w-32 flex items-center sm:h-32">
+
+              <label
+                htmlFor="serviceStandard"
+                group
+                className={`${
+                  serviceSelected === "serviceStandard" && selectedServiceClass
+                }group min-w-fit flex gap-4 items-center appearance-none bg-gray-50 w-full p-4 my-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44`}>
+                <div className="w-20 min-w-max h-20 sm:w-32 sm:h-32">
+                  <div className="flex items-center w-20 h-20 sm:w-32 sm:h-32">
                     <Image src="/standard.webp" width="220px" height="90px" />
                   </div>
                 </div>
-                <div className="flex flex-col text-left gap-2 w-full max-w-xl max-h-full">
+                <div className="flex flex-col gap-2 w-full max-w-xl max-h-full text-left">
                   <p className="text-lg">Standard</p>
-                  <ul className="hidden  text-sm xs:flex flex-col max-h-32 overflow-auto text-gray-500">
-                  Includes: 
-                  
-                  <li className="flex overflow-clip "><FaCheck className="text-green-400 text-md pr-2 min-w-max " /> Free cancelation up to 24 hours before pickup</li>
-                  <li className="flex overflow-clip"><FaCheck className="text-green-400 text-md pr-2 min-w-max " />  Taxes & Fees included</li>
-                  <li className="flex overflow-clip"><FaCheck className="text-green-400 text-md pr-2 min-w-max" />  60 min. Free Waiting Time</li>
+                  <ul className="hidden overflow-auto flex-col max-h-32 text-sm text-gray-500 xs:flex">
+                    Includes:
+                    <li className="flex overflow-clip">
+                      <FaCheck className="pr-2 min-w-max text-green-400 text-md" />{" "}
+                      Free cancelation up to 24 hours before pickup
+                    </li>
+                    <li className="flex overflow-clip">
+                      <FaCheck className="pr-2 min-w-max text-green-400 text-md" />{" "}
+                      Taxes & Fees included
+                    </li>
+                    <li className="flex overflow-clip">
+                      <FaCheck className="pr-2 min-w-max text-green-400 text-md" />{" "}
+                      60 min. Free Waiting Time
+                    </li>
                   </ul>
                 </div>
-                <div className="flex flex-col items-center justify-center">
-                  <p><FaUsers className="text-sky-400" />3</p>
-                  <p><FaSuitcase className="text-sky-400"/>2</p>
-                  
+                <div className="flex flex-col justify-center items-center">
+                  <p>
+                    <Tooltip style="light" content="Passengers">
+                      <FaUsers className="text-sky-400" />
+                    </Tooltip>
+                    3
+                  </p>
+                  <p>
+                    <Tooltip style="light" content="Luggage">
+                      <FaSuitcase className="text-sky-400" />
+                    </Tooltip>
+                    2
+                  </p>
+                  <input
+                    className="hidden"
+                    id="serviceStandard"
+                    type="radio"></input>
                 </div>
-              </a>
-            </section>
+              </label>
+              <label
+                htmlFor="serviceBus"
+                group
+                className={` ${
+                  serviceSelected === "serviceBus" && selectedServiceClass
+                }group min-w-fit flex gap-4 items-center appearance-none bg-gray-50 w-full p-4 my-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44`}>
+                <div className="w-20 min-w-max h-20 sm:w-32 sm:h-32">
+                  <div className="flex items-center w-20 h-20 sm:w-32 sm:h-32">
+                    <Image src="/standard.webp" width="220px" height="90px" />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2 w-full max-w-xl max-h-full text-left">
+                  <p className="text-lg">Standard</p>
+                  <ul className="hidden overflow-auto flex-col max-h-32 text-sm text-gray-500 xs:flex">
+                    Includes:
+                    <li className="flex overflow-clip">
+                      <FaCheck className="pr-2 min-w-max text-green-400 text-md" />{" "}
+                      Free cancelation up to 24 hours before pickup
+                    </li>
+                    <li className="flex overflow-clip">
+                      <FaCheck className="pr-2 min-w-max text-green-400 text-md" />{" "}
+                      Taxes & Fees included
+                    </li>
+                    <li className="flex overflow-clip">
+                      <FaCheck className="pr-2 min-w-max text-green-400 text-md" />{" "}
+                      60 min. Free Waiting Time
+                    </li>
+                  </ul>
+                </div>
+                <div className="flex flex-col justify-center items-center">
+                  <p>
+                    <FaUsers className="text-sky-400" />3
+                  </p>
+                  <p>
+                    <FaSuitcase className="text-sky-400" />2
+                  </p>
+                  <input
+                    className="hidden"
+                    id="serviceBus"
+                    type="radio"></input>
+                </div>
+              </label>
+            </form>
             <section className="">
-              <div className="w-full inline-flex bg-gray-100 tracking-wider font-medium text-lg text-gray-600">
-                PASSENGER DETAILS<p className="mx-8 justify-center"> or </p><Link  href="/signin"><a className=" text-lg hover:text-sky-400 flex ">SIGN IN</a></Link>
+              <div className="inline-flex w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
+                PASSENGER DETAILS<p className="justify-center mx-8"> or </p>
+                <Link href="/signin">
+                  <a className="flex text-lg hover:text-sky-400">SIGN IN</a>
+                </Link>
                 {/* <div>or </div> */}
               </div>
-             
+
               <div
-                className="p-6   lg:w-full border-y-2 shadow-sm border-gray-400  bg-gray-50 group"
+                className="p-6 bg-gray-50 border-gray-400 shadow-sm lg:w-full border-y-2 group"
                 open>
-                <div className="flex items-center justify-between cursor-pointer">
+                <div className="flex justify-between items-center cursor-pointer">
                   <div className="w-full">
                     <form onSubmit={handleLogin} autoComplete="off">
                       <div className="flex relative mb-2 w-full shadow-sm">
-                        <span className="rounded-l-md inline-flex  border-r-2 items-center px-3  bg-gray-50  text-gray-600 shadow-sm text-sm">
+                        <span className="inline-flex items-center px-3 text-sm text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm">
                           <svg
                             width="15"
                             height="15"
@@ -322,13 +419,13 @@ export default function Booking() {
                           name="email"
                           type="email"
                           id="email"
-                          className=" rounded-r-lg flex-1 appearance-none border-0 w-full py-2 px-4 bg-gray-50 text-gray-600 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-500 "
+                          className="flex-1 px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-sky-500"
                           placeholder="Your email"
                         />
                       </div>
 
                       <div className="flex relative mb-2 w-full shadow-sm">
-                        <span className="rounded-l-md inline-flex  border-r-2 items-center px-3  bg-gray-50  text-gray-600 shadow-sm text-sm">
+                        <span className="inline-flex items-center px-3 text-sm text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm">
                           <svg
                             width="15"
                             height="15"
@@ -342,12 +439,12 @@ export default function Booking() {
                           name="email"
                           type="email"
                           id="email"
-                          className=" rounded-r-lg flex-1 appearance-none border-0 w-full py-2 px-4 bg-gray-50 text-gray-600 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-500 "
+                          className="flex-1 px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-sky-500"
                           placeholder="Your email"
                         />
                       </div>
                       <div className="flex relative mb-2 w-full shadow-sm">
-                        <span className="rounded-l-md inline-flex  border-r-2 items-center px-3  bg-gray-50  text-gray-600 shadow-sm text-sm">
+                        <span className="inline-flex items-center px-3 text-sm text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm">
                           <svg
                             width="15"
                             height="15"
@@ -361,7 +458,7 @@ export default function Booking() {
                           name="email"
                           type="email"
                           id="email"
-                          className=" rounded-r-lg flex-1 appearance-none border-0 w-full py-2 px-4 bg-gray-50 text-gray-600 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-500 "
+                          className="flex-1 px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-sky-500"
                           placeholder="Your email"
                         />
                       </div>
@@ -371,17 +468,22 @@ export default function Booking() {
               </div>
             </section>
             <section className="">
-              <div className="w-full bg-gray-100 tracking-wider font-medium text-lg text-gray-600">
+              <div className="w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
                 PAYMENT
               </div>
-              <div className="p-6   lg:w-full  shadow-sm border-gray-400  bg-gray-50 group">
-                <select
-                  className="rounded-lg flex-1 appearance-none border-0 w-full py-2 px-4 bg-gray-50 text-gray-600 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-500 "
-                  onChange={handleSelectPayment}>
-                  <option className=""><FaMoneyBill />Cash</option>
-                  <option className="appearance-none rounded-b-md"><FaCreditCard/> Card</option>
-                </select>
+              <div className="p-6 bg-gray-50 border-gray-400 shadow-sm lg:w-full group">
+                <Dropdown label="Payment Method" >
+                  <Dropdown.Item onClick={handleSelectPayment} className="!z-[2]">
+                    <FaMoneyBill className="inline-flex gap-4 text-lg" />
+                    <p className="inline-flex ml-2 font-semibold">Cash</p>
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={handleSelectPayment} className="rounded-b-md appearance-none">
+                    <FaCreditCard className="inline-flex gap-4 text-lg" />{" "}
+                    <p className="inline-flex ml-1 font-semibold">Card</p>
+                  </Dropdown.Item>
+                </Dropdown>
               </div>
+             
             </section>
           </div>
           <div className="hidden lg:flex">
@@ -395,6 +497,8 @@ export default function Booking() {
                 price={data.total_trip_price}
                 distance={data.distance}
                 duration={data.duration}
+                onClick={handleBooking}
+                disabled={canSubmit}
               />
             </div>
           </div>
