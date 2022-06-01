@@ -163,6 +163,12 @@ export default function Booking() {
           data.distance = distanceResults.distance;
         }catch(err){
           console.log(err)
+          try{
+            handleGetDistance(data.location, data.destination);
+            data.distance = distanceResults.distance;
+          }catch(err){
+            console.log(err)
+          }
         }
       },2000
 
