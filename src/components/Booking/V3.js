@@ -25,7 +25,7 @@ const PlacesAutocomplete = dynamic(() => import("react-places-autocomplete"));
 // const HCaptcha = dynamic(() => import("@hcaptcha/react-hcaptcha"));
 
 const Form = () => {
-  const [mapsLoaded, setMapsLoaded] = useState(true);
+  const [mapsLoaded, setMapsLoaded] = useState(false);
   const loader = new Loader({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
     version: "weekly",
