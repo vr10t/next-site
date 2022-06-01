@@ -19,6 +19,7 @@ import { BsFillPersonFill } from "@react-icons/all-files/bs/BsFillPersonFill";
 import { FaAngleUp } from "@react-icons/all-files/fa/FaAngleUp";
 import { FaMoneyBill } from "@react-icons/all-files/fa/FaMoneyBill";
 import { FaUsers } from "@react-icons/all-files/fa/FaUsers";
+import { FaPhoneAlt } from "@react-icons/all-files/fa/FaPhoneAlt";
 import { FaSuitcase } from "@react-icons/all-files/fa/FaSuitcase";
 import { FaTaxi } from "@react-icons/all-files/fa/FaTaxi";
 import Link from "next/link";
@@ -26,11 +27,12 @@ import Image from "next/image";
 import { Loader } from "@googlemaps/js-api-loader";
 import { Tooltip } from "flowbite-react";
 import { Dropdown } from "flowbite-react";
-import {FaEnvelope} from "@react-icons/all-files/fa/FaEnvelope"
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
-
+import { FaEnvelope } from "@react-icons/all-files/fa/FaEnvelope";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
 
 export default function Booking() {
   const [distanceResults, setDistanceResults] = useState("");
@@ -53,25 +55,34 @@ export default function Booking() {
   const selectedServiceClass = "ring-2 ring-sky-400 bg-sky-400";
   const [paymentMethod, setPaymentMethod] = useState(null);
   const [canSubmit, setCanSubmit] = useState(false);
+  const [phone,setPhone] = useState()
   let service;
   const validationSchema = Yup.object().shape({
-    
     name: Yup.string()
-        .required('Name is required'),
-    dob: Yup.string()
-        .required('Phone number is required')
-        .matches(/^(((\+44\s?\d{4}|\(?0\d{4}\)?)\s?\d{3}\s?\d{3})|((\+44\s?\d{3}|\(?0\d{3}\)?)\s?\d{3}\s?\d{4})|((\+44\s?\d{2}|\(?0\d{2}\)?)\s?\d{4}\s?\d{4}))(\s?\#(\d{4}|\d{3}))?$/, 'Phone number is invalid'),
-    email: Yup.string()
-        .required('Email is required')
-        .email('Email is invalid'),
-    acceptTerms: Yup.bool()
-        .oneOf([true], 'Accept Ts & Cs is required')
-});
-const formOptions = { resolver: yupResolver(validationSchema) };
+      .required("Name is required")
+      .matches(/[A-z ]{4}/, "Name is too short")
+      .matches(
+        /^[A-z]+(([',. [a-z ][A-Z ])?[-]?[a-zA-Z]*)*$/,
+        "Name must not contain invalid characters"
+      ),
+    phone: Yup.string()
+      .required("Phone number is required")
+      .matches(
+        /^(((\+44\s?\d{4}|\(?0\d{4}\)?)\s?\d{3}\s?\d{3})|((\+44\s?\d{3}|\(?0\d{3}\)?)\s?\d{3}\s?\d{4})|((\+44\s?\d{2}|\(?0\d{2}\)?)\s?\d{4}\s?\d{4}))(\s?\#(\d{4}|\d{3}))?$/,
+        "Phone number is invalid"
+      ),
+    email: Yup.string().required("Email is required").email("Email is invalid"),
+    acceptTerms: Yup.bool().oneOf([true], "Accept Ts & Cs is required"),
+  });
+  const formOptions = {
+    resolver: yupResolver(validationSchema),
+    reValidateMode: "onChange",
+  };
 
-// get functions to build form with useForm() hook
-const { register, handleSubmit, reset, formState } = useForm(formOptions);
-const { errors } = formState;
+  // get functions to build form with useForm() hook
+  const { register, handleSubmit, reset, formState, clearErrors } =
+    useForm(formOptions);
+  const { errors } = formState;
   const loader = new Loader({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
     version: "weekly",
@@ -89,6 +100,14 @@ const { errors } = formState;
   useEffect(() => {
     console.log(session);
     console.log(window.innerWidth);
+    loader
+    .load()
+    .then((google) => {
+      service = new google.maps.DistanceMatrixService();
+    })
+    .catch((e) => {
+      console.log(e);
+    });
     // console.log(service)
   }, []);
 
@@ -97,15 +116,28 @@ const { errors } = formState;
     setTimeout(() => {
       setTripDistance(data.distance);
       setTotalTripPrice(data.total_trip_price);
-    }, 1500);
+    }, 2000);
   }, [data]);
   useEffect(() => {
+    saveSessionStorage()
+  }, []);
+
+  useEffect(() => {
+    Object.assign(data, {
+      distance: distanceResults.distance,
+      duration: distanceResults.duration,
+    });
+    window.sessionStorage.setItem("BOOKING_DATA", JSON.stringify(data));
+    calculatePrice();
+    console.log("distanceResults:", distanceResults, "data:", data);
+  }, [distanceResults]);
+  function saveSessionStorage(){
     try {
       // check whether booking data is present
       let parsedData = JSON.parse(
         window.sessionStorage.getItem("BOOKING_DATA")
       );
-      console.log("parsedData:", parsedData);
+      // console.log("parsedData:", parsedData);
       if (parsedData !== null) {
         //set booking details to saved data from sessionStorage
         setDataToParsedData(parsedData);
@@ -124,19 +156,21 @@ const { errors } = formState;
       }
     } catch (error) {
       console.log(error);
-    }
-    console.log("data:", data);
-  }, []);
+      console.log("Something went wrong fetching distance results... reattempting\n\n")
+      setTimeout(()=>{
+        try{
+          handleGetDistance(parsedData.location, parsedData.destination);
+          data.distance = distanceResults.distance;
+        }catch(err){
+          console.log(err)
+        }
+      },2000
 
-  useEffect(() => {
-    Object.assign(data, {
-      distance: distanceResults.distance,
-      duration: distanceResults.duration,
-    });
-    window.sessionStorage.setItem("BOOKING_DATA", JSON.stringify(data));
-    calculatePrice();
-    console.log("distanceResults:", distanceResults, "data:", data);
-  }, [distanceResults]);
+      )
+    
+    }
+    // console.log("data:", data);
+  }
   function handleGetDistance(location, destination) {
     service.getDistanceMatrix(
       {
@@ -150,6 +184,7 @@ const { errors } = formState;
     );
 
     function callback(response, status) {
+      console.log("status",status)
       if (status === "OK") {
         let distance = response.rows[0].elements[0].distance.text;
         let duration = response.rows[0].elements[0].duration.text;
@@ -194,8 +229,8 @@ const { errors } = formState;
     data.total_trip_price = tripPrice;
     window.sessionStorage.setItem("BOOKING_DATA", JSON.stringify(data));
   }
-  function handleLogin() {
-    console.log("login");
+  function handleErrors() {
+    clearErrors();
   }
   const handleSelectPayment = (e) => {
     if (e.target.innerText !== undefined) {
@@ -219,9 +254,9 @@ const { errors } = formState;
   }
   function onSubmit(data) {
     // display form data on success
-    alert('SUCCESS!! :-)\n\n' + JSON.stringify(data, null, 4));
+    alert("SUCCESS!! :-)\n\n" + JSON.stringify(data, null, 4));
     return false;
-}
+  }
   return (
     <>
       <Layout>
@@ -284,7 +319,7 @@ const { errors } = formState;
                   <BsCalendarFill className="px-1" />
                 </div>
                 <div className={data.service ? completed : uncompleted}>
-                  {data.date && data.time ? (
+                  {data.service ? (
                     <FaCheck className="float-right text-sm" />
                   ) : (
                     ""
@@ -310,7 +345,6 @@ const { errors } = formState;
               </div>
 
               <button
-                data-bs-t
                 onClick={handleBooking}
                 disabled={!canSubmit}
                 className="flex justify-center items-center mx-12 my-2 w-full h-16 text-2xl font-medium text-center text-gray-50 bg-sky-500 rounded-lg disabled:bg-gray-400">
@@ -329,38 +363,38 @@ const { errors } = formState;
                 group
                 className={`${
                   serviceSelected === "serviceStandard" && selectedServiceClass
-                }group min-w-fit flex gap-4 items-center appearance-none bg-gray-50 w-full p-4 my-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44`}>
+                }group min-w-fit flex gap-1 items-center appearance-none bg-gray-50 w-full p-4 my-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44`}>
                 <div className="w-20 min-w-max h-20 sm:w-32 sm:h-32">
-                  <div className="flex items-center w-20 h-20 sm:w-32 sm:h-32">
-                    <Image src="/standard.webp" width="220px" height="90px" />
+                  <div className="flex items-center w-full h-full">
+                    <Image src="/standard.webp" width="130px" height="65px" />
                   </div>
                 </div>
-                <div className="flex flex-col gap-2 w-full max-w-xl max-h-full text-left">
+                <div className="flex flex-col gap-1 w-full max-w-xl max-h-full text-left">
                   <p className="text-lg">Standard</p>
                   <ul className="hidden overflow-auto flex-col max-h-32 text-sm text-gray-500 xs:flex">
                     Includes:
                     <li className="flex overflow-clip">
-                      <FaCheck className="pr-2 min-w-max text-green-400 text-md" />{" "}
+                      <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
                       Free cancelation up to 24 hours before pickup
                     </li>
                     <li className="flex overflow-clip">
-                      <FaCheck className="pr-2 min-w-max text-green-400 text-md" />{" "}
+                      <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
                       Taxes & Fees included
                     </li>
                     <li className="flex overflow-clip">
-                      <FaCheck className="pr-2 min-w-max text-green-400 text-md" />{" "}
+                      <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
                       60 min. Free Waiting Time
                     </li>
                   </ul>
                 </div>
-                <div className="flex flex-col justify-center items-center">
-                  <div>
+                <div className="flex flex-col justify-center items-center self-center">
+                  <div className="flex flex-col items-center self-end">
                     <Tooltip style="light" content="Passengers">
                       <FaUsers className="text-sky-400" />
                     </Tooltip>
                     3
                   </div>
-                  <div>
+                  <div className="flex flex-col items-center self-end">
                     <Tooltip style="light" content="Luggage">
                       <FaSuitcase className="text-sky-400" />
                     </Tooltip>
@@ -417,73 +451,116 @@ const { errors } = formState;
             </form>
             <section onClick={handleSubmit(onSubmit)} className="">
               <div className="flex items-stretch w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
-              <p className="grow" > PASSENGER DETAILS</p><p className="self-end mr-2 text-sm"> or </p>
+                <p className="grow"> PASSENGER DETAILS</p>
+                <p className="self-end mr-2 text-sm"> or </p>
                 <Link href="/signin">
-                  <a className="self-end text-sm text-sky-600 hover:text-sky-400">Sign In</a>
+                  <a className="self-end text-sm text-sky-600 hover:text-sky-400">
+                    Sign In
+                  </a>
                 </Link>
                 {/* <div>or </div> */}
               </div>
 
-              <div
-                className="p-6 bg-gray-50 border-gray-400 shadow-sm lg:w-full border-y-2 group"
-                >
+              <div className="p-6 bg-gray-50 border-gray-400 shadow-sm lg:w-full border-y-2 group">
                 <div className="flex justify-between items-center cursor-pointer">
                   <div className="w-full">
-                    <form onSubmit={handleLogin} autoComplete="off">
+                    <form className="flex flex-col gap-2" autoComplete="off">
                       <div className="flex relative mb-2 w-full shadow-sm">
-                        <span className="inline-flex items-center px-3 text-lg text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm">
+                        <span className="inline-flex items-center px-3 text-lg text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm h">
                           <BsFillPersonFill />
                         </span>
-                        <input onClick={(e)=>console.log(e)}
-                        onKeyDownCapture={(e)=>{console.log(e)}}
-                        {...register('name')}
+                        <label htmlFor="name" className="sr-only">
+                          Full Name
+                        </label>
+                        <input
+                          {...register("name")}
+                          onChange={handleErrors}
+                          // onFocus={handleErrors}
                           name="name"
                           type="text"
                           id="name"
-                          className="flex-1 px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-sky-500"
+                          className={`flex-1 px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 ${
+                            errors.name
+                              ? "focus:ring-pink-400 "
+                              : "focus:ring-sky-500"
+                          }`}
                           placeholder="Your full name"
                         />
-                        <div className="invalid-feedback">{errors.title?.message}</div>
+                        {errors.name && (
+                          <div className="absolute w-full h-full text-sm font-medium text-pink-500 rounded-md ring-2 ring-pink-400">
+                            <p className="relative left-1 -top-3 px-2 w-max bg-gray-50">
+                              {errors.name?.message}
+                            </p>
+                          </div>
+                        )}
                       </div>
 
                       <div className="flex relative mb-2 w-full shadow-sm">
-                        <span className="inline-flex items-center px-3 text-sm text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm">
-                          <svg
-                            width="15"
-                            height="15"
-                            fill="currentColor"
-                            viewBox="0 0 1792 1792"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1792 710v794q0 66-47 113t-113 47h-1472q-66 0-113-47t-47-113v-794q44 49 101 87 362 246 497 345 57 42 92.5 65.5t94.5 48 110 24.5h2q51 0 110-24.5t94.5-48 92.5-65.5q170-123 498-345 57-39 100-87zm0-294q0 79-49 151t-122 123q-376 261-468 325-10 7-42.5 30.5t-54 38-52 32.5-57.5 27-50 9h-2q-23 0-50-9t-57.5-27-52-32.5-54-38-42.5-30.5q-91-64-262-182.5t-205-142.5q-62-42-117-115.5t-55-136.5q0-78 41.5-130t118.5-52h1472q65 0 112.5 47t47.5 113z"></path>
-                          </svg>
+                        <span className="inline-flex items-center px-3 text-lg text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm h">
+                          <FaEnvelope />
                         </span>
+                        <label htmlFor="email" className="sr-only">
+                          Email Address
+                        </label>
                         <input
+                          {...register("email")}
+                          onChange={handleErrors}
+                          // onFocus={handleErrors}
                           name="email"
                           type="email"
                           id="email"
-                          className="flex-1 px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-sky-500"
-                          placeholder="Your email"
+                          className={`flex-1 px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 ${
+                            errors.email
+                              ? "focus:ring-pink-400 "
+                              : "focus:ring-sky-500"
+                          }`}
+                          placeholder="Your email address"
                         />
+                        {errors.email && (
+                          <div className="absolute w-full h-full text-sm font-medium text-pink-500 rounded-md ring-2 ring-pink-400">
+                            <p className="relative left-1 -top-3 px-2 w-max bg-gray-50">
+                              {errors.email?.message}
+                            </p>
+                          </div>
+                        )}
                       </div>
-                      <div className="flex relative mb-2 w-full shadow-sm">
-                        <span className="inline-flex items-center px-3 text-sm text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm">
-                          <svg
-                            width="15"
-                            height="15"
-                            fill="currentColor"
-                            viewBox="0 0 1792 1792"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1792 710v794q0 66-47 113t-113 47h-1472q-66 0-113-47t-47-113v-794q44 49 101 87 362 246 497 345 57 42 92.5 65.5t94.5 48 110 24.5h2q51 0 110-24.5t94.5-48 92.5-65.5q170-123 498-345 57-39 100-87zm0-294q0 79-49 151t-122 123q-376 261-468 325-10 7-42.5 30.5t-54 38-52 32.5-57.5 27-50 9h-2q-23 0-50-9t-57.5-27-52-32.5-54-38-42.5-30.5q-91-64-262-182.5t-205-142.5q-62-42-117-115.5t-55-136.5q0-78 41.5-130t118.5-52h1472q65 0 112.5 47t47.5 113z"></path>
-                          </svg>
-                        </span>
-                        <input
-                          name="email"
-                          type="email"
-                          id="email"
-                          className="flex-1 px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-sky-500"
-                          placeholder="Your email"
-                        />
-                      </div>
+                      {/* <div className="flex relative mb-2 w-full shadow-sm"> */}
+                        {/* <span+44 className="inline-flex items-center px-3 text-lg text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm h">
+                          <FaPhoneAlt />
+                        </span+44 7583932231421242144 75839322314212421
+                        <label htmlFor="phone" className="sr-only">
+                          Phone Number
+                        </label> */}
+                        {/* <PhoneNumberInput
+                          {...register("phone")}
+                          onChange={handleErrors}
+                          // onFocus={handleErrors}
+                          // name="phone"
+                          // required={true}
+                          // type="tel"
+                          // id="phone"
+                          // defaultValue="+44"
+                          // placeholder="+44"
+                          className={`flex-1 px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 ${
+                            errors.phone
+                              ? "focus:ring-pink-400 "
+                              : "focus:ring-sky-500"
+                          }`}
+                        /> */}
+                        <PhoneInput
+                        
+      placeholder="Enter phone number"
+      value={phone}
+      onChange={setPhone}/>
+  )
+                        {/* {errors.phone && (
+                          <div className="absolute w-full h-full text-sm font-medium text-pink-500 rounded-md ring-2 ring-pink-400">
+                            <p className="relative left-1 -top-3 px-2 w-max bg-gray-50">
+                              {errors.phone?.message}
+                            </p>
+                          </div>
+                        )} */}
+                      {/* </div> */}
                     </form>
                   </div>
                 </div>
@@ -494,7 +571,7 @@ const { errors } = formState;
                 PAYMENT
               </div>
               <div className="flex justify-center p-6 bg-gray-50 border-gray-400 shadow-sm lg:w-full">
-                <Dropdown  label="Payment Method" size="xl" >
+                <Dropdown label="Payment Method" size="xl">
                   <Dropdown.Item
                     onClick={handleSelectPayment}
                     className="!z-[2]">

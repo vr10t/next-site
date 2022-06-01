@@ -25,7 +25,7 @@ const PlacesAutocomplete = dynamic(() => import("react-places-autocomplete"));
 // const HCaptcha = dynamic(() => import("@hcaptcha/react-hcaptcha"));
 
 const Form = () => {
-  const [mapsLoaded, setMapsLoaded] = useState(false);
+  const [mapsLoaded, setMapsLoaded] = useState(true);
   const loader = new Loader({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
     version: "weekly",
@@ -133,34 +133,34 @@ const Form = () => {
     console.log(e);
   }
   function handlePermission() {
-    navigator.permissions
-      .query({ name: "geolocation" })
-      .then(function (result) {
-        if (result.state == "granted") {
-          report(result.state);
-        } else if (result.state == "prompt") {
-          report(result.state);
+    // navigator.permissions
+    //   .query({ name: "geolocation" })
+    //   .then(function (result) {
+    //     if (result.state == "granted") {
+    //       report(result.state);
+    //     } else if (result.state == "prompt") {
+    //       report(result.state);
 
-          navigator.geolocation.getCurrentPosition(revealPosition);
-        } else if (result.state == "denied") {
-          report(result.state);
-        }
-        result.addEventListener("change", function () {
-          report(result.state);
-        });
-      });
+    //       navigator.geolocation.getCurrentPosition(revealPosition);
+    //     } else if (result.state == "denied") {
+    //       report(result.state);
+    //     }
+    //     result.addEventListener("change", function () {
+    //       report(result.state);
+    //     });
+    //   });
   }
 
   function report(state) {
     console.log("Permission " + state);
   }
-  useEffect(() => {
-    handlePermission();
-  }, []);
+  // useEffect(() => {
+  //   handlePermission();
+  // }, []);
 
   return (
     <div className="relative  z-[9]  justify-center xs:mx-auto mx-1 w-full bg-none py-4 ">
-      {mapsLoaded && <Map>asasa </Map>}
+      {/* {mapsLoaded && <Map>asasa </Map>} */}
       <form id="booking" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-2 max-screen-xs xs:mx-auto mx-3 w-5/6  lg:[28rem] lg:max-lg min-max ">
           <div className="flex flex-row rounded-lg xs:mx-auto  grow w-full  ">

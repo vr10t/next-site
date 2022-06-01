@@ -22,6 +22,7 @@
     "react-booking-form": "^2.0.0-alpha.64",
     "react-dom": "17.0.2",
     "react-hook-form": "^7.31.1",
+    "react-phone-number-input": "^3.2.2",
     "react-places-autocomplete": "^7.3.0",
     "sass": "^1.50.1",
     "stripe": "^8.222.0",

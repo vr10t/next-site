@@ -22,27 +22,27 @@ export default function Summary(props) {
           </h2>
           <Receipt className="" />
           <div className="">
-            <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 text-4xl font-bold text-sky-500 lg:p-4">
+            <div className="grid grid-cols-4 p-4 px-4 m-auto mt-5 w-5/6 text-3xl font-bold text-sky-500 lg:p-4">
               {" "}
-              <div className="mt-5  truncate hover:text-ellipsis max-w-[8rem]">
+              <div className="self-end ">
                 <label className="sr-only">Distance</label> <FaRoute />
               </div>
               <div className="col-span-2">
-                <hr className="mt-10 border-t-0 border-b-4 border-gray-400 border-dashed" />
+                <hr className="mt-10 border-t-0 border-b-2 border-gray-400 border-dashed" />
               </div>
-              <div className="mt-5 ml-5 text-2xl font-normal">
+              <div className="self-end text-xl font-normal">
                 {props.distance}
               </div>
             </div>
-            <div className="grid grid-cols-4 gap-2 px-4 m-auto w-5/6 text-4xl text-sky-500 lg:p-4">
+            <div className="grid grid-cols-4  px-4 m-auto w-5/6 text-3xl text-sky-500 lg:p-4">
               {" "}
-              <div className="font-bold">
+              <div className="font-bold self-end">
                 <BsWatch />
               </div>
               <div className="col-span-2">
-                <hr className="mt-10 border-t-0 border-b-4 border-gray-400 border-dashed" />
+                <hr className="mt-10 border-t-0 border-b-2  border-gray-400 border-dashed" />
               </div>
-              <div className="mt-5 ml-5 text-2xl">{props.duration}</div>
+              <div className="self-end text-xl">{props.duration}</div>
             </div>{" "}
           </div>
           <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl lg:p-4">
