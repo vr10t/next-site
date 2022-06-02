@@ -73,7 +73,7 @@ const Form = () => {
     Object.assign(formData, { location: origin, destination: destination });
 
     setData(formData), console.log(formData);
-    window.sessionStorage.removeItem("BOOKING_DATA");
+    window.localStorage.removeItem("BOOKING_DATA");
     router.push("/booking");
     return false;
   }

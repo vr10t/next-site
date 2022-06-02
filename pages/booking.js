@@ -32,6 +32,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import 'react-phone-number-input/style.css'
+
 import PhoneInput from 'react-phone-number-input'
 
 export default function Booking() {
@@ -119,7 +120,7 @@ export default function Booking() {
     }, 2000);
   }, [data]);
   useEffect(() => {
-    saveSessionStorage()
+    savelocalStorage()
   }, []);
 
   useEffect(() => {
@@ -127,19 +128,19 @@ export default function Booking() {
       distance: distanceResults.distance,
       duration: distanceResults.duration,
     });
-    window.sessionStorage.setItem("BOOKING_DATA", JSON.stringify(data));
+    window.localStorage.setItem("BOOKING_DATA", JSON.stringify(data));
     calculatePrice();
     console.log("distanceResults:", distanceResults, "data:", data);
   }, [distanceResults]);
-  function saveSessionStorage(){
+  function savelocalStorage(){
     try {
       // check whether booking data is present
       let parsedData = JSON.parse(
-        window.sessionStorage.getItem("BOOKING_DATA")
+        window.localStorage.getItem("BOOKING_DATA")
       );
       // console.log("parsedData:", parsedData);
       if (parsedData !== null) {
-        //set booking details to saved data from sessionStorage
+        //set booking details to saved data from localStorage
         setDataToParsedData(parsedData);
         console.log(data);
         console.log(
@@ -152,17 +153,17 @@ export default function Booking() {
       } else {
         //if no booking data is saved, get distance and save data
         handleGetDistance(data.location, data.destination);
-        window.sessionStorage.setItem("BOOKING_DATA", JSON.stringify(data));
+        window.localStorage.setItem("BOOKING_DATA", JSON.stringify(data));
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       console.log("Something went wrong fetching distance results... reattempting\n\n")
       setTimeout(()=>{
         try{
           handleGetDistance(parsedData.location, parsedData.destination);
           data.distance = distanceResults.distance;
         }catch(err){
-          console.log(err)
+          // console.log(err)
           try{
             handleGetDistance(data.location, data.destination);
             data.distance = distanceResults.distance;
@@ -230,10 +231,10 @@ export default function Booking() {
       setFarePrice(6);
     }
     console.log(farePrice, distanceInMiles);
-    tripPrice = farePrice * distanceInMiles;
-    data.price_per_mile = farePrice.toString();
+    tripPrice = Math.round((farePrice * distanceInMiles)*100)/100
+          data.price_per_mile = farePrice.toString();
     data.total_trip_price = tripPrice;
-    window.sessionStorage.setItem("BOOKING_DATA", JSON.stringify(data));
+    window.localStorage.setItem("BOOKING_DATA", JSON.stringify(data));
   }
   function handleErrors() {
     clearErrors();
@@ -243,7 +244,7 @@ export default function Booking() {
       console.log(e.target.innerText);
       setPaymentMethod(e.target.innerText);
       data.payment = e.target.innerText;
-      window.sessionStorage.setItem("BOOKING_DATA", JSON.stringify(data));
+      window.localStorage.setItem("BOOKING_DATA", JSON.stringify(data));
     }
   };
   const handleSelectService = (e) => {
@@ -251,7 +252,7 @@ export default function Booking() {
       setServiceSelected(e.target.id);
       data.service = e.target.id;
       console.log(data.service);
-      window.sessionStorage.setItem("BOOKING_DATA", JSON.stringify(data));
+      window.localStorage.setItem("BOOKING_DATA", JSON.stringify(data));
     }
     //
   };
@@ -263,7 +264,9 @@ export default function Booking() {
     alert("SUCCESS!! :-)\n\n" + JSON.stringify(data, null, 4));
     return false;
   }
-  return (
+
+    
+    return (
     <>
       <Layout>
         {!session && showBanner && (
@@ -297,7 +300,7 @@ export default function Booking() {
               </div>
             )}
 
-            <div className="lg:hidden z-[22] h-20 fixed bottom-0 left-0  flex justify-center w-screen   bg-gray-100 ">
+            <div className="lg:hidden overflow-hidden z-[22] h-20 fixed bottom-0 left-0  flex justify-center w-screen   bg-gray-100 ">
               <div
                 onClick={() => setShowSummary(!showSummary)}
                 className={summaryClassNames}>
@@ -358,7 +361,7 @@ export default function Booking() {
               </button>
             </div>
           </div>
-          <div className="mx-4 lg:w-full max-w-screen">
+          <div className="mx-4 max-w-full  lg:w-full">
             <form onClick={handleSelectService} className="">
               <div className="w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
                 CHOOSE YOUR SERVICE
@@ -366,28 +369,28 @@ export default function Booking() {
 
               <label
                 htmlFor="serviceStandard"
-                group
+               
                 className={`${
                   serviceSelected === "serviceStandard" && selectedServiceClass
-                }group min-w-fit flex gap-1 items-center appearance-none bg-gray-50 w-full p-4 my-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44`}>
+                } hover:scale-105 hover:ring-sky-500 hover:ring-2 duration-200 overflow-hidden flex gap-1 items-center appearance-none bg-gray-50 w-full p-4 my-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44`}>
                 <div className="w-20 min-w-max h-20 sm:w-32 sm:h-32">
-                  <div className="flex items-center w-full h-full">
-                    <Image src="/standard.webp" width="130px" height="65px" />
+                  <div className="flex items-center w-32 h-20">
+                    <Image src="/standard.webp" width={1920} height={1080} layout="" />
                   </div>
                 </div>
-                <div className="flex flex-col gap-1 w-full max-w-xl max-h-full text-left">
+                <div className="flex flex-col gap-1 w-full max-w-full max-h-full text-left">
                   <p className="text-lg">Standard</p>
                   <ul className="hidden overflow-auto flex-col max-h-32 text-sm text-gray-500 xs:flex">
                     Includes:
-                    <li className="flex overflow-clip">
+                    <li className="flex overflow-ellipsis">
                       <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
                       Free cancelation up to 24 hours before pickup
                     </li>
-                    <li className="flex overflow-clip">
+                    <li className="flex truncate">
                       <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
                       Taxes & Fees included
                     </li>
-                    <li className="flex overflow-clip">
+                    <li className="flex truncate">
                       <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
                       60 min. Free Waiting Time
                     </li>
@@ -413,41 +416,95 @@ export default function Booking() {
                 </div>
               </label>
               <label
-                htmlFor="serviceBus"
-                group
-                className={` ${
-                  serviceSelected === "serviceBus" && selectedServiceClass
-                }group min-w-fit flex gap-4 items-center appearance-none bg-gray-50 w-full p-4 my-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44`}>
+                htmlFor="serviceSelect"
+               
+                className={`${
+                  serviceSelected === "serviceSelect" && selectedServiceClass
+                } hover:scale-105 hover:ring-sky-500 hover:ring-2 duration-200 overflow-hidden flex gap-1 items-center appearance-none bg-gray-50 w-full p-4 my-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44`}>
                 <div className="w-20 min-w-max h-20 sm:w-32 sm:h-32">
-                  <div className="flex items-center w-20 h-20 sm:w-32 sm:h-32">
-                    <Image src="/standard.webp" width="220px" height="90px" />
+                  <div className="flex items-center w-32 h-20">
+                    <Image  src="/select.webp" width="1920px" height="1080px" layout=""  />
                   </div>
                 </div>
-                <div className="flex flex-col gap-2 w-full max-w-xl max-h-full text-left">
-                  <p className="text-lg">Standard</p>
+                <div className="flex flex-col gap-1 w-full max-w-full max-h-full text-left">
+                  <p className="text-lg">Select</p>
                   <ul className="hidden overflow-auto flex-col max-h-32 text-sm text-gray-500 xs:flex">
                     Includes:
-                    <li className="flex overflow-clip">
-                      <FaCheck className="pr-2 min-w-max text-green-400 text-md" />{" "}
+                    <li className="flex overflow-ellipsis">
+                      <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
                       Free cancelation up to 24 hours before pickup
                     </li>
-                    <li className="flex overflow-clip">
-                      <FaCheck className="pr-2 min-w-max text-green-400 text-md" />{" "}
+                    <li className="flex truncate">
+                      <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
                       Taxes & Fees included
                     </li>
-                    <li className="flex overflow-clip">
-                      <FaCheck className="pr-2 min-w-max text-green-400 text-md" />{" "}
+                    <li className="flex truncate">
+                      <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
                       60 min. Free Waiting Time
                     </li>
                   </ul>
                 </div>
-                <div className="flex flex-col justify-center items-center">
-                  <p>
-                    <FaUsers className="text-sky-400" />3
-                  </p>
-                  <p>
-                    <FaSuitcase className="text-sky-400" />2
-                  </p>
+                <div className="flex flex-col justify-center items-center self-center">
+                  <div className="flex flex-col items-center self-end">
+                    <Tooltip style="light" content="Passengers">
+                      <FaUsers className="text-sky-400" />
+                    </Tooltip>
+                    5
+                  </div>
+                  <div className="flex flex-col items-center self-end">
+                    <Tooltip style="light" content="Luggage">
+                      <FaSuitcase className="text-sky-400" />
+                    </Tooltip>
+                    4
+                  </div>
+                  <input
+                    className="hidden"
+                    id="serviceSelect"
+                    type="radio"></input>
+                </div>
+              </label>
+              <label
+                htmlFor="serviceBus"
+               
+                className={`${
+                  serviceSelected === "serviceBus" && selectedServiceClass
+                } hover:scale-105 hover:ring-sky-500 hover:ring-2 duration-200 overflow-hidden flex gap-1 items-center appearance-none bg-gray-50 w-full p-4 my-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44`}>
+                <div className="w-20 min-w-max h-20 sm:w-32 sm:h-32">
+                  <div className="flex items-center w-32 h-20">
+                    <Image  src="/bus.webp" width="1920px" height="1080px" layout=""  />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-1 w-full max-w-full max-h-full text-left">
+                  <p className="text-lg">Minibus</p>
+                  <ul className="hidden overflow-auto flex-col max-h-32 text-sm text-gray-500 xs:flex">
+                    Includes:
+                    <li className="flex overflow-ellipsis">
+                      <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
+                      Free cancelation up to 24 hours before pickup
+                    </li>
+                    <li className="flex truncate">
+                      <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
+                      Taxes & Fees included
+                    </li>
+                    <li className="flex truncate">
+                      <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
+                      60 min. Free Waiting Time
+                    </li>
+                  </ul>
+                </div>
+                <div className="flex flex-col justify-center items-center self-center">
+                  <div className="flex flex-col items-center self-end">
+                    <Tooltip style="light" content="Passengers">
+                      <FaUsers className="text-sky-400" />
+                    </Tooltip>
+                    16
+                  </div>
+                  <div className="flex flex-col items-center self-end">
+                    <Tooltip style="light" content="Luggage">
+                      <FaSuitcase className="text-sky-400" />
+                    </Tooltip>
+                    16
+                  </div>
                   <input
                     className="hidden"
                     id="serviceBus"
@@ -553,12 +610,13 @@ export default function Booking() {
                               : "focus:ring-sky-500"
                           }`}
                         /> */}
-                        <PhoneInput
-                        
+                        <div className="flex relative mb-2 w-full shadow-sm">
+                        <PhoneInput className="inline-flex items-center w-full  pl-2 text-lg text-gray-900 bg-gray-50 rounded-md border-r-2 shadow-sm" 
+                        defaultCountry="GB" 
       placeholder="Enter phone number"
       value={phone}
       onChange={setPhone}/>
-  )
+  </div>
                         {/* {errors.phone && (
                           <div className="absolute w-full h-full text-sm font-medium text-pink-500 rounded-md ring-2 ring-pink-400">
                             <p className="relative left-1 -top-3 px-2 w-max bg-gray-50">
@@ -577,9 +635,10 @@ export default function Booking() {
                 PAYMENT
               </div>
               <div className="flex justify-center p-6 bg-gray-50 border-gray-400 shadow-sm lg:w-full">
-                <Dropdown label="Payment Method" size="xl">
-                  <Dropdown.Item
+                <Dropdown  style={{backgroundColor:"rgb(2 132 199)"}} className="!bg-gray-50 " label="Payment Method" size="xl">
+            <Dropdown.Item
                     onClick={handleSelectPayment}
+                    
                     className="!z-[2]">
                     <FaMoneyBill className="inline-flex gap-4 text-lg" />
                     <p className="inline-flex ml-2 font-semibold">Cash</p>
