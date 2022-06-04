@@ -11,45 +11,55 @@ import { FaTaxi } from "@react-icons/all-files/fa/FaTaxi";
 import { FaCreditCard } from "@react-icons/all-files/fa/FaCreditCard";
 import { FaCheck } from "@react-icons/all-files/fa/FaCheck";
 import { useAppContext } from "../../context/state";
+import {Tooltip} from "flowbite-react"
 import Receipt from "../Svg/Receipt";
 export default function Summary(props,children) {
  const {data} = useAppContext()
  const completed = "flex flex-row-reverse justify-start float-left px-1 gap-1 text-sky-500 ";
  const uncompleted = "mx-auto py-2 text-gray-500 ";
   return (
-    <div className="flex relative w-screen bg-clip-content lg:-mt-20  bg-gray-100 shadow-2xl lg:rounded-xl lg:w-full ">
+    <div className="flex w-screen bg-clip-content bg-gray-100 shadow-2xl lg:rounded-xl lg:w-full">
     
-      <div className="mt-24 w-full lg:mt-2 lg:max-w-lg overflow-scroll">
+      <div className="overflow-auto mt-24 w-full lg:mt-2 lg:max-w-lg">
         <div className="">
-          <h2 className="lg:relative lg:top-[10.5rem] text-left justify-center flex lg:block lg:ml-16 text-gray-800 text-3xl font-bold ">
+          <h2 className="flex justify-center text-3xl font-bold text-left text-gray-800 mb-4 lg:my-10 lg:block lg:ml-16">
             Summary
           </h2>
-          <Receipt className="" />
-          <div className="">
-            <div className="grid grid-cols-4 p-4 px-4 m-auto mt-5 w-5/6 text-3xl font-bold text-sky-500 lg:p-4">
+          
+          <div className="flex rounded-2xl bg-gray-200 mx-[2.7rem]">
+          <div className="flex flex-col gap-4 py-6 grow">
+            <div className="flex flex-row  m-auto  w-5/6 text-3xl font-bold text-gray-800">
               {" "}
-              <div className="self-end">
-                <label className="sr-only">Distance</label> <FaRoute />
+              <div className="">
+                <label className="sr-only">Distance</label>
+                <Tooltip style="light" content="Distance">
+                 <FaRoute /></Tooltip>
               </div>
-              <div className="col-span-2">
-                <hr className="mt-10 border-t-0 border-b-2 border-gray-400 border-dashed" />
+              <div className="h-1/2 mx-4 border-t-0 border-b-2 border-gray-400 border-dashed grow">
+               
               </div>
-              <div className="self-end text-xl font-normal">
+              <div className="self-center text-base font-bold">
                 {props.distance}
+               
               </div>
+              
             </div>
-            <div className="grid grid-cols-4 px-4 m-auto w-5/6 text-3xl text-sky-500 lg:p-4">
+            
+            <div className="flex flex-row self-center m-auto  w-5/6 text-3xl font-bold text-gray-800">
               {" "}
-              <div className="self-end font-bold">
-                <BsWatch />
+              <div className="">
+              <label className="sr-only">Estimated trip time</label>
+              <Tooltip style="light" content="Estimated trip time">
+              <BsWatch /></Tooltip>
               </div>
-              <div className="col-span-2">
-                <hr className="mt-10 border-t-0 border-b-2 border-gray-400 border-dashed" />
+              <div className="h-1/2 mx-4 border-t-0 border-b-2 border-gray-400 border-dashed grow">
               </div>
-              <div className="self-end text-xl">{props.duration}</div>
+              <div className="self-center text-base font-bold">{props.duration}</div>
+            </div>
             </div>{" "}
+            <Receipt className="" />
           </div>
-          <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl lg:p-4">
+          <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
             <div className="col-span-1 my-auto text-3xl text-gray-800">
               {" "}
               <div className={data.location ? completed : uncompleted}>
@@ -74,7 +84,7 @@ export default function Summary(props,children) {
               </a>
             </div>
           </div>
-          <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl lg:p-4">
+          <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
             <div className="col-span-1 my-auto text-3xl text-gray-800">
               {" "}
               <div className={data.destination ? completed : uncompleted}>
@@ -99,7 +109,7 @@ export default function Summary(props,children) {
               </a>
             </div>
           </div>
-          <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl lg:p-4">
+          <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
             <div className="col-span-1 my-auto text-3xl text-gray-800">
               {" "}
               <div className={data.passengers ? completed : uncompleted}>
@@ -122,7 +132,7 @@ export default function Summary(props,children) {
               </a>
             </div>
           </div>
-          <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl lg:p-4">
+          <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
             <div className="col-span-1 my-auto text-3xl text-gray-800">
               {" "}<div className={data.date ? completed : uncompleted}>
                   {data.date ? (
@@ -144,7 +154,7 @@ export default function Summary(props,children) {
               </a>
             </div>
           </div>
-          <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl lg:p-4">
+          <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
             <div className="col-span-1 my-auto text-3xl text-gray-800">
               {" "}<div className={data.time ? completed : uncompleted}>
                   {data.time ? (
@@ -167,7 +177,7 @@ export default function Summary(props,children) {
             </div>
           </div>
           {data.service && 
-            <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl lg:p-4">
+            <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
             <div className="col-span-1 my-auto text-3xl text-gray-800">
               {" "}<div className={data.service ? completed : uncompleted}>
                   {data.time ? (
@@ -189,7 +199,7 @@ export default function Summary(props,children) {
               </a>
             </div>
           </div>}
-          <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 rounded-2xl bg-gray-100/25 lg:p-4">
+          <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 rounded-2xl bg-gray-100/25">
             <div className="col-span-1 my-auto text-3xl font-medium text-gray-800">
               {" "}
               Total:{" "}

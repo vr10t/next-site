@@ -423,29 +423,7 @@ export default function Booking() {
                           </div>
                         )}
                       </div>
-                      {/* <div className="flex relative mb-2 w-full shadow-sm"> */}
-                        {/* <span+44 className="inline-flex items-center px-3 text-lg text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm h">
-                          <FaPhoneAlt />
-                        </span+44 7583932231421242144 75839322314212421
-                        <label htmlFor="phone" className="sr-only">
-                          Phone Number
-                        </label> */}
-                        {/* <PhoneNumberInput
-                          {...register("phone")}
-                          onChange={handleErrors}
-                          // onFocus={handleErrors}
-                          // name="phone"
-                          // required={true}
-                          // type="tel"
-                          // id="phone"
-                          // defaultValue="+44"
-                          // placeholder="+44"
-                          className={`flex-1 px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 ${
-                            errors.phone
-                              ? "focus:ring-pink-400 "
-                              : "focus:ring-sky-500"
-                          }`}
-                        /> */}
+                      
                         <div className="flex relative mb-2 w-full shadow-sm">
                         <PhoneInput 
                         className="inline-flex items-center pl-2 w-full text-lg text-gray-900 bg-gray-50 rounded-md border-r-2 shadow-sm" 
