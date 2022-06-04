@@ -11,13 +11,13 @@ export default function Navbar() {
 
   return (
     <header className="shadow-sm">
-      <div className="max-w-screen h-20 p-4 items-center  flex fixed bg-gray-50 w-screen z-[22] ">
+      <div className="max-w-screen h-20 p-4 items-center  shadow flex fixed bg-gray-50 w-screen z-[22] ">
         <div className="flex justify-between items-center space-x-4 w-full lg:space-x-10">
           <div className="flex lg:w-0 lg:flex-1">
             <span className="w-20 h-10 bg-gray-200 rounded-lg md:flex"></span>
           </div>
 
-          <nav className="hidden space-x-8 text-sm font-medium md:flex grow">
+          <nav className="hidden space-x-8 justify-center text-sm font-medium md:flex grow">
             <Link href="/#">
               <a className="block px-3 py-2 text-base font-medium text-gray-800 no-underline rounded-md">
                 Home
@@ -47,13 +47,13 @@ export default function Navbar() {
               </a>
             </Link>
             <Link href="/signup">
-              <a className="px-5 py-2 text-sm font-medium text-white no-underline bg-sky-600 rounded-lg shadow-md hover:bg-sky-700">
+              <a className="flex px-5 py-2 text-md self-center font-medium text-white no-underline bg-sky-600 rounded-lg shadow-md hover:bg-sky-700">
                 Sign up
               </a>
             </Link>
           </div>
 
-          <div className="md:hidden">
+          <div className="md:hidden ">
             <button
               onClick={handleClick}
               className="p-2 text-gray-600 bg-gray-100 rounded-lg"
@@ -64,7 +64,7 @@ export default function Navbar() {
           </div>
         </div>
         {expanded && (
-          <nav className="md:hidden w-screen left-0 top-16 pl-4 fixed bg-gray-50  mt-3 z-[23]">
+          <nav className="md:hidden shadow w-screen left-0 top-16 pl-4 fixed bg-gray-50  mt-3 z-[23]">
             <Link href="/#">
               <a className="block px-3 py-2 text-base font-medium text-gray-800 no-underline rounded-md hover:text-gray-600 hover:bg-gray-200">
                 Home

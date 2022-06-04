@@ -32,9 +32,9 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import 'react-phone-number-input/style.css'
-
+import ProgressIcons from "../src/components/Booking/ProgressIcons";
 import PhoneInput from 'react-phone-number-input'
-
+import Service from "../src/components/Booking/Service";
 export default function Booking() {
   const [distanceResults, setDistanceResults] = useState("");
   const { data, setData } = useAppContext();
@@ -50,10 +50,8 @@ export default function Booking() {
   const summaryClassNames = showSummary
     ? "fixed flex  top-20 rotate-180 w-screen text-gray-50 text-3xl justify-center bg-sky-500 h-8"
     : "fixed flex  bottom-32 w-screen text-gray-50 text-3xl justify-center bg-sky-500 h-8";
-  const completed = "mx-auto py-2 text-sky-500 ";
-  const uncompleted = "mx-auto py-2 text-gray-500 ";
-  const [serviceSelected, setServiceSelected] = useState(null);
-  const selectedServiceClass = "ring-2 ring-sky-400 bg-sky-400";
+    const [serviceSelected, setServiceSelected] = useState(null);
+  
   const [paymentMethod, setPaymentMethod] = useState(null);
   const [canSubmit, setCanSubmit] = useState(false);
   const [phone,setPhone] = useState()
@@ -81,7 +79,7 @@ export default function Booking() {
   };
 
   // get functions to build form with useForm() hook
-  const { register, handleSubmit, reset, formState, clearErrors } =
+  const { register, handleSubmit, formState, clearErrors, } =
     useForm(formOptions);
   const { errors } = formState;
   const loader = new Loader({
@@ -120,6 +118,8 @@ export default function Booking() {
     }, 2000);
   }, [data]);
   useEffect(() => {
+    console
+    .log(data.total_trip_price)
     savelocalStorage()
   }, []);
 
@@ -260,8 +260,13 @@ export default function Booking() {
     console.log("booked");
   }
   function onSubmit(data) {
+    handleSubmit(data)
+    let dsamlkdmaslkdm=data
+    console.log(dsamlkdmaslkdm)
     // display form data on success
-    alert("SUCCESS!! :-)\n\n" + JSON.stringify(data, null, 4));
+    console.log("submitted")
+    console.log(data)
+    // alert("SUCCESS!! :-)\n\n" + JSON.stringify(data, null, 4));
     return false;
   }
 
@@ -277,7 +282,7 @@ export default function Booking() {
         )}
 
         <div className="static justify-center  mt-64 w-[95vw] sm:w-[97vw] mx-auto lg:  max-w-screen bg-gray-100 overflow-x-none flex flex-col lg:flex-row  ">
-          <div className="absolute top-56 bg-gray-100 w-[95vw] lg:w-[97vw] mx-auto h-32 flex items-center justify-center z-[8] text-4xl font-medium text-center text-gray-800">
+          <div className="absolute top-56 bg-gray-100 w-[95vw] lg:w-[97vw] mx-auto h-32 flex items-center justify-center z-[7] text-4xl font-medium text-center text-gray-800">
             Youre almost there!
           </div>
           <div>
@@ -300,58 +305,13 @@ export default function Booking() {
               </div>
             )}
 
-            <div className="lg:hidden overflow-hidden z-[22] h-20 fixed bottom-0 left-0  flex justify-center w-screen   bg-gray-100 ">
+            <div className="lg:hidden  z-[22] h-20 fixed bottom-0 left-0  flex justify-center max-w-screen w-screen   bg-gray-100 ">
               <div
                 onClick={() => setShowSummary(!showSummary)}
                 className={summaryClassNames}>
                 <FaAngleUp />
               </div>
-              <div className="grid absolute left-0 bottom-20 grid-cols-5 px-4 w-screen text-4xl bg-gray-100">
-                <div
-                  className={
-                    data.location && data.destination ? completed : uncompleted
-                  }>
-                  {data.location && data.destination ? (
-                    <FaCheck className="float-right text-sm" />
-                  ) : (
-                    ""
-                  )}
-                  <FaMapMarkerAlt className="px-1" />
-                </div>
-                <div
-                  className={data.date && data.time ? completed : uncompleted}>
-                  {data.date && data.time ? (
-                    <FaCheck className="float-right text-sm" />
-                  ) : (
-                    ""
-                  )}
-                  <BsCalendarFill className="px-1" />
-                </div>
-                <div className={data.service ? completed : uncompleted}>
-                  {data.service ? (
-                    <FaCheck className="float-right text-sm" />
-                  ) : (
-                    ""
-                  )}
-                  <FaTaxi className="px-1" />
-                </div>
-                <div className={data.account ? completed : uncompleted}>
-                  {data.account ? (
-                    <FaCheck className="float-right text-sm" />
-                  ) : (
-                    ""
-                  )}
-                  <BsFillPersonFill className="px-1" />
-                </div>
-                <div className={data.payment ? completed : uncompleted}>
-                  {data.payment ? (
-                    <FaCheck className="float-right text-sm" />
-                  ) : (
-                    ""
-                  )}
-                  <FaCreditCard className="px-1" />
-                </div>
-              </div>
+              <ProgressIcons />
 
               <button
                 onClick={handleBooking}
@@ -361,158 +321,34 @@ export default function Booking() {
               </button>
             </div>
           </div>
-          <div className="mx-4 max-w-full  lg:w-full">
+          <div className="px-8 max-w-full lg:w-full">
             <form onClick={handleSelectService} className="">
               <div className="w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
                 CHOOSE YOUR SERVICE
               </div>
-
-              <label
-                htmlFor="serviceStandard"
-               
-                className={`${
-                  serviceSelected === "serviceStandard" && selectedServiceClass
-                } hover:scale-105 hover:ring-sky-500 hover:ring-2 duration-200 overflow-hidden flex gap-1 items-center appearance-none bg-gray-50 w-full p-4 my-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44`}>
-                <div className="w-20 min-w-max h-20 sm:w-32 sm:h-32">
-                  <div className="flex items-center w-32 h-20">
-                    <Image src="/standard.webp" width={1920} height={1080} layout="" />
-                  </div>
-                </div>
-                <div className="flex flex-col gap-1 w-full max-w-full max-h-full text-left">
-                  <p className="text-lg">Standard</p>
-                  <ul className="hidden overflow-auto flex-col max-h-32 text-sm text-gray-500 xs:flex">
-                    Includes:
-                    <li className="flex overflow-ellipsis">
-                      <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
-                      Free cancelation up to 24 hours before pickup
-                    </li>
-                    <li className="flex truncate">
-                      <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
-                      Taxes & Fees included
-                    </li>
-                    <li className="flex truncate">
-                      <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
-                      60 min. Free Waiting Time
-                    </li>
-                  </ul>
-                </div>
-                <div className="flex flex-col justify-center items-center self-center">
-                  <div className="flex flex-col items-center self-end">
-                    <Tooltip style="light" content="Passengers">
-                      <FaUsers className="text-sky-400" />
-                    </Tooltip>
-                    3
-                  </div>
-                  <div className="flex flex-col items-center self-end">
-                    <Tooltip style="light" content="Luggage">
-                      <FaSuitcase className="text-sky-400" />
-                    </Tooltip>
-                    2
-                  </div>
-                  <input
-                    className="hidden"
-                    id="serviceStandard"
-                    type="radio"></input>
-                </div>
-              </label>
-              <label
-                htmlFor="serviceSelect"
-               
-                className={`${
-                  serviceSelected === "serviceSelect" && selectedServiceClass
-                } hover:scale-105 hover:ring-sky-500 hover:ring-2 duration-200 overflow-hidden flex gap-1 items-center appearance-none bg-gray-50 w-full p-4 my-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44`}>
-                <div className="w-20 min-w-max h-20 sm:w-32 sm:h-32">
-                  <div className="flex items-center w-32 h-20">
-                    <Image  src="/select.webp" width="1920px" height="1080px" layout=""  />
-                  </div>
-                </div>
-                <div className="flex flex-col gap-1 w-full max-w-full max-h-full text-left">
-                  <p className="text-lg">Select</p>
-                  <ul className="hidden overflow-auto flex-col max-h-32 text-sm text-gray-500 xs:flex">
-                    Includes:
-                    <li className="flex overflow-ellipsis">
-                      <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
-                      Free cancelation up to 24 hours before pickup
-                    </li>
-                    <li className="flex truncate">
-                      <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
-                      Taxes & Fees included
-                    </li>
-                    <li className="flex truncate">
-                      <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
-                      60 min. Free Waiting Time
-                    </li>
-                  </ul>
-                </div>
-                <div className="flex flex-col justify-center items-center self-center">
-                  <div className="flex flex-col items-center self-end">
-                    <Tooltip style="light" content="Passengers">
-                      <FaUsers className="text-sky-400" />
-                    </Tooltip>
-                    5
-                  </div>
-                  <div className="flex flex-col items-center self-end">
-                    <Tooltip style="light" content="Luggage">
-                      <FaSuitcase className="text-sky-400" />
-                    </Tooltip>
-                    4
-                  </div>
-                  <input
-                    className="hidden"
-                    id="serviceSelect"
-                    type="radio"></input>
-                </div>
-              </label>
-              <label
-                htmlFor="serviceBus"
-               
-                className={`${
-                  serviceSelected === "serviceBus" && selectedServiceClass
-                } hover:scale-105 hover:ring-sky-500 hover:ring-2 duration-200 overflow-hidden flex gap-1 items-center appearance-none bg-gray-50 w-full p-4 my-4 rounded-lg active:ring-2 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 h-44`}>
-                <div className="w-20 min-w-max h-20 sm:w-32 sm:h-32">
-                  <div className="flex items-center w-32 h-20">
-                    <Image  src="/bus.webp" width="1920px" height="1080px" layout=""  />
-                  </div>
-                </div>
-                <div className="flex flex-col gap-1 w-full max-w-full max-h-full text-left">
-                  <p className="text-lg">Minibus</p>
-                  <ul className="hidden overflow-auto flex-col max-h-32 text-sm text-gray-500 xs:flex">
-                    Includes:
-                    <li className="flex overflow-ellipsis">
-                      <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
-                      Free cancelation up to 24 hours before pickup
-                    </li>
-                    <li className="flex truncate">
-                      <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
-                      Taxes & Fees included
-                    </li>
-                    <li className="flex truncate">
-                      <FaCheck className="self-center pr-2 min-w-max text-green-400 text-md" />{" "}
-                      60 min. Free Waiting Time
-                    </li>
-                  </ul>
-                </div>
-                <div className="flex flex-col justify-center items-center self-center">
-                  <div className="flex flex-col items-center self-end">
-                    <Tooltip style="light" content="Passengers">
-                      <FaUsers className="text-sky-400" />
-                    </Tooltip>
-                    16
-                  </div>
-                  <div className="flex flex-col items-center self-end">
-                    <Tooltip style="light" content="Luggage">
-                      <FaSuitcase className="text-sky-400" />
-                    </Tooltip>
-                    16
-                  </div>
-                  <input
-                    className="hidden"
-                    id="serviceBus"
-                    type="radio"></input>
-                </div>
-              </label>
+              <Service 
+                for="Standard"
+                image="standard"
+                passengers="3"
+                luggage="3"
+                selected={serviceSelected==="Standard"?true:false}
+              />
+              <Service 
+                for="Select"
+                image="select"
+                passengers="5"
+                luggage="4"
+                selected={serviceSelected==="Select"?true:false}
+              />
+              <Service 
+                for="Bus"
+                image="bus"
+                passengers="16"
+                luggage="16"
+                selected={serviceSelected==="Bus"?true:false}
+              />
             </form>
-            <section onClick={handleSubmit(onSubmit)} className="">
+            <section  className="">
               <div className="flex items-stretch w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
                 <p className="grow"> PASSENGER DETAILS</p>
                 <p className="self-end mr-2 text-sm"> or </p>
@@ -525,9 +361,9 @@ export default function Booking() {
               </div>
 
               <div className="p-6 bg-gray-50 border-gray-400 shadow-sm lg:w-full border-y-2 group">
-                <div className="flex justify-between items-center cursor-pointer">
+              <div className="flex justify-between items-center cursor-pointer">
                   <div className="w-full">
-                    <form className="flex flex-col gap-2" autoComplete="off">
+                    <form id="register"  onBlur={onSubmit} className="flex flex-col gap-2" >
                       <div className="flex relative mb-2 w-full shadow-sm">
                         <span className="inline-flex items-center px-3 text-lg text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm h">
                           <BsFillPersonFill />
@@ -611,7 +447,8 @@ export default function Booking() {
                           }`}
                         /> */}
                         <div className="flex relative mb-2 w-full shadow-sm">
-                        <PhoneInput className="inline-flex items-center w-full  pl-2 text-lg text-gray-900 bg-gray-50 rounded-md border-r-2 shadow-sm" 
+                        <PhoneInput 
+                        className="inline-flex items-center pl-2 w-full text-lg text-gray-900 bg-gray-50 rounded-md border-r-2 shadow-sm" 
                         defaultCountry="GB" 
       placeholder="Enter phone number"
       value={phone}
@@ -625,6 +462,7 @@ export default function Booking() {
                           </div>
                         )} */}
                       {/* </div> */}
+                      <button type="submit">Submit</button>
                     </form>
                   </div>
                 </div>
@@ -654,7 +492,7 @@ export default function Booking() {
             </section>
           </div>
           <div className="hidden lg:flex">
-            <div className=" z-[7] -top-10  absolute lg:relative right-0 float-right h-screen lg:h-full min-w-max overflow-auto">
+            <div className=" z-[7] -top-20  absolute lg:relative right-0 float-right h-screen lg:h-full min-w-max overflow-auto">
               <Summary
                 location={data.location}
                 destination={data.destination}
