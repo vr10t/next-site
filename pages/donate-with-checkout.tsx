@@ -1,6 +1,6 @@
 import { NextPage } from 'next'
 import Layout from '../src/components/layout'
-import { total } from '../utils/payments'
+
 import CheckoutForm from '../src/components/CheckoutForm'
 
 const DonatePage: NextPage = () => {
@@ -9,8 +9,8 @@ const DonatePage: NextPage = () => {
       <div className="page-container">
         <h1>Donate with Checkout</h1>
         <p>Donate to our project </p>
-        <CheckoutForm />
-        <button onClick={()=>console.log(total(20))}>Total</button>
+        {/* <CheckoutForm /> */}
+        {/* <button onClick={()=>console.log(total(20))}>Total</button> */}
       </div>
     </Layout>
   )
