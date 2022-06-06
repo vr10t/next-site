@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { CURRENCY, MIN_AMOUNT, MAX_AMOUNT } from '../../../config/index';
+import { CURRENCY } from '../../../config/index';
 import { formatAmountForStripe } from '../../../utils/stripe-helpers';
 
 import Stripe from 'stripe';
@@ -11,29 +11,26 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method === 'POST') {
     const amount: number = req.body.amount;
     try {
-      // Validate the amount that was passed from the client.
-      if (!(amount >= MIN_AMOUNT && amount <= MAX_AMOUNT)) {
-        throw new Error('Invalid amount.');
-      }
+     
       // Create Checkout Sessions from body params.
       const params: Stripe.Checkout.SessionCreateParams = {
-        submit_type: 'donate',
+        submit_type: 'book',
         payment_method_types: ['card'],
         line_items: [
           {
-            name: 'Custom amount donation',
+            name: 'Booking',
             amount: formatAmountForStripe(amount, CURRENCY),
             currency: CURRENCY,
             quantity: 1,
           },
         ],
         success_url: `${req.headers.origin}/result?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${req.headers.origin}/donate-with-checkout`,
+        cancel_url: `${req.headers.origin}/booking`,
       };
       const checkoutSession: Stripe.Checkout.Session = await stripe.checkout.sessions.create(
         params

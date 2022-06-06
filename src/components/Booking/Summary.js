@@ -6,7 +6,7 @@ import { BsCalendarFill } from "@react-icons/all-files/bs/BsCalendarFill";
 import { FaMapPin } from "@react-icons/all-files/fa/FaMapPin";
 import { BsClockFill } from "@react-icons/all-files/bs/BsClockFill";
 import { FaRoute } from "@react-icons/all-files/fa/FaRoute";
-import { BsWatch } from "@react-icons/all-files/bs/BsWatch";
+import { FaHourglassHalf} from "@react-icons/all-files/fa/FaHourglassHalf";
 import { FaTaxi } from "@react-icons/all-files/fa/FaTaxi";
 import { FaCreditCard } from "@react-icons/all-files/fa/FaCreditCard";
 import { FaCheck } from "@react-icons/all-files/fa/FaCheck";
@@ -50,7 +50,7 @@ export default function Summary(props,children) {
               <div className="">
               <label className="sr-only">Estimated trip time</label>
               <Tooltip style="light" content="Estimated trip time">
-              <BsWatch /></Tooltip>
+              <FaHourglassHalf /></Tooltip>
               </div>
               <div className="h-1/2 mx-4 border-t-0 border-b-2 border-gray-400 border-dashed grow">
               </div>

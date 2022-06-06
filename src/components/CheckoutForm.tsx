@@ -8,8 +8,8 @@ import getStripe from '../../utils/getStripe';
 import { fetchPostJSON } from '../../utils/api-helpers';
 import { formatAmountForDisplay } from '../../utils/stripe-helpers';
 import * as config from '../../config';
-
-const CheckoutForm = () => {
+type Props={amount:Number}
+const CheckoutForm = ({amount}: Props, children: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined) => {
   
   const [loading, setLoading] = useState(false);
 //   const [input, setInput] = useState({
@@ -28,7 +28,7 @@ const CheckoutForm = () => {
     setLoading(true);
     // Create a Checkout Session.
     const response = await fetchPostJSON('/api/checkout_sessions', {
-      amount: 33,
+      amount: amount,
     });
 
     if (response.statusCode === 500) {
@@ -52,28 +52,8 @@ const CheckoutForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <CustomDonationInput
-        className="checkout-style"
-        name={'customDonation'}
-        // value={input.customDonation}
-        // min={config.MIN_AMOUNT}
-        // max={config.MAX_AMOUNT}
-        // step={config.AMOUNT_STEP}
-        value={33}
-        currency={config.CURRENCY}
-        // onChange={handleInputChange}
-      />
-      {/* <StripeTestCards /> */}
-      {/* <button onClick={()=>{increaseTOTAL(1)}}>[{TOTAL}]</button> */}
-      <button
-        className=" bg-red-600 w-full h-full"
-        type="submit"
-        disabled={loading}
-        
-      >
-        Pay {formatAmountForDisplay(33, config.CURRENCY)}
-      </button>
+    <form onClick={handleSubmit}>
+     {children}
     </form>
   );
 };

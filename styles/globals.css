@@ -3,9 +3,12 @@
 @tailwind components;
 @tailwind utilities;
 body{
-    background-color:rgb(249 250 251)
+    background-color:rgb(249 250 251);
+    overflow-x: hidden;
+    max-width: 100%;
 }
 html{
+    max-width: 100%;
     overflow-x: hidden;
 }
 .PhoneInputInput{

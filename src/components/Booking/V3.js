@@ -189,7 +189,7 @@ const Form = () => {
                       {...getInputProps({
                         id: "location",
                         className:
-                          "truncate w-[72vw] flex grow border-0 rounded-r-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadosm text-base focus:outline-none focus:ring-2 focus:ring-sky-100",
+                          "truncate w-[72vw]  flex grow border-0 rounded-r-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadosm text-base focus:outline-none focus:ring-2 focus:ring-sky-100",
                         name: "location",
                         type: "text",
                         required: true,
@@ -197,7 +197,7 @@ const Form = () => {
                       })}
                     />
 
-                    <div className="absolute bg-gray-50 max max-xs ">
+                    <div className="absolute bg-gray-50 z-[999] ">
                       {loading && <div>Loading...</div>}
                       {suggestions.map((suggestion) => {
                         let className = suggestion.active
@@ -246,7 +246,7 @@ const Form = () => {
               <FaMapPin />
             </span>
             {mapsLoaded && (
-              <PlacesAutocomplete
+              <PlacesAutocomplete 
                 value={destination}
                 onChange={handleChangeDestination}
                 onSelect={handleSelectDestination}
@@ -262,14 +262,14 @@ const Form = () => {
                       {...register("destination")}
                       {...getInputProps({
                         id: "destination",
-                        className: `${styles.places} relative grow truncate  border-0 rounded-r-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shado-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-100`,
+                        className: `${styles.places}  relative grow truncate  border-0 rounded-r-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shado-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-100`,
                         name: "destination",
                         type: "text",
                         required: true,
                         placeholder: "To...",
                       })}
                     />
-                    <div className="absolute bg-gray-50    ">
+                    <div className="absolute bg-gray-50 z-[999]   ">
                       {loading && <div>Loading...</div>}
                       {suggestions.map((suggestion) => {
                         const className = suggestion.active
