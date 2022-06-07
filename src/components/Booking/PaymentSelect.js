@@ -23,16 +23,27 @@ const methods = [
 ];
 
 export default function PaymentSelect() {
-  const { data } = useAppContext();
+  const { data,setData } = useAppContext();
+  const [state,updateState]= useState(false)
   const [selectedMethod, setSelectedMethod] = useState(methods[0]);
 
   useEffect(() => {
-    if(selectedMethod.id !== 999){ data.payment =selectedMethod.name 
+    setPaymentMethod()
+    setData(data)
+  }, [selectedMethod]);
+ 
+  function setPaymentMethod(){
+    if(selectedMethod.id !== 999){ 
+      data.payment =selectedMethod.name 
+
+      
+
 }
+
   
 
     console.log(data.payment);
-  }, [selectedMethod]);
+  }
   return (
     <Listbox value={selectedMethod} onChange={setSelectedMethod}>
       <Listbox.Button className="bg-sky-600 flex items-center justify-between px-8 text-lg text-white rounded-lg h-12">
@@ -51,7 +62,7 @@ export default function PaymentSelect() {
             value={method}
             disabled={method.unavailable}>
             {({ active, selected, disabled }) => (
-              <li
+              <span
                 className={`flex font-semibold gap-2 w-full ${
                   !disabled && "h-12"
                 } items-center ${
@@ -63,7 +74,7 @@ export default function PaymentSelect() {
                 {method.id !== 999 && method.name}
 
                 {selected && method.id !== 999 && <FaCheck />}
-              </li>
+              </span>
             )}
           </Listbox.Option>
         ))}

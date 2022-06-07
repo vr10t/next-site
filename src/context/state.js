@@ -1,13 +1,18 @@
-import { createContext, useContext, useState,useEffect } from "react";
+import { createContext, useContext, useState,useEffect,useReducer } from "react";
 import { supabase } from "../../utils/supabaseClient";
 
 const AppContext = createContext();
 const AuthContext = createContext();
+const reducer = (state, pair) => ({ ...state, ...pair })
+
+const initialState = {}
 export function AppWrapper({ children }) {
-  const [data, setData] = useState({});
-  let sharedState = { data: data, setData: (x) => setData(x) };
+ 
+const [data, setData] = useReducer(reducer, initialState)
+  // const [data, setData] = useState({});
+  // let sharedState = { data: data, setData: (x) => setData(x) };
   return (
-    <AppContext.Provider value={sharedState}>{children}</AppContext.Provider>
+    <AppContext.Provider value={{data,setData}}>{children}</AppContext.Provider>
   );
 }
 

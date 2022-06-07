@@ -13,10 +13,141 @@ import { FaCheck } from "@react-icons/all-files/fa/FaCheck";
 import { useAppContext } from "../../context/state";
 import {Tooltip} from "flowbite-react"
 import Receipt from "../Svg/Receipt";
+import { useState } from "react";
+import AutocompleteInput from "../Booking/AutocompleteInput"
+import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
+import { handleGetDistance } from "../../../utils/google-helpers";
 export default function Summary(props,children) {
- const {data} = useAppContext()
+ const {data,setData} = useAppContext()
  const completed = "flex flex-row-reverse justify-start float-left px-1 gap-1 text-sky-500 ";
  const uncompleted = "mx-auto py-2 text-gray-500 ";
+ const [editable,setEditable] = useState({location:false,destination:false,passengers:false,date:false,time:false})
+ const [locationEditable,setLocationEditable]=useState(false)
+ const [destinationEditable,setDestinationEditable]=useState(false)
+ const [passengersEditable,setPassengersEditable]=useState(false)
+ const [dateEditable,setDateEditable]=useState(false)
+ const [timeEditable,setTimeEditable]=useState(false)
+ const [passengers,setPassengers]=useState("")
+ const [date,setDate]=useState('')
+ const [time,setTime] =useState("")
+ const [origin,setOrigin]= useState('')
+ const [destination,setDestination]= useState('')
+ const[distance,setDistance]= useState('')
+ const [duration,setDuration]=useState('')
+ let dateObject = new Date();
+ let minute = dateObject.getMinutes()
+ let hour = dateObject.getHours() +1
+  let day = dateObject.getDate();
+  let month = dateObject.getMonth() + 1;
+  let maxMonths = dateObject.getMonth() + 4;
+  let year = dateObject.getFullYear();
+  if (month < 10) month = "0" + month;
+  if (day < 10) day = "0" + day;
+  let now = hour + ":"+ minute
+  let today = year + "-" + month + "-" + day;
+  let threeMonthsFromNow = year + "-" + maxMonths+ "-" + day;
+
+ function callback(response, status) {
+  console.log("status", status);
+  try {
+    
+      setDistance(response.rows[0].elements[0].distance.text)
+      setDuration(response.rows[0].elements[0].duration.text)
+      data.distance = distance
+      data.duration = duration
+      console.log(distance,duration)
+      // setDistanceResults({ distance: distance, duration: duration });
+    
+      console.log(response, status);
+    
+  } catch (error) {}
+}
+
+ const handleChangeOrigin = (e) => {
+  setOrigin(e);
+};
+
+const handleSelectOrigin = (e) => {
+  geocodeByAddress(e)
+    .then((results) => getLatLng(results[0]))
+    .then((latLng) => {
+      console.log("Success", latLng);
+    })
+    .catch((error) => console.error("Error", error));
+  setOrigin(e);
+  console.log("origin:", origin);
+};
+const handleChangeDestination = (e) => {
+  setDestination(e);
+};
+const handleSelectDestination = (e) => {
+  geocodeByAddress(e)
+    .then((results) => getLatLng(results[0]))
+    .then((latLng) => {
+      console.log("Success", latLng);
+    })
+    .catch((error) => console.error("Error", error));
+  setDestination(e);
+  console.log("destination:", destination);
+};
+ function edit(e){
+  // setEditable((editable)=>editable.input=true)
+  switch (e.target.parentNode.id) {
+    case "location":
+     setLocationEditable(true) 
+      break;
+      case "destination":
+     setDestinationEditable(true)
+      break;
+      case "passengers":
+     setPassengersEditable(true)
+      break;
+      case "date":
+     setDateEditable(true)
+     
+      break;
+      case "time":
+     setTimeEditable(true)
+      
+      break;
+  
+    default:
+      break;
+  }
+  console.log(e.target.parentNode.id)
+ }
+ function save(e){
+  switch (e.target.parentNode.id) {
+    case "location":
+     setLocationEditable(false) 
+      break;
+      case "destination":
+     setDestinationEditable(false)
+      break;
+      case "passengers":
+     setPassengersEditable(false)
+      break;
+      case "date":
+     setDateEditable(false)
+     
+      break;
+      case "time":
+     setTimeEditable(false)
+      
+      break;
+  
+    default:
+      break;
+  }
+   if(origin!=""){data.location=origin}
+   if(destination!=""){data.destination=destination}
+   if(passengers!=""){data.passengers=passengers}
+   if(date!=""){data.date=date}
+   if(time!=""){data.time=time}
+   setData(data)
+   handleGetDistance(data.location,data.destination,callback)
+ }
+ console.log(now)
   return (
     <div className="flex w-screen bg-clip-content bg-gray-100 shadow-2xl lg:rounded-xl lg:w-full">
     
@@ -39,7 +170,7 @@ export default function Summary(props,children) {
                
               </div>
               <div className="self-center text-base font-bold">
-                {props.distance}
+                {distance==''?props.distance:distance}
                
               </div>
               
@@ -54,7 +185,7 @@ export default function Summary(props,children) {
               </div>
               <div className="h-1/2 mx-4 border-t-0 border-b-2 border-gray-400 border-dashed grow">
               </div>
-              <div className="self-center text-base font-bold">{props.duration}</div>
+              <div className="self-center text-base font-bold">{duration==''?props.duration:duration}</div>
             </div>
             </div>{" "}
             <Receipt className="" />
@@ -75,13 +206,17 @@ export default function Summary(props,children) {
               <p className="font-bold text-gray-800 lg:text-sm">
                 Pickup address
               </p>
-              <p className={`${data.location}text-sm text-gray-500`}>{props.location}</p>
+              {locationEditable? <AutocompleteInput
+              value={origin}
+                onChange={handleChangeOrigin}
+                onSelect={handleSelectOrigin} /> :<p className={`text-sm text-gray-500`}>{origin==""?props.location:origin}</p>}
+              
             </div>
 
-            <div className="my-auto">
-              <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
+            <div id="location" className="my-auto">
+              {locationEditable?<button  onClick={save} className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">Save</button>:<button onClick={edit} className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
                 Change
-              </a>
+              </button>}
             </div>
           </div>
           <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
@@ -100,13 +235,16 @@ export default function Summary(props,children) {
               <p className="font-bold text-gray-800 lg:text-sm">
                 Dropoff address
               </p>
-              <p className={`${data.destination }text-sm text-gray-500`}>{props.destination}</p>
+              {destinationEditable? <AutocompleteInput
+              value={destination}
+                onChange={handleChangeDestination}
+                onSelect={handleSelectDestination} /> :<p className={`${data.destination}text-sm text-gray-500`}>{destination==""?props.destination:destination}</p>}
             </div>
 
-            <div className="my-auto">
-              <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
+            <div id="destination" className="my-auto">
+              {destinationEditable?<button onClick={save} className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">Save</button>:<button onClick={edit} className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
                 Change
-              </a>
+              </button>}
             </div>
           </div>
           <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
@@ -123,13 +261,14 @@ export default function Summary(props,children) {
             </div>
             <div className="col-span-2 pt-1">
               <p className="font-bold text-gray-800 lg:text-sm">Passengers</p>
-              <p className={`${data.passengers }text-sm text-gray-500`}>{props.passengers}</p>
+              {passengersEditable? <input className=" w-auto  flex grow border-0 rounded-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-50 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none ring-2 focus:ring-2 focus:ring-sky-600"
+              type="number" min="1" max="16" value={passengers} onChange={(e)=>setPassengers(e.target.value)} /> :<p className={`text-sm text-gray-500`}>{passengers==""?props.passengers:passengers}</p>}
             </div>
 
-            <div className="my-auto">
-              <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
+            <div id="passengers" className="my-auto">
+            {passengersEditable?<button onClick={save} className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">Save</button>:<button onClick={edit} className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
                 Change
-              </a>
+              </button>}
             </div>
           </div>
           <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
@@ -145,13 +284,14 @@ export default function Summary(props,children) {
             </div>
             <div className="col-span-2 pt-1">
               <p className="font-bold text-gray-800 lg:text-sm">Pickup date</p>
-              <p className={`${data.date }text-sm text-gray-500`}>{props.date}</p>
+              {dateEditable? <input className=" w-auto  flex grow border-0 rounded-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-50 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none ring-2 focus:ring-2 focus:ring-sky-600"
+              type="date" min={today} max={threeMonthsFromNow} value={date} onChange={(e)=>setDate(e.target.value)} /> :<p className={`text-sm text-gray-500`}>{date==""?props.date:date}</p>}
             </div>
 
-            <div className="my-auto">
-              <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
+            <div id="date" className="my-auto">
+            {dateEditable?<button onClick={save} className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">Save</button>:<button onClick={edit} className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
                 Change
-              </a>
+              </button>}
             </div>
           </div>
           <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
@@ -167,35 +307,84 @@ export default function Summary(props,children) {
             </div>
             <div className="col-span-2 pt-1">
               <p className="font-bold text-gray-800 lg:text-sm">Pickup time</p>
-              <p className={`${data.time }text-sm text-gray-500`}>{props.time}</p>
+              {timeEditable? <input className=" w-auto  flex grow border-0 rounded-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-50 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none ring-2 focus:ring-2 focus:ring-sky-600"
+              type="time" min={now} value={time} onChange={(e)=>setTime(e.target.value)} /> :<p className={`text-sm text-gray-500`}>{time==""?props.time:time}</p>}
             </div>
 
-            <div className="my-auto">
-              <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
+            <div id="time" className="my-auto">
+            {timeEditable?<button onClick={save} className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">Save</button>:<button onClick={edit} className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
                 Change
-              </a>
+              </button>}
             </div>
           </div>
           {data.service && 
             <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
             <div className="col-span-1 my-auto text-3xl text-gray-800">
               {" "}<div className={data.service ? completed : uncompleted}>
-                  {data.time ? (
+                  {data.service ? (
                     <FaCheck className="float-right text-sm" />
                   ) : (
                     ""
-                  )}<BsClockFill />
+                  )}<FaTaxi />
                   </div>
               
             </div>
             <div className="col-span-2 pt-1">
-              <p className="font-bold text-gray-800 lg:text-sm">Pickup time</p>
-              <p className={`${data.time }text-sm text-gray-500`}>{props.time}</p>
+              <p className="font-bold text-gray-800 lg:text-sm">Service</p>
+              <p className={`text-sm text-gray-500`}>{data.service}</p>
             </div>
 
             <div className="my-auto">
               <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
-                Change
+               
+              </a>
+            </div>
+          </div>}
+          {data.name &&data.email&&data.phone && 
+            <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+            <div className="col-span-1 my-auto text-3xl text-gray-800">
+              {" "}<div className={data.name &&data.email&&data.phone ? completed : uncompleted}>
+                  {data.name &&data.email&&data.phone ? (
+                    <FaCheck className="float-right text-sm" />
+                  ) : (
+                    ""
+                  )}<BsFillPersonFill />
+                  </div>
+              
+            </div>
+            <div className="col-span-2 pt-1">
+              <p className="font-bold text-gray-800 lg:text-sm">Passenger details</p>
+              <p className={`text-sm text-gray-500`}>{data.name}</p>
+              <p className={`text-sm text-gray-500`}>{data.email}</p>
+              <p className={`text-sm text-gray-500`}>{data.phone}</p>
+            </div>
+
+            <div className="my-auto">
+              <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
+               
+              </a>
+            </div>
+          </div>}
+          {data.payment && 
+            <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+            <div className="col-span-1 my-auto text-3xl text-gray-800">
+              {" "}<div className={data.payment ? completed : uncompleted}>
+                  {data.payment ? (
+                    <FaCheck className="float-right text-sm" />
+                  ) : (
+                    ""
+                  )}<FaCreditCard />
+                  </div>
+              
+            </div>
+            <div className="col-span-2 pt-1">
+              <p className="font-bold text-gray-800 lg:text-sm">Payment Method</p>
+              <p className={`text-sm text-gray-500`}>{data.payment}</p>
+            </div>
+
+            <div className="my-auto">
+              <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
+               
               </a>
             </div>
           </div>}
@@ -211,7 +400,7 @@ export default function Summary(props,children) {
             </div>
 
             <div className="my-auto text-3xl">
-              <a className="text-3xl text-gray-500">£{props.price===undefined?"loading..":props.price}</a>
+              <a className="text-3xl text-gray-500">£{props.price===undefined||props.price===NaN?"loading..":props.price}</a>
             </div>
           </div>
           <div className="h-10"></div>

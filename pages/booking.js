@@ -32,7 +32,19 @@ import Service from "../src/components/Booking/Service";
 import getStripe from "../utils/getStripe";
 import { fetchPostJSON } from "../utils/api-helpers";
 import { handleSignup, handleSubmitBooking } from "../utils/supabase-helpers";
+import { useRouter } from "next/router";
+import { handleGetDistance as distanceMatrix } from "../utils/google-helpers";
 export default function Booking() {
+  const [mapsLoaded, setMapsLoaded] = useState(false);
+  const loader = new Loader({
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
+    version: "weekly",
+    libraries: ["places"],
+  });
+  loader.load().then(() => {
+    setMapsLoaded(true);
+  });
+  const router = useRouter();
   const [distanceResults, setDistanceResults] = useState("");
   const { data } = useAppContext();
   const session = useAuthContext();
@@ -52,8 +64,23 @@ export default function Booking() {
   const [paymentMethod, setPaymentMethod] = useState(null);
   const [canSubmit, setCanSubmit] = useState(false);
   const [phone, setPhone] = useState();
-  let BOOKING_DATA={ location:data.location, destination:data.destination,passengers:data.passengers,date:data.date,time:data.time,distance:data.distance,duration:data.duration,service:data.service}
- 
+  const [dataError, setDataError] = useState(false);
+  let dataErrorDiv = (
+    <div className="fixed overscroll-none w-screen mx-auto mt-1/2 flex pt-64 font-semibold tracking-wide p-8 h-screen z-[99] bg-black/95 text-pink-500 text-4xl">
+      No booking data was found, redirecting...
+    </div>
+  );
+  let BOOKING_DATA = {
+    location: data.location,
+    destination: data.destination,
+    passengers: data.passengers,
+    date: data.date,
+    time: data.time,
+    distance: data.distance,
+    duration: data.duration,
+    service: data.service,
+  };
+
   let service;
   const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -84,69 +111,70 @@ export default function Booking() {
     formState: { errors },
     clearErrors,
   } = useForm(formOptions);
-  const loader = new Loader({
-    apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
-    version: "weekly",
-    libraries: ["places"],
-  });
-
-  loader
-    .load()
-    .then((google) => {
-      service = new google.maps.DistanceMatrixService();
-    })
-    .catch((e) => {
-      console.log(e);
-    });
-
-  useEffect(() => {
-    console.log(session);
-    console.log(window.innerWidth);
-    loader
-      .load()
-      .then((google) => {
-        service = new google.maps.DistanceMatrixService();
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-    // console.log(service)
-  }, []);
 
   useEffect(() => {
     // allow other functions to execute, otherwise component mounts before the variables update
     setTimeout(() => {
       setTripDistance(data.distance);
       setTotalTripPrice(data.total_trip_price);
-      console.log('dadada',BOOKING_DATA)
+      console.log("dadada", BOOKING_DATA);
     }, 2000);
-    Object.assign(BOOKING_DATA,{ location:data.location, destination:data.destination,passengers:data.passengers,date:data.date,time:data.time,distance:data.distance,duration:data.duration,service:data.service})
-    
+    Object.assign(BOOKING_DATA, {
+      location: data.location,
+      destination: data.destination,
+      passengers: data.passengers,
+      date: data.date,
+      time: data.time,
+      distance: data.distance,
+      duration: data.duration,
+      service: data.service,
+    });
   }, [data.distance]);
   useEffect(() => {
     console.log(data.total_trip_price);
     savelocalStorage();
-   
   }, []);
 
   useEffect(() => {
-    Object.assign(data, {
-      distance: distanceResults.distance,
-      duration: distanceResults.duration,
-    });
+    try {
+      Object.assign(data, {
+        distance: distanceResults.distance,
+        duration: distanceResults.duration,
+      });
+    } catch (error) {
+      console.log(error);
+      console.log(distanceResults);
+    }
+
     window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
     calculatePrice();
     console.log("distanceResults:", distanceResults, "data:", data);
   }, [distanceResults]);
+  function handleGetDistance(o, d) {
+    distanceMatrix(o, d, callback);
+    function callback(response, status) {
+      console.log("status", status);
+      try {
+        if (status === "OK") {
+          let distance = response.rows[0].elements[0].distance.text;
+          let duration = response.rows[0].elements[0].duration.text;
+          setDistanceResults({ distance: distance, duration: duration });
+        } else {
+          console.log(response, status);
+        }
+      } catch (error) {}
+    }
+  }
   function savelocalStorage() {
     try {
       // check whether booking data is present
       let parsedData = JSON.parse(window.localStorage.getItem("BOOKING_DATA"));
       // console.log("parsedData:", parsedData);
-      if (parsedData !== null) {
+      let parsedDataIsValid = validateBookingData(parsedData);
+      if (parsedDataIsValid) {
         //set booking details to saved data from localStorage
         setDataToParsedData(parsedData);
-        console.log(data);
+        console.log(parsedData);
         console.log(
           "data is set to parsedData",
           parsedData.location,
@@ -156,9 +184,20 @@ export default function Booking() {
         data.distance = distanceResults.distance;
       } else {
         //if no booking data is saved, get distance and save data
-        handleGetDistance(data.location, data.destination);
-        window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
-        
+        try {
+          handleGetDistance(data.location, data.destination);
+        } catch (error) {
+          setDataError(true);
+
+          setTimeout(() => {
+            router.push("/");
+          }, 3000);
+        }
+
+        window.localStorage.setItem(
+          "BOOKING_DATA",
+          JSON.stringify(BOOKING_DATA)
+        );
       }
     } catch (error) {
       // console.log(error);
@@ -182,31 +221,28 @@ export default function Booking() {
     }
     // console.log("data:", data);
   }
-  function handleGetDistance(location, destination) {
-    service.getDistanceMatrix(
-      {
-        origins: [location],
-        destinations: [destination],
-        travelMode: google.maps.TravelMode.DRIVING,
-        unitSystem: google.maps.UnitSystem.IMPERIAL,
-        avoidTolls: true,
-      },
-      callback
+  function validateBookingData(obj) {
+    console.log(
+      "validating",
+      obj.location === undefined ||
+        obj.destination === undefined ||
+        obj.date === undefined ||
+        obj.time === undefined ||
+        obj.passengers === undefined
     );
-
-    function callback(response, status) {
-      console.log("status", status);
-      try {
-        if (status === "OK") {
-          let distance = response.rows[0].elements[0].distance.text;
-          let duration = response.rows[0].elements[0].duration.text;
-          setDistanceResults({ distance: distance, duration: duration });
-        } else {
-          console.log(response, status);
-        }
-      } catch (error) {}
+    if (
+      obj.location === undefined ||
+      obj.destination === undefined ||
+      obj.date === undefined ||
+      obj.time === undefined ||
+      obj.passengers === undefined
+    ) {
+      return false;
+    } else {
+      return true;
     }
   }
+
   async function handleRedirectToCheckout() {
     // Create a Checkout Session.
     const response = await fetchPostJSON("/api/checkout_sessions", {
@@ -280,23 +316,23 @@ export default function Booking() {
     //
   };
   function handleBooking() {
-    handleSubmitBooking(data)
+    handleSubmitBooking(data);
     // handleRedirectToCheckout();
   }
   function onSubmit(formData) {
     // handleSignup(data);
-    data.name=formData.name
-    data.email=formData.email
-    data.phone=formData.phone
+    data.name = formData.name;
+    data.email = formData.email;
+    data.phone = formData.phone;
     console.log(data);
-    
+
     // alert("SUCCESS!! :-)\n\n" + JSON.stringify(data, null, 4));
     return false;
   }
-  
 
   return (
     <>
+      {dataError && dataErrorDiv}
       <Layout>
         {!session && showBanner && (
           <Announcement
@@ -314,7 +350,7 @@ export default function Booking() {
             {showSummary && (
               <div className="flex  lg:hidden">
                 <div className="overscroll-contain z-[21] top-20  fixed lg:relative left-0 h-[80vh] lg:h-max overflow-auto">
-                  <Summary
+                 { mapsLoaded &&<Summary
                     location={data.location}
                     destination={data.destination}
                     passengers={data.passengers}
@@ -325,7 +361,7 @@ export default function Booking() {
                     duration={data.duration}
                     onClick={handleBooking}
                     disabled={!canSubmit}
-                  />
+                  />}
                 </div>
               </div>
             )}
@@ -454,7 +490,7 @@ export default function Booking() {
 
                       <div className="flex relative mb-2 w-full shadow-sm">
                         <PhoneInput
-                          {...register('phone')}
+                          {...register("phone")}
                           className="inline-flex items-center pl-2 w-full text-lg text-gray-900 bg-gray-50 rounded-md border-r-2 shadow-sm"
                           defaultCountry="GB"
                           placeholder="Enter phone number"
@@ -462,14 +498,14 @@ export default function Booking() {
                           onChange={setPhone}
                         />
                         {errors.phone && (
-                        <div className="absolute w-full h-full text-sm font-medium text-pink-500 rounded-md ring-2 ring-pink-400">
-                          <p className="relative left-1 -top-3 px-2 w-max bg-gray-50">
-                            {errors.phone?.message}
-                          </p>
-                        </div>
-                      )}
+                          <div className="absolute w-full h-full text-sm font-medium text-pink-500 rounded-md ring-2 ring-pink-400">
+                            <p className="relative left-1 -top-3 px-2 w-max bg-gray-50">
+                              {errors.phone?.message}
+                            </p>
+                          </div>
+                        )}
                       </div>
-                      
+
                       {/* </div> */}
                       {/* <button type="submit">Submit</button> */}
                     </form>
@@ -488,7 +524,7 @@ export default function Booking() {
           </div>
           <div className="hidden lg:flex">
             <div className=" z-[7] -top-20  lg:relative right-0 float-right h-screen lg:h-full min-w-max overflow-auto">
-              <Summary
+              {mapsLoaded &&<Summary
                 location={data.location}
                 destination={data.destination}
                 passengers={data.passengers}
@@ -499,7 +535,7 @@ export default function Booking() {
                 duration={data.duration}
                 onClick={handleBooking}
                 disabled={canSubmit}
-              />
+              />}
             </div>
           </div>
         </div>
