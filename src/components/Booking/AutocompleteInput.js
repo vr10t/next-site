@@ -15,9 +15,9 @@ export default function AutocompleteInput(props){
                     <input
                      
                       {...getInputProps({
-                        id: "location",
+                        id: props.id,
                         className:
-                          " w-auto  flex grow border-0 rounded-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-50 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none ring-2 focus:ring-2 focus:ring-sky-600",
+                          " w-auto max-w-[12rem] xs:max-w-[15rem] md:max-w-[18rem] flex grow border-0 rounded-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-50 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none ring-2 focus:ring-2 focus:ring-sky-600",
                         name:props.name,
                         type: "text",
                         required: true,
@@ -25,7 +25,7 @@ export default function AutocompleteInput(props){
                       })}
                     />
 
-                    <div className="absolute bg-gray-50 z-[999] ">
+                    <div className="absolute bg-gray-50 z-[999] w-auto max-w-[12rem] xs:max-w-[15rem] overflow-auto ">
                       {loading && <div>Loading...</div>}
                       {suggestions.map((suggestion) => {
                         let className = suggestion.active
@@ -41,7 +41,7 @@ export default function AutocompleteInput(props){
                               backgroundColor: "rgb(249 250 251)",
                               cursor: "pointer",
                             };
-                        let key = suggestion.value;
+                        let key = suggestion.id;
                         return (
                           <div
                             {...getSuggestionItemProps(suggestion, {

@@ -1,5 +1,4 @@
 import React, { useCallback } from "react";
-import { useRef } from "react";
 import { FaMapMarkerAlt } from "@react-icons/all-files/fa/FaMapMarkerAlt";
 import { BsFillPersonFill } from "@react-icons/all-files/bs/BsFillPersonFill";
 import { FaPhoneAlt } from "@react-icons/all-files/fa/FaPhoneAlt";
@@ -20,6 +19,10 @@ import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
 import { getURL } from "next/dist/shared/lib/utils";
 import { Loader } from "@googlemaps/js-api-loader";
 import styles from "./Form.module.scss";
+import { Tooltip } from "flowbite-react";
+import {FaArrowRight} from "@react-icons/all-files/fa/FaArrowRight"
+import {handleGetDistance} from "../../../utils/google-helpers"
+import {throttle} from "throttle-debounce"
 
 const PlacesAutocomplete = dynamic(() => import("react-places-autocomplete"));
 // const HCaptcha = dynamic(() => import("@hcaptcha/react-hcaptcha"));
@@ -38,7 +41,7 @@ const Form = () => {
   useCallback(() => {}, [onSubmit]);
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
-
+  const [travelDate,setTravelDate]=useState("ASAP")
   let date = new Date();
   let day = date.getDate();
   let month = date.getMonth() + 1;
@@ -58,10 +61,11 @@ const Form = () => {
       .required("Last name is required")
       .positive()
       .integer(),
-    date: Yup.string().required("Date of Birth is required"),
+    date: Yup.string(),
 
-    time: Yup.string().required("Email is required"),
+    
   });
+  
   const formOptions = { resolver: yupResolver(validationSchema) };
 
   // get functions to build form with useForm() hook
@@ -72,37 +76,130 @@ const Form = () => {
     let formData = e;
     Object.assign(formData, { location: origin, destination: destination });
 
-    setData(formData), console.log(formData);
+    setData(formData);
+    console.log(data);
     window.localStorage.removeItem("BOOKING_DATA");
-    router.push("/booking");
+    // router.push("/booking");
     return false;
   }
-  const handleChangeOrigin = (e) => {
-    setOrigin(e);
-  };
+  useEffect(()=>{
+    setData(data)
+    handleChangeOrSelect()
+    
+    setTimeout(() => {
+      console.log(data)
+    }, 1000);
+    
 
+  },[origin,destination])
+  function callback(response, status) {
+    console.log("status", status);
+    try {
+      // setDistance(response.rows[0].elements[0].distance.text);
+      // setDuration(response.rows[0].elements[0].duration.text);
+      
+      data.distance = response.rows[0].elements[0].distance.text;
+      data.duration = response.rows[0].elements[0].duration.text;
+      setData(data)
+      setTimeout(()=>console.log(data.distance, data.duration),2000)
+      // setDistanceResults({ distance: distance, duration: duration });
+
+      console.log(response, status);
+    } catch (error) {
+      data.distance='error'
+      data.duration='error'
+      setData(data)
+      console.log(`incorrect location or destination`)
+    }
+  }
+  function debounce(func, wait, immediate) {
+    // 'private' variable for instance
+    // The returned function will be able to reference this due to closure.
+    // Each call to the returned function will share this common timer.
+    var timeout;
+  
+    // Calling debounce returns a new anonymous function
+    return function() {
+      // reference the context and args for the setTimeout function
+      let context = this,
+        args = arguments;
+  
+      // Should the function be called now? If immediate is true
+      //   and not already in a timeout then the answer is: Yes
+      let callNow = immediate && !timeout;
+  
+      // This is the basic debounce behaviour where you can call this 
+      //   function several times, but it will only execute once 
+      //   [before or after imposing a delay]. 
+      //   Each time the returned function is called, the timer starts over.
+      clearTimeout(timeout);
+  
+      // Set the new timeout
+      timeout = setTimeout(function() {
+  
+        // Inside the timeout function, clear the timeout variable
+        // which will let the next execution run when in 'immediate' mode
+        timeout = null;
+  
+        // Check if the function already ran with the immediate flag
+        if (!immediate) {
+          // Call the original function with apply
+          // apply lets you define the 'this' object as well as the arguments 
+          //    (both captured before setTimeout)
+          func.apply(context, args);
+        }
+      }, wait);
+  
+      // Immediate mode and no wait timer? Execute the function..
+      if (callNow) func.apply(context, args);
+    }
+  }
+  const debounceHandleGetDistance = throttle(2000,handleGetDistance)
+  const handleChangeOrigin = (e) => {
+    setOrigin(e)
+    data.location=origin
+    setData(data)
+    console.log(data.location)
+    handleChangeOrSelect()
+  };
+  
+  function handleChangeOrSelect(){
+    console.log(origin,destination)
+    if(data.location !=undefined&&data.destination!=undefined){
+     debounceHandleGetDistance(origin, destination, callback)
+    }
+  }
   const handleSelectOrigin = (e) => {
-    geocodeByAddress(e)
-      .then((results) => getLatLng(results[0]))
-      .then((latLng) => {
-        console.log("Success", latLng);
-      })
-      .catch((error) => console.error("Error", error));
+    // geocodeByAddress(e)
+    //   .then((results) => getLatLng(results[0]))
+    //   .then((latLng) => {
+    //     console.log("Success", latLng);
+    //   })
+    //   .catch((error) => console.error("Error", error));
     setOrigin(e);
-    console.log("origin:", origin);
+    data.location=origin
+    console.log(origin);
+    setData(data)
+    
   };
   const handleChangeDestination = (e) => {
-    setDestination(e);
+    setDestination(e)
+    data.destination=destination
+    setData(data)
+   
   };
   const handleSelectDestination = (e) => {
-    geocodeByAddress(e)
-      .then((results) => getLatLng(results[0]))
-      .then((latLng) => {
-        console.log("Success", latLng);
-      })
-      .catch((error) => console.error("Error", error));
+    // geocodeByAddress(e)
+    //   .then((results) => getLatLng(results[0]))
+    //   .then((latLng) => {
+    //     console.log("Success", latLng);
+    //   })
+    //   .catch((error) => console.error("Error", error));
     setDestination(e);
-    console.log("destination:", destination);
+    data.destination=destination
+    console.log(data)
+    setData(data)
+   
   };
   function getLocation() {
     navigator.geolocation.getCurrentPosition(showPosition);
@@ -129,34 +226,9 @@ const Form = () => {
       alert(err.message);
     }
   }
-  function revealPosition(e) {
-    console.log(e);
-  }
-  function handlePermission() {
-    // navigator.permissions
-    //   .query({ name: "geolocation" })
-    //   .then(function (result) {
-    //     if (result.state == "granted") {
-    //       report(result.state);
-    //     } else if (result.state == "prompt") {
-    //       report(result.state);
-
-    //       navigator.geolocation.getCurrentPosition(revealPosition);
-    //     } else if (result.state == "denied") {
-    //       report(result.state);
-    //     }
-    //     result.addEventListener("change", function () {
-    //       report(result.state);
-    //     });
-    //   });
-  }
-
-  function report(state) {
-    console.log("Permission " + state);
-  }
-  // useEffect(() => {
-  //   handlePermission();
-  // }, []);
+  
+  
+  
 
   return (
     <div className="relative  z-[9]  justify-center xs:mx-auto mx-1 w-full bg-none py-4 ">
@@ -176,6 +248,7 @@ const Form = () => {
                 value={origin}
                 onChange={handleChangeOrigin}
                 onSelect={handleSelectOrigin}
+               
                 searchOptions={{ componentRestrictions: { country: "gb" } }}>
                 {({
                   getInputProps,
@@ -183,10 +256,11 @@ const Form = () => {
                   getSuggestionItemProps,
                   loading,
                 }) => (
-                  <div>
-                    <input
+                  <div >
+                    <input 
                       {...register("location")}
                       {...getInputProps({
+                        
                         id: "location",
                         className:
                           "truncate w-[72vw]  flex grow border-0 rounded-r-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadosm text-base focus:outline-none focus:ring-2 focus:ring-sky-100",
@@ -213,7 +287,7 @@ const Form = () => {
                               backgroundColor: "rgb(249 250 251)",
                               cursor: "pointer",
                             };
-                        let key = suggestion.value;
+                        let key = suggestion.id;
                         return (
                           <div
                             {...getSuggestionItemProps(suggestion, {
@@ -230,13 +304,14 @@ const Form = () => {
                 )}
               </PlacesAutocomplete>
             )}
-            <span className="inline-flex relative text-gray-700 w-6 right-8 my-3  ">
-            <button onClick={getLocation}>
-              <FaCrosshairs />
-            </button>
-          </span>
+           <span className="inline-flex relative ring-1 ring-gray-400 duration-200 hover:ring-gray-50 shadow-sm bg-gray-200 text-gray-900 hover:bg-sky-500 hover:text-white px-2 rounded right-10 ml-1 my-1   ">
+              <button onClick={getLocation}>
+              <Tooltip style="light" placement="left" content="Your location"> 
+                <FaCrosshairs /></Tooltip>
+              </button> 
+            </span>
           </div>
-         
+
           <div className="flex flex-row rounded-lg xs:mx-auto w-full border-1 border-gray-900">
             {" "}
             <span className="inline-flex  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadosm text-lg">
@@ -246,7 +321,7 @@ const Form = () => {
               <FaMapPin />
             </span>
             {mapsLoaded && (
-              <PlacesAutocomplete 
+              <PlacesAutocomplete
                 value={destination}
                 onChange={handleChangeDestination}
                 onSelect={handleSelectDestination}
@@ -258,11 +333,12 @@ const Form = () => {
                   loading,
                 }) => (
                   <div>
+                  
                     <input
                       {...register("destination")}
                       {...getInputProps({
                         id: "destination",
-                        className: `${styles.places}  relative grow truncate  border-0 rounded-r-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shado-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-100`,
+                        className: `${styles.places}  relative grow  border-0 rounded-r-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shado-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-100`,
                         name: "destination",
                         type: "text",
                         required: true,
@@ -285,11 +361,12 @@ const Form = () => {
                               backgroundColor: "rgb(249 250 251)",
                               cursor: "pointer",
                             };
+                            let key = suggestion.id;
                         return (
                           <div
                             {...getSuggestionItemProps(suggestion, {
                               className,
-                              style,
+                              style, key
                             })}>
                             <span>{suggestion.description}</span>
                           </div>
@@ -322,45 +399,38 @@ const Form = () => {
               max="16"
             />
           </div>
-          <div className="grid grid-cols-5 justify-between gap-2 min-w-[72vw] max-w-[72vw]">
+
+          <div className="flex justify-between gap-2 w-full  max-w-96">
             <div className="flex flex-row col-span-3 rounded-lg  w-full border-1 border-gray-900">
               {" "}
               <span className="inline-flex  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadow-sm text-lg">
                 <label htmlFor="date" className="sr-only ">
-                  From
+                  
                 </label>
                 <BsCalendarFill />
               </span>
+              <select {...register("date")} onChange={(e)=>setTravelDate(e.target.value)} className=" border-0 rounded-r-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600" defaultValue="ASAP">
+                <option  value="ASAP">ASAP</option>
+                <option value="Later">Later</option>
+              </select>
+              
+            </div>
+          </div>
+          {travelDate=="Later"&&<div className="flex justify-between gap-2 w-full  max-w-96">
+            <div className="flex flex-row col-span-3 rounded-lg  w-full border-1 border-gray-900">
+              {" "}
+              <span className="inline-flex  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadow-sm text-lg">
+              <FaArrowRight /></span>
               <input
                 {...register("date")}
                 id="date"
                 className=" border-0 rounded-r-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600"
                 name="date"
-                required={true}
-                type="date"
-                placeholder={today}
-                defaultValue={today}
+                // required={true}
+                type="datetime-local"
+                
               />
-            </div>
-            <div className="flex flex-row rounded-lg xs:mx-auto col-start-6  ">
-              <span className="inline-flex border-x-2  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadow-sm text-lg">
-                <label htmlFor="time" className="sr-only ">
-                  Time
-                </label>
-                <BsClockFill />
-              </span>
-              <input
-                {...register("time")}
-                id="time"
-                className=" border-0 max-w-fit rounded-r-md appearance-none focus-ring-full  py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600"
-                name="time"
-                required={true}
-                type="time"
-                placeholder=""
-                defaultValue=""
-              />
-            </div>
-          </div>
+              </div></div>}
           <div className="flex flex-row rounded-lg mx-1 w-full">
             <button
               type="submit"

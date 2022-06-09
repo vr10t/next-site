@@ -24,8 +24,8 @@ const completed = "mx-auto py-2 text-sky-500 ";
                   <FaMapMarkerAlt className="px-1" />
                 </div>
                 <div
-                  className={data.date && data.time ? completed : uncompleted}>
-                  {data.date && data.time ? (
+                  className={data.date  ? completed : uncompleted}>
+                  {data.date  ? (
                     <FaCheck className="float-right text-sm" />
                   ) : (
                     ""

@@ -46,7 +46,7 @@ export default function Booking() {
   });
   const router = useRouter();
   const [distanceResults, setDistanceResults] = useState("");
-  const { data } = useAppContext();
+  const { data,setData } = useAppContext();
   const session = useAuthContext();
   let distanceInMiles;
   const [farePrice, setFarePrice] = useState(4);
@@ -70,7 +70,7 @@ export default function Booking() {
       No booking data was found, redirecting...
     </div>
   );
-  let BOOKING_DATA = {
+  let BOOKING_DATA={
     location: data.location,
     destination: data.destination,
     passengers: data.passengers,
@@ -113,64 +113,76 @@ export default function Booking() {
   } = useForm(formOptions);
 
   useEffect(() => {
+    console.log('useEffect');
     // allow other functions to execute, otherwise component mounts before the variables update
     setTimeout(() => {
       setTripDistance(data.distance);
       setTotalTripPrice(data.total_trip_price);
+      Object.assign(BOOKING_DATA,{
+        location: data.location,
+        destination: data.destination,
+        passengers: data.passengers,
+        date: data.date,
+        time: data.time,
+        distance: data.distance,
+        duration: data.duration,
+        service: data.service,})
+        console.log(BOOKING_DATA);
       console.log("dadada", BOOKING_DATA);
+      if (BOOKING_DATA.distance != undefined) {
+        console.log('setting booking data')
+        window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
+        calculatePrice()
+      }
     }, 2000);
-    Object.assign(BOOKING_DATA, {
-      location: data.location,
-      destination: data.destination,
-      passengers: data.passengers,
-      date: data.date,
-      time: data.time,
-      distance: data.distance,
-      duration: data.duration,
-      service: data.service,
-    });
-  }, [data.distance]);
+    // setData(data)
+    
+  }, [data]);
   useEffect(() => {
-    console.log(data.total_trip_price);
+    setData(data)
+    console.log(data);
     savelocalStorage();
+    console.log('useEffect');
   }, []);
 
-  useEffect(() => {
-    try {
-      Object.assign(data, {
-        distance: distanceResults.distance,
-        duration: distanceResults.duration,
-      });
-    } catch (error) {
-      console.log(error);
-      console.log(distanceResults);
-    }
-
-    window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
-    calculatePrice();
-    console.log("distanceResults:", distanceResults, "data:", data);
-  }, [distanceResults]);
-  function handleGetDistance(o, d) {
+  useEffect(()=>{
+   updateBookingData()
+   console.log('useEffect');
+  },[data])
+  function updateBookingData(){
+    if (BOOKING_DATA.distance != undefined) {
+      console.log('setting booking data')
+      window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));}
+  }
+  function handleGetDistance(o, d, cb) {
     distanceMatrix(o, d, callback);
     function callback(response, status) {
       console.log("status", status);
       try {
-        if (status === "OK") {
-          let distance = response.rows[0].elements[0].distance.text;
-          let duration = response.rows[0].elements[0].duration.text;
-          setDistanceResults({ distance: distance, duration: duration });
-        } else {
-          console.log(response, status);
-        }
+        data.distance = response.rows[0].elements[0].distance.text;
+        data.duration = response.rows[0].elements[0].duration.text;
+        
+        setData(data);
+        cb
+        
       } catch (error) {}
+    }
+  }
+ 
+  function distanceCallback(){
+    if (BOOKING_DATA.distance != undefined) {
+      console.log('setting booking data')
+      window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
+      
+      calculatePrice();
     }
   }
   function savelocalStorage() {
     try {
       // check whether booking data is present
       let parsedData = JSON.parse(window.localStorage.getItem("BOOKING_DATA"));
-      // console.log("parsedData:", parsedData);
-      let parsedDataIsValid = validateBookingData(parsedData);
+      console.log("parsedData:", parsedData);
+      let parsedDataIsValid = validateParsedData(parsedData);
       if (parsedDataIsValid) {
         //set booking details to saved data from localStorage
         setDataToParsedData(parsedData);
@@ -180,12 +192,22 @@ export default function Booking() {
           parsedData.location,
           parsedData.destination
         );
-        handleGetDistance(parsedData.location, parsedData.destination);
-        data.distance = distanceResults.distance;
+        handleGetDistance(parsedData.location, parsedData.destination,distanceCallback);
+        
       } else {
         //if no booking data is saved, get distance and save data
+        Object.assign(BOOKING_DATA,{
+          location: data.location,
+          destination: data.destination,
+          passengers: data.passengers,
+          date: data.date,
+          time: data.time,
+          distance: data.distance,
+          duration: data.duration,
+          service: data.service,})
+          console.log(BOOKING_DATA);
         try {
-          handleGetDistance(data.location, data.destination);
+          handleGetDistance(data.location, data.destination,distanceCallback);
         } catch (error) {
           setDataError(true);
 
@@ -194,10 +216,7 @@ export default function Booking() {
           }, 3000);
         }
 
-        window.localStorage.setItem(
-          "BOOKING_DATA",
-          JSON.stringify(BOOKING_DATA)
-        );
+        
       }
     } catch (error) {
       // console.log(error);
@@ -221,7 +240,7 @@ export default function Booking() {
     }
     // console.log("data:", data);
   }
-  function validateBookingData(obj) {
+  function validateParsedData(obj) {
     console.log(
       "validating",
       obj.location === undefined ||
@@ -279,6 +298,7 @@ export default function Booking() {
     data.service = obj.service;
     data.payment = obj.payment;
     data.session = obj.session;
+    savelocalStorage()
   }
   function calculatePrice() {
     try {
@@ -303,6 +323,8 @@ export default function Booking() {
     window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
   }
   function handleErrors() {
+    console.log(errors)
+   
     clearErrors();
   }
 
@@ -329,7 +351,9 @@ export default function Booking() {
     // alert("SUCCESS!! :-)\n\n" + JSON.stringify(data, null, 4));
     return false;
   }
+function validateBookingData(){
 
+}
   return (
     <>
       {dataError && dataErrorDiv}
@@ -350,18 +374,20 @@ export default function Booking() {
             {showSummary && (
               <div className="flex  lg:hidden">
                 <div className="overscroll-contain z-[21] top-20  fixed lg:relative left-0 h-[80vh] lg:h-max overflow-auto">
-                 { mapsLoaded &&<Summary
-                    location={data.location}
-                    destination={data.destination}
-                    passengers={data.passengers}
-                    date={data.date}
-                    time={data.time}
-                    price={data.total_trip_price}
-                    distance={data.distance}
-                    duration={data.duration}
-                    onClick={handleBooking}
-                    disabled={!canSubmit}
-                  />}
+                  {mapsLoaded && (
+                    <Summary
+                      location={data.location}
+                      destination={data.destination}
+                      passengers={data.passengers}
+                      date={data.date}
+                      time={data.time}
+                      price={data.total_trip_price}
+                      distance={data.distance}
+                      duration={data.duration}
+                      onClick={handleBooking}
+                      disabled={!canSubmit}
+                    />
+                  )}
                 </div>
               </div>
             )}
@@ -372,11 +398,11 @@ export default function Booking() {
                 className={summaryClassNames}>
                 <FaAngleUp />
               </div>
-              <ProgressIcons />
+              {!showSummary && <ProgressIcons />}
 
               <button
                 onClick={handleBooking}
-                // disabled={!canSubmit}
+                disabled={!canSubmit}
                 className="flex justify-center items-center mx-12 my-2 w-full h-16 text-2xl font-medium text-center text-gray-50 bg-sky-500 rounded-lg disabled:bg-gray-400">
                 Book Now
               </button>
@@ -524,18 +550,20 @@ export default function Booking() {
           </div>
           <div className="hidden lg:flex">
             <div className=" z-[7] -top-20  lg:relative right-0 float-right h-screen lg:h-full min-w-max overflow-auto">
-              {mapsLoaded &&<Summary
-                location={data.location}
-                destination={data.destination}
-                passengers={data.passengers}
-                date={data.date}
-                time={data.time}
-                price={data.total_trip_price}
-                distance={data.distance}
-                duration={data.duration}
-                onClick={handleBooking}
-                disabled={canSubmit}
-              />}
+              {mapsLoaded && (
+                <Summary
+                  location={data.location}
+                  destination={data.destination}
+                  passengers={data.passengers}
+                  date={data.date}
+                  time={data.time}
+                  price={data.total_trip_price}
+                  distance={data.distance}
+                  duration={data.duration}
+                  onClick={handleBooking}
+                  disabled={canSubmit}
+                />
+              )}
             </div>
           </div>
         </div>
