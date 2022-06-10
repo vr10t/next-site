@@ -187,13 +187,15 @@ const Form = () => {
 
   return (
     <div className="relative  z-[9]  justify-center xs:mx-auto mx-1 w-full bg-none py-4 ">
-    <div className="mx-auto bg-red-500 flex  justify-center mb-6 w-full h-full">
-      {mapsLoaded && <Map
+    <div className="mx-auto  flex flex-col items-center justify-center mb-6 w-full h-full">
+      {mapsLoaded &&<> <Map
       className="absolute"
       origin={origin}
       destination={destination}
       shouldFetchDirections={shouldFetchDirections}
-      >asasa </Map>}</div>
+      > </Map>
+      {data.distance &&<span className="w-full h-full text-center text-white text-2xl bg-black/50 z-[9999]">Est. distance: {data.distance}</span>}</>}
+      </div>
       <form id="booking" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-2 justify-center xs:mx-auto mx-3 w-5/6  ">
           <div className="flex flex-row rounded-lg xs:mx-auto  grow w-full  ">
@@ -233,7 +235,7 @@ const Form = () => {
                       {...getInputProps({
                         id: "location",
                         className:
-                          "truncate w-full  flex grow border-0 rounded-r-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadosm text-base focus:outline-none focus:ring-2 focus:ring-sky-100",
+                          ` ${styles.places} truncate w-full  flex grow border-0 rounded-r-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadosm text-base focus:outline-none focus:ring-2 focus:ring-sky-100`,
                         name: "location",
                         type: "text",
                         required: true,
@@ -425,14 +427,7 @@ const Form = () => {
               Search
             </button>
           </div>
-          <button
-  type="button"
-  onClick={() => {
-    throw new Error("Sentry Frontend Error");
-  }}
->
-  Throw error
-</button>
+          
         </div>
       </form>
     </div>

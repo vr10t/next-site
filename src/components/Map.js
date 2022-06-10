@@ -99,7 +99,7 @@ function Map(props) {
               )
             }
         </>
-        <span className="w-full h-full bg-black/75 z-[9999]">Hello</span>
+        
       </GoogleMap>
   ) 
 }
