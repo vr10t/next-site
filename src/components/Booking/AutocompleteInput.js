@@ -4,7 +4,18 @@ export default function AutocompleteInput(props){
                 value={props.value}
                 onChange={props.onChange}
                 onSelect={props.onSelect}
-                searchOptions={{ componentRestrictions: { country: "gb" } }}>
+                onError={(status, clearSuggestions) => {
+                  console.log(
+                    "Google Maps API returned error with status: ",
+                    status
+                  );
+                  clearSuggestions();
+                }}
+                shouldFetchSuggestions={props.shouldFetchSuggestions}
+                searchOptions={{
+                  componentRestrictions: { country: "gb" },
+                  fields: ["formatted_address"],
+                }}>
                 {({
                   getInputProps,
                   suggestions,
@@ -48,7 +59,8 @@ export default function AutocompleteInput(props){
                               className,
                               style,
                               key,
-                            })}>
+                            })}
+                            key={suggestion.id}>
                             <span>{suggestion.description}</span>
                           </div>
                         );

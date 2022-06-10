@@ -31,7 +31,7 @@ type Props = {
       </Head>
       
         <Navbar />
-     <div className="h-32 bg-transparent"></div>
+     <div className="h-20 bg-transparent"></div>
       <main className="overflow-hidden">{children}</main>
       
         <div className="">

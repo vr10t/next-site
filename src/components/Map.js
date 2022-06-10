@@ -1,58 +1,107 @@
-import { Wrapper, Status } from "@googlemaps/react-wrapper";
-import { useState, useRef, useEffect } from "react";
-import { Loader } from "@googlemaps/js-api-loader";
-export default function Map() {
-  const googleApiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
-  const loader = new Loader({
-    apiKey: googleApiKey,
-    version: "weekly",
-    libraries: ["places"],
-  });
-  loader.load();
-  const ref = useRef<HTMLDivElement>(null);
-  const [map, setMap] = useState();
- 
+import React from 'react'
+import { GoogleMap, DirectionsService, DirectionsRenderer } from '@react-google-maps/api';
+import {throttle,debounce} from "throttle-debounce"
+const containerStyle = {
+  width: '400px',
+  height: '400px',
 
-  const Map = ({
-    onClick,
-    onIdle,
-    children,
-    style,
-    ...options
-  }) => {};
-  useEffect(() => {
-    if (ref.current && !map) {
-      setMap(new window.google.maps.Map(ref.current, {}));
+};
+
+const center = {
+  lat: -3.745,
+  lng: -38.523
+};
+
+function Map(props) {
+  // const { isLoaded } = useJsApiLoader({
+  //   id: 'google-map-script',
+  //   googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY
+  // })
+  const [response,setResponse]= React.useState(null)
+  const [map, setMap] = React.useState(null)
+  const count = React.useRef(0);
+  const onLoad = React.useCallback(function callback(map) {
+    const bounds = new window.google.maps.LatLngBounds(center);
+    map.fitBounds(bounds);
+    setMap(map)
+  }, [])
+
+  const onUnmount = React.useCallback(function callback(map) {
+    setMap(null)
+  }, [])
+  function callback (response) {
+    console.log(response)
+
+    if (response !== null) {
+      if (response.status === 'OK' && count.current === 0) {
+        count.current++;
+      console.count();
+        setResponse(response)
+      } else {
+        console.log('response: ', response)
+      }
     }
-  }, [ref, map]);
-  // const render = (status) => {
-  //   return <div ref={ref} style={style} />;
-   // };
-  // useDeepCompareEffectForMaps(() => {
-  //   if (map) {
-  //     map.setOptions(options);
-  //   }
-  // }, [map, options]);
-  // useEffect(() => {
-  //   if (map) {
-  //     ["click", "idle"].forEach((eventName) =>
-  //       google.maps.event.clearListeners(map, eventName)
-  //     );
-  
-  //     if (onClick) {
-  //       map.addListener("click", onClick);
-  //     }
-  
-  //     if (onIdle) {
-  //       map.addListener("idle", () => onIdle(map));
-  //     }
-  //   }
-  // }, [map, onClick, onIdle]);
-
+  }
+  const directionsCallback = React.useCallback( debounce(3000,callback,{atBegin:true}),[])
   return (
-    // <Wrapper apiKey={googleApiKey} >
-    //  <Map />
-    // </Wrapper>
-    <div ></div>
-  );
+      <GoogleMap className="mx-auto"
+        mapContainerStyle={containerStyle}
+        center={center}
+        zoom={10}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+      >
+        { /* Child components, such as markers, info windows, etc. */ }
+        <>
+        {
+              (
+                props.destination !== '' &&
+                props.origin !== '' &&
+                props.shouldFetchDirections
+              ) && (
+                <DirectionsService
+                  // required
+                  options={{ // eslint-disable-line react-perf/jsx-no-new-object-as-prop
+                    destination: props.destination,
+                    origin: props.origin,
+                    travelMode: 'DRIVING'
+                  }}
+                  // required
+                  callback={directionsCallback}
+                  // optional
+                  onLoad={directionsService => {
+                    console.log('DirectionsService onLoad directionsService: ', directionsService)
+                  }}
+                  // optional
+                  onUnmount={directionsService => {
+                    console.log('DirectionsService onUnmount directionsService: ', directionsService)
+                  }}
+                />
+              )
+            }
+
+            {
+             response !== null && (
+                <DirectionsRenderer
+                  // required
+                  options={{ // eslint-disable-line react-perf/jsx-no-new-object-as-prop
+                    directions: response
+                  }}
+                  // optional
+                  onLoad={directionsRenderer => {
+                    console.log('DirectionsRenderer onLoad directionsRenderer: ', directionsRenderer)
+                  }}
+                  // optional
+                  onUnmount={directionsRenderer => {
+                    console.log('DirectionsRenderer onUnmount directionsRenderer: ', directionsRenderer)
+                  }}
+                />
+              )
+            }
+        </>
+        <span className="w-full h-full bg-black/75 z-[9999]">Hello</span>
+      </GoogleMap>
+  ) 
 }
+
+export default React.memo(Map)
