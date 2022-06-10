@@ -88,7 +88,7 @@ const Form = () => {
     setData(formData);
     console.log(data);
     window.localStorage.removeItem("BOOKING_DATA");
-    // router.push("/booking");
+    router.push("/booking");
     return false;
   }
   useEffect(() => {
@@ -194,7 +194,8 @@ const Form = () => {
       destination={destination}
       shouldFetchDirections={shouldFetchDirections}
       > </Map>
-      {data.distance &&<span className="w-full h-full text-center text-white text-2xl bg-black/50 z-[9999]">Est. distance: {data.distance}</span>}</>}
+      {data.distance &&<span className="w-full h-full text-center text-white text-2xl bg-black/50 z-[9999]">Est. distance: {data.distance}</span>}
+      {data.duration &&<span className="w-full h-full text-center text-white text-2xl bg-black/50 z-[9999]">Est. duration: {data.duration}</span>}</>}
       </div>
       <form id="booking" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-2 justify-center xs:mx-auto mx-3 w-5/6  ">

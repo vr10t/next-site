@@ -192,7 +192,7 @@ export default function Booking() {
           parsedData.location,
           parsedData.destination
         );
-        handleGetDistance(parsedData.location, parsedData.destination,distanceCallback);
+        
         
       } else {
         //if no booking data is saved, get distance and save data
@@ -206,37 +206,21 @@ export default function Booking() {
           duration: data.duration,
           service: data.service,})
           console.log(BOOKING_DATA);
-        try {
-          handleGetDistance(data.location, data.destination,distanceCallback);
-        } catch (error) {
-          setDataError(true);
+        // try {
+        //   handleGetDistance(data.location, data.destination,distanceCallback);
+        // } catch (error) {
+        //   setDataError(true);
 
-          setTimeout(() => {
-            router.push("/");
-          }, 3000);
-        }
+        //   setTimeout(() => {
+        //     router.push("/");
+        //   }, 3000);
+        // }
 
         
       }
     } catch (error) {
-      // console.log(error);
-      console.log(
-        "Something went wrong fetching distance results... reattempting\n\n"
-      );
-      setTimeout(() => {
-        try {
-          handleGetDistance(parsedData.location, parsedData.destination);
-          data.distance = distanceResults.distance;
-        } catch (err) {
-          // console.log(err)
-          try {
-            handleGetDistance(data.location, data.destination);
-            data.distance = distanceResults.distance;
-          } catch (err) {
-            console.log(err);
-          }
-        }
-      }, 2000);
+      console.log(error);
+      
     }
     // console.log("data:", data);
   }
@@ -339,7 +323,7 @@ export default function Booking() {
   };
   function handleBooking() {
     handleSubmitBooking(data);
-    // handleRedirectToCheckout();
+    handleRedirectToCheckout();
   }
   function onSubmit(formData) {
     // handleSignup(data);
