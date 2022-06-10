@@ -30,7 +30,7 @@ export async function handleSubmitBooking(ev) {
       destination: ev.destination,
       passengers: ev.passengers,
       date: ev.date,
-      time: ev.time,
+      time: "20:30",
       distance: ev.distance,
       duration: ev.duration,
       service: ev.service,

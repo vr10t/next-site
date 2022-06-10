@@ -46,7 +46,7 @@ export default function Booking() {
   });
   const router = useRouter();
   const [distanceResults, setDistanceResults] = useState("");
-  const { data,setData } = useAppContext();
+  const { data, setData } = useAppContext();
   const session = useAuthContext();
   let distanceInMiles;
   const [farePrice, setFarePrice] = useState(4);
@@ -70,7 +70,7 @@ export default function Booking() {
       No booking data was found, redirecting...
     </div>
   );
-  let BOOKING_DATA={
+  let BOOKING_DATA = {
     location: data.location,
     destination: data.destination,
     passengers: data.passengers,
@@ -113,12 +113,12 @@ export default function Booking() {
   } = useForm(formOptions);
 
   useEffect(() => {
-    console.log('useEffect');
+    console.log("useEffect");
     // allow other functions to execute, otherwise component mounts before the variables update
     setTimeout(() => {
       setTripDistance(data.distance);
       setTotalTripPrice(data.total_trip_price);
-      Object.assign(BOOKING_DATA,{
+      Object.assign(BOOKING_DATA, {
         location: data.location,
         destination: data.destination,
         passengers: data.passengers,
@@ -126,33 +126,50 @@ export default function Booking() {
         time: data.time,
         distance: data.distance,
         duration: data.duration,
-        service: data.service,})
-        console.log(BOOKING_DATA);
+        service: data.service,
+      });
+      console.log(BOOKING_DATA);
       console.log("dadada", BOOKING_DATA);
       if (BOOKING_DATA.distance != undefined) {
-        console.log('setting booking data')
-        window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
-        calculatePrice()
+        console.log("setting booking data");
+        window.localStorage.setItem(
+          "BOOKING_DATA",
+          JSON.stringify(BOOKING_DATA)
+        );
+        calculatePrice();
       }
     }, 2000);
     // setData(data)
-    
+    if (
+      data.location !== undefined &&
+      data.destination !== undefined &&
+      data.passengers !== undefined &&
+      data.date !== undefined &&
+      data.service !== undefined &&
+      data.payment !== undefined &&
+      data.name !== undefined &&
+      data.email !== undefined &&
+      data.phone !== undefined
+    ) {
+      setCanSubmit(true);
+    }
   }, [data]);
   useEffect(() => {
-    setData(data)
+    setData(data);
     console.log(data);
     savelocalStorage();
-    console.log('useEffect');
+    console.log("useEffect");
   }, []);
 
-  useEffect(()=>{
-   updateBookingData()
-   console.log('useEffect');
-  },[data])
-  function updateBookingData(){
+  useEffect(() => {
+    updateBookingData();
+    console.log("useEffect");
+  }, [data]);
+  function updateBookingData() {
     if (BOOKING_DATA.distance != undefined) {
-      console.log('setting booking data')
-      window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));}
+      console.log("setting booking data");
+      window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
+    }
   }
   function handleGetDistance(o, d, cb) {
     distanceMatrix(o, d, callback);
@@ -161,19 +178,18 @@ export default function Booking() {
       try {
         data.distance = response.rows[0].elements[0].distance.text;
         data.duration = response.rows[0].elements[0].duration.text;
-        
+
         setData(data);
-        cb
-        
+        cb;
       } catch (error) {}
     }
   }
- 
-  function distanceCallback(){
+
+  function distanceCallback() {
     if (BOOKING_DATA.distance != undefined) {
-      console.log('setting booking data')
+      console.log("setting booking data");
       window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
-      
+
       calculatePrice();
     }
   }
@@ -192,11 +208,9 @@ export default function Booking() {
           parsedData.location,
           parsedData.destination
         );
-        
-        
       } else {
         //if no booking data is saved, get distance and save data
-        Object.assign(BOOKING_DATA,{
+        Object.assign(BOOKING_DATA, {
           location: data.location,
           destination: data.destination,
           passengers: data.passengers,
@@ -204,8 +218,9 @@ export default function Booking() {
           time: data.time,
           distance: data.distance,
           duration: data.duration,
-          service: data.service,})
-          console.log(BOOKING_DATA);
+          service: data.service,
+        });
+        console.log(BOOKING_DATA);
         // try {
         //   handleGetDistance(data.location, data.destination,distanceCallback);
         // } catch (error) {
@@ -215,12 +230,9 @@ export default function Booking() {
         //     router.push("/");
         //   }, 3000);
         // }
-
-        
       }
     } catch (error) {
       console.log(error);
-      
     }
     // console.log("data:", data);
   }
@@ -282,7 +294,7 @@ export default function Booking() {
     data.service = obj.service;
     data.payment = obj.payment;
     data.session = obj.session;
-    savelocalStorage()
+    savelocalStorage();
   }
   function calculatePrice() {
     try {
@@ -307,8 +319,8 @@ export default function Booking() {
     window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
   }
   function handleErrors() {
-    console.log(errors)
-   
+    console.log(errors);
+
     clearErrors();
   }
 
@@ -335,9 +347,7 @@ export default function Booking() {
     // alert("SUCCESS!! :-)\n\n" + JSON.stringify(data, null, 4));
     return false;
   }
-function validateBookingData(){
-
-}
+  function validateBookingData() {}
   return (
     <>
       {dataError && dataErrorDiv}
