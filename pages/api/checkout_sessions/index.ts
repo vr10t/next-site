@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-
+import { withSentry } from '@sentry/nextjs';
 import { CURRENCY } from '../../../config/index';
 import { formatAmountForStripe } from '../../../utils/stripe-helpers';
 
@@ -9,7 +9,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2020-08-27',
 });
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
@@ -45,3 +45,4 @@ export default async function handler(
     res.status(405).end('Method Not Allowed');
   }
 }
+export default withSentry(handler);

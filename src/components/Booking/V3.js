@@ -425,6 +425,14 @@ const Form = () => {
               Search
             </button>
           </div>
+          <button
+  type="button"
+  onClick={() => {
+    throw new Error("Sentry Frontend Error");
+  }}
+>
+  Throw error
+</button>
         </div>
       </form>
     </div>

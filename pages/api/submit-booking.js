@@ -1,5 +1,6 @@
 import { supabase } from "../../utils/supabaseClient";
-export default async function handler(req, res) {
+import { withSentry } from '@sentry/nextjs';
+async function handler(req, res) {
   // Get body submitted in request's body.
   // const router =useRouter()
   const body = req.body;
@@ -25,3 +26,4 @@ export default async function handler(req, res) {
   // and also return a copy of the object we received from Supabase
   return res.status(200).json({ data: data });
 }
+export default withSentry(handler);
