@@ -34,6 +34,7 @@ import { fetchPostJSON } from "../utils/api-helpers";
 import { handleSignup, handleSubmitBooking } from "../utils/supabase-helpers";
 import { useRouter } from "next/router";
 import { handleGetDistance as distanceMatrix } from "../utils/google-helpers";
+import Popup from "../src/components/Booking/Popup";
 export default function Booking() {
   const [mapsLoaded, setMapsLoaded] = useState(false);
   const loader = new Loader({
@@ -41,9 +42,12 @@ export default function Booking() {
     version: "weekly",
     libraries: ["places"],
   });
-  loader.load().then(() => {
-    setMapsLoaded(true);
-  });
+  useEffect(() => {
+    loader.load().then(() => {
+      setMapsLoaded(true);
+    });
+  }, []);
+
   const router = useRouter();
   const [distanceResults, setDistanceResults] = useState("");
   const { data, setData } = useAppContext();
@@ -65,6 +69,8 @@ export default function Booking() {
   const [canSubmit, setCanSubmit] = useState(false);
   const [phone, setPhone] = useState();
   const [dataError, setDataError] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [shouldUsePreviousData,setShouldUsePreviousData]= useState(false)
   let dataErrorDiv = (
     <div className="fixed overscroll-none w-screen mx-auto mt-1/2 flex pt-64 font-semibold tracking-wide p-8 h-screen z-[99] bg-black/95 text-pink-500 text-4xl">
       No booking data was found, redirecting...
@@ -79,6 +85,7 @@ export default function Booking() {
     distance: data.distance,
     duration: data.duration,
     service: data.service,
+    payment:data.payment
   };
 
   let service;
@@ -127,6 +134,7 @@ export default function Booking() {
         distance: data.distance,
         duration: data.duration,
         service: data.service,
+        payment:data.payment
       });
       console.log(BOOKING_DATA);
       console.log("dadada", BOOKING_DATA);
@@ -159,10 +167,9 @@ export default function Booking() {
     console.log(data);
     savelocalStorage();
     console.log("useEffect");
-  }, []);
+  }, [shouldUsePreviousData]);
 
   useEffect(() => {
-    updateBookingData();
     console.log("useEffect");
   }, [data]);
   function updateBookingData() {
@@ -171,43 +178,25 @@ export default function Booking() {
       window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
     }
   }
-  function handleGetDistance(o, d, cb) {
-    distanceMatrix(o, d, callback);
-    function callback(response, status) {
-      console.log("status", status);
-      try {
-        data.distance = response.rows[0].elements[0].distance.text;
-        data.duration = response.rows[0].elements[0].duration.text;
 
-        setData(data);
-        cb;
-      } catch (error) {}
-    }
-  }
-
-  function distanceCallback() {
-    if (BOOKING_DATA.distance != undefined) {
-      console.log("setting booking data");
-      window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
-
-      calculatePrice();
-    }
-  }
   function savelocalStorage() {
     try {
       // check whether booking data is present
       let parsedData = JSON.parse(window.localStorage.getItem("BOOKING_DATA"));
-      console.log("parsedData:", parsedData);
+      // console.log("parsedData:", parsedData);
       let parsedDataIsValid = validateParsedData(parsedData);
+      console.log(parsedDataIsValid);
       if (parsedDataIsValid) {
         //set booking details to saved data from localStorage
-        setDataToParsedData(parsedData);
-        console.log(parsedData);
-        console.log(
-          "data is set to parsedData",
-          parsedData.location,
-          parsedData.destination
-        );
+        setShowPopup(true);
+        if(shouldUsePreviousData){
+          setShowPopup(false);
+          setDataToParsedData(parsedData);
+           console.log("data is set to parsedData", parsedData);
+        }
+        
+       
+       
       } else {
         //if no booking data is saved, get distance and save data
         Object.assign(BOOKING_DATA, {
@@ -221,15 +210,7 @@ export default function Booking() {
           service: data.service,
         });
         console.log(BOOKING_DATA);
-        // try {
-        //   handleGetDistance(data.location, data.destination,distanceCallback);
-        // } catch (error) {
-        //   setDataError(true);
-
-        //   setTimeout(() => {
-        //     router.push("/");
-        //   }, 3000);
-        // }
+        updateBookingData();
       }
     } catch (error) {
       console.log(error);
@@ -242,14 +223,12 @@ export default function Booking() {
       obj.location === undefined ||
         obj.destination === undefined ||
         obj.date === undefined ||
-        obj.time === undefined ||
         obj.passengers === undefined
     );
     if (
       obj.location === undefined ||
       obj.destination === undefined ||
       obj.date === undefined ||
-      obj.time === undefined ||
       obj.passengers === undefined
     ) {
       return false;
@@ -294,7 +273,6 @@ export default function Booking() {
     data.service = obj.service;
     data.payment = obj.payment;
     data.session = obj.session;
-    savelocalStorage();
   }
   function calculatePrice() {
     try {
@@ -347,7 +325,17 @@ export default function Booking() {
     // alert("SUCCESS!! :-)\n\n" + JSON.stringify(data, null, 4));
     return false;
   }
-  function validateBookingData() {}
+  function handleClosePopup(e) {
+    
+    if (e.target.id !== "popup") {
+      setShouldUsePreviousData(true)
+      setShowPopup(false);
+    }
+  }
+  function handleRedirectToBooking() {
+    window.localStorage.removeItem("BOOKING_DATA");
+    router.push("/");
+  }
   return (
     <>
       {dataError && dataErrorDiv}
@@ -358,7 +346,16 @@ export default function Booking() {
             className="fixed"
           />
         )}
-
+        {showPopup && (
+          <div
+            onClick={handleClosePopup}
+            className="fixed z-[9999] flex flex-col items-center align-middle  overscroll-none h-screen w-screen bg-black/90">
+            <Popup
+             
+              onClick={handleRedirectToBooking}
+            />
+          </div>
+        )}
         <div className="static justify-center  mt-64 w-[95vw] sm:w-[97vw] mx-auto lg:  max-w-screen bg-gray-100 overflow-x-none flex flex-col lg:flex-row  ">
           <div className=""></div>
           <div className="  bg-gray-100 w-full mx-auto h-32 flex items-center justify-center z-[7] text-4xl font-medium text-center text-gray-800">

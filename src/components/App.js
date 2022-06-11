@@ -17,13 +17,14 @@ function App() {
   const [showSignup, setShowSignup] = useState(false);
   const [showSignin, setShowSignin] = useState(false);
   const [session, setSession] = useState(null);
-
+ const [pageLoaded, setPageLoaded]= useState(false)
   useEffect(() => {
     setSession(supabase.auth.session());
 
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
+    setPageLoaded(true)
   }, []);
   function handleSignup() {
     console.log(showSignup);
@@ -39,7 +40,7 @@ function App() {
         <SignUp show={showSignup} />
         <SignIn show={showSignin} />
 
-        <Form />
+       {pageLoaded && <Form />}
         <Welcome />
         <Reviews />
         <FAQ />
