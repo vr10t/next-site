@@ -355,12 +355,12 @@ export default function Booking() {
               onClick={handleRedirectToBooking}
             />
           </div>
-        )}
-        <div className="static justify-center  mt-64 w-[95vw] sm:w-[97vw] mx-auto lg:  max-w-screen bg-gray-100 overflow-x-none flex flex-col lg:flex-row  ">
-          <div className=""></div>
-          <div className="  bg-gray-100 w-full mx-auto h-32 flex items-center justify-center z-[7] text-4xl font-medium text-center text-gray-800">
-            Youre almost there!
+        )}<div className=" mt-10 bg-gray-100 w-full mx-auto h-32 flex items-center justify-center z-[7] text-4xl font-medium text-center text-gray-800">
+           <p className='z-20 '>Youre almost there!</p> 
           </div>
+        <div className="static justify-center  mt-0 w-[95vw] sm:w-[97vw] mx-auto lg:  max-w-screen bg-gray-100 overflow-x-none flex flex-col lg:flex-row  ">
+          <div className=""></div>
+          
           <div>
             {showSummary && (
               <div className="flex  lg:hidden">
@@ -567,7 +567,7 @@ export default function Booking() {
           Update
         </button>
       </Layout>
-      <div className="h-40"></div>
+      <div className="h-40 lg:h-0"></div>
     </>
   );
 }

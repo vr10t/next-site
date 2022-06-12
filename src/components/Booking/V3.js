@@ -211,8 +211,8 @@ setData(data)
    
 }
   return (
-    <div className="relative  z-[9]  justify-center xs:mx-auto mx-1 w-full bg-none py-4 ">
-      <div className="mx-auto  flex flex-col items-center justify-center mb-6 w-full h-full">
+    <div className="relative  z-[9]  justify-center mx-auto  w-full bg-none py-4 ">
+      <div className="mx-auto  flex flex-col items-center mb-6 w-full h-full">
         {mapsLoaded && (
           <>
             {" "}
@@ -237,10 +237,10 @@ setData(data)
         )}
       </div>
       <form id="booking" onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-col gap-2 justify-center xs:mx-auto mx-3 w-5/6  ">
-          <div className="flex flex-row rounded-lg xs:mx-auto  grow w-80  ">
+        <div className="flex flex-col gap-2  items-center mx-auto grow  w-full   ">
+          <div className="flex flex-row rounded-lg   w-80  ">
             {" "}
-            <span className="inline-flex  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadosm text-lg">
+            <span className="inline-flex  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadow-sm text-lg">
               <label htmlFor="location" className="sr-only ">
                 From
               </label>
@@ -269,12 +269,12 @@ setData(data)
                   getSuggestionItemProps,
                   loading,
                 }) => (
-                  <div onBlur={handleChangeOrSelect}>
+                  <div className="w-80" onBlur={handleChangeOrSelect}>
                     <input
                       {...register("location")}
                       {...getInputProps({
                         id: "location",
-                        className: `   w-full  flex grow border-0 rounded-r-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadosm text-base focus:outline-none focus:ring-2 focus:ring-sky-100`,
+                        className: ` w-[17.5rem] border-0 rounded-r-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-100`,
                         name: "location",
                         type: "text",
                         required: true,
@@ -323,7 +323,7 @@ setData(data)
               </button>
             </span>
           </div>
-          <div className="flex flex-row rounded-lg xs:mx-auto  border-1 border-gray-900">
+          <div className="flex flex-row rounded-lg w-80  border-1 border-gray-900">
             {" "}
             <span className="inline-flex  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadosm text-lg">
               <label htmlFor="destination" className="sr-only ">
@@ -360,7 +360,7 @@ setData(data)
                       {...register("destination")}
                       {...getInputProps({
                         id: "destination",
-                        className: `  relative grow  border-0 rounded-r-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shado-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-100`,
+                        className: ` w-[17.5rem] relative grow  border-0 rounded-r-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shado-sm text-base focus:outline-none focus:ring-2 focus:ring-sky-100`,
                         name: "destination",
                         type: "text",
                         required: true,

@@ -54,7 +54,7 @@ export default function DateSelect() {
       </Listbox.Button>
       <Listbox.Options
         style={{ borderRadius: "10px" }}
-        className="absolute mt-10 ml-10  bg-gray-100 w-80 border-[2px] py-1 border-t-0  border-gray-200 rounded-b-2xl">
+        className="absolute mt-10 ml-10  bg-gray-100 w-72 border-[2px] py-1 border-t-0  border-gray-200 rounded-b-2xl">
         {methods.map((method) => (
           <Listbox.Option
             className=" "
