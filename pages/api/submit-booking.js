@@ -4,6 +4,7 @@ async function handler(req, res) {
   // Get body submitted in request's body.
   // const router =useRouter()
   const body = req.body;
+  console.log(body.return_date)
   let { data, error } = await supabase
     .from("bookings")
     .insert([
@@ -12,14 +13,18 @@ async function handler(req, res) {
         dropoff_destination: body.destination,
         passengers: body.passengers,
         pickup_date: body.date,
-        pickup_time: body.time,
         distance: body.distance,
         service: body.service,
+        return_date: body.return_date,
+        flight_number:body.flight_number,
+        name:body.name,
+        email:body.email,
+        phone:body.phone,
       },
     ]);
 
   if (error) {
-    console.warn(error.message);
+    // console.warn(error);
     return res.status(401).json({ error: error.message });
   }
   // Send 200 success if there were no errors!

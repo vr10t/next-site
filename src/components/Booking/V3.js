@@ -30,7 +30,7 @@ const PlacesAutocomplete = dynamic(() => import("react-places-autocomplete"));
 
 // const HCaptcha = dynamic(() => import("@hcaptcha/react-hcaptcha"));
 
-const Form = () => {
+function Form(){
   const [mapsLoaded, setMapsLoaded] = useState(false);
   const [shouldFetchOriginSuggestions, setShouldFetchOriginSuggestions] =
     useState(false);
@@ -54,13 +54,19 @@ const Form = () => {
   useCallback(() => {}, [onSubmit]);
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
-  const [travelDate, setTravelDate] = useState("ASAP");
+  const [passengers,setPassengers] = useState(1)
+  const [dateAndTime,setDateAndTime] = useState("ASAP")
+  const [date,setDate] = useState("ASAP")
+  const [time,setTime] = useState("")
+  const [returnDateAndTime, setReturnDateAndTime] = useState("");
+  const [returnDate, setReturnDate] = useState("");
+  const [returnTime, setReturnTime] = useState("")
   const [addReturn,setAddReturn]= useState(false)
   const [addFlightMonitoring,setAddFlightMonitoring]= useState(false)
-  let date = new Date();
-  let day = date.getDate();
-  let month = date.getMonth() + 1;
-  let year = date.getFullYear();
+  let dateObject = new Date();
+  let day = dateObject.getDate();
+  let month = dateObject.getMonth() + 1;
+  let year = dateObject.getFullYear();
   let distance, duration;
   if (month < 10) month = "0" + month;
   if (day < 10) day = "0" + day;
@@ -77,20 +83,41 @@ const Form = () => {
       .positive()
       .integer(),
     date: Yup.string(),
+    return_date: Yup.string(),
   });
-
+useEffect(()=>{
+  // setTime(date?.split())
+  let d =dateAndTime.split('T')
+setDate(d[0])
+setTime(d[1])
+  console.log(date,time);
+},[dateAndTime])
+useEffect(()=>{
+  // setTime(date?.split())
+  let d =returnDateAndTime.split('T')
+setReturnDate(d[0])
+setReturnTime(d[1])
+  console.log(returnDate,returnTime);
+},[returnDateAndTime])
   const formOptions = { resolver: yupResolver(validationSchema) };
 
   // get functions to build form with useForm() hook
   const { register, handleSubmit, reset, formState } = useForm(formOptions);
   const { errors } = formState;
-  function onSubmit(e) {
-    JSON.stringify(e, null, 4);
-    let formData = e;
-    Object.assign(formData, { location: origin, destination: destination });
-
-    setData(formData);
-    console.log(data);
+  function onSubmit() {
+    
+console.log(origin,destination)
+data.location= origin
+data.destination=destination;
+data.passengers=passengers;
+data.date=date;
+data.time=time;
+data.return=addReturn
+data.return_date=returnDate
+data.return_time=returnTime
+data.flight_monitoring=addFlightMonitoring
+    setData(data);
+   
     window.localStorage.removeItem("BOOKING_DATA");
     router.push("/booking");
     return false;
@@ -130,6 +157,8 @@ const Form = () => {
     while (origin.length < 2) {
       setShouldFetchOriginSuggestions(false);
       setOrigin(e);
+      data.location = origin;
+      setData(data)
       return;
     }
     setShouldFetchDirections(false);
@@ -148,6 +177,7 @@ const Form = () => {
   }
   const handleSelectOrigin = (e) => {
     setOrigin(e);
+    
     data.location = origin;
     console.log(origin);
     setData(data);
@@ -174,7 +204,19 @@ const Form = () => {
   function getLocation() {
     navigator.geolocation.getCurrentPosition(showPosition);
   }
+  function handleChangePassengers(e){
+    setPassengers(e.target.value)
+    data.passengers=passengers
+    setData(data)
+    }
+function handleChangeDate(e){
+setDateAndTime(e.target.value)
 
+}
+function handleChangeReturnDate(e){
+  setReturnDateAndTime(e.target.value)
+ 
+  }
   function showPosition(position) {
     console.log(
       "Latitude: " +
@@ -189,27 +231,29 @@ const Form = () => {
     );
   }
   useEffect(()=>console.log(data),[data])
+  useEffect(()=>setData(data),[addFlightMonitoring])
 function handleAddReturn(e){
-  if (e.target.checked){
-    setAddReturn(true)
-  }else if(!e.target.checked){
-    setAddReturn(false)
-  }
+  
+    setAddReturn(e.target.checked)
+  
   data.return=addReturn
+  
 setData(data)
   
 }
 function handleAddFlightMonitoring(e){
-  if (e.target.checked){
-    setAddFlightMonitoring(true)
-  }else if(!e.target.checked){
-    setAddFlightMonitoring(false)
-  }
+ 
+    setAddFlightMonitoring(e.target.checked)
+    
+ 
+  console.log('addflightmon',addFlightMonitoring)
 data.flight_monitoring=addFlightMonitoring
+data.flight_number=""
 setData(data)
   
    
 }
+
   return (
     <div className="relative  z-[9]  justify-center mx-auto  w-full bg-none py-4 ">
       <div className="mx-auto  flex flex-col items-center mb-6 w-full h-full">
@@ -415,6 +459,8 @@ setData(data)
               className="  flex w-80  border-0 rounded-r-md flex-1 appearance-none focus-ring-full  py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600"
               name="passengers"
               required={true}
+              value={passengers}
+              onChange={handleChangePassengers}
               type="number"
               placeholder="Passengers"
               min="1"
@@ -439,7 +485,7 @@ setData(data)
               <DateSelect />
             </div>
           </div>
-          {data.date == "Later" && (
+          {data.date !== "ASAP" && (
             <div className="flex flex-col w-80  max-w-96">
             <div className="text-lg text-gray-800 font-semibold">Departure date</div>
               <div className="flex flex-row col-span-3 rounded-lg  w-full border-1 border-gray-900">
@@ -452,7 +498,8 @@ setData(data)
                   id="date"
                   className=" border-0 rounded-r-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600"
                   name="date"
-                  // required={true}
+                  value={dateAndTime}
+                  onChange={handleChangeDate}
                   type="datetime-local"
                 />
               </div>
@@ -467,11 +514,12 @@ setData(data)
                   <FaArrowRight />
                 </span>
                 <input
-                  {...register("date")}
-                  id="date"
+                  {...register("return_date")}
+                  id="return_date"
                   className=" border-0 rounded-r-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-100 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-cyan-600"
-                  name="date"
-                  // required={true}
+                  name="return_date"
+                  value={returnDateAndTime}
+                  onChange={handleChangeReturnDate}
                   type="datetime-local"
                 />
               </div>

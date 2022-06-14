@@ -31,10 +31,15 @@ import PhoneInput from "react-phone-number-input";
 import Service from "../src/components/Booking/Service";
 import getStripe from "../utils/getStripe";
 import { fetchPostJSON } from "../utils/api-helpers";
-import { handleSignup, handleSubmitBooking } from "../utils/supabase-helpers";
+import { getBookings, handleSignup, handleSubmitBooking } from "../utils/supabase-helpers";
 import { useRouter } from "next/router";
 import { handleGetDistance as distanceMatrix } from "../utils/google-helpers";
 import Popup from "../src/components/Booking/Popup";
+import { supabase } from "../utils/supabaseClient";
+import { Checkbox } from "flowbite-react";
+import AutocompleteInput from "../src/components/Booking/AutocompleteInput"
+import StepperInput from "../src/components/Booking/StepperInput";
+// import {google} from "googleapis"
 export default function Booking() {
   const [mapsLoaded, setMapsLoaded] = useState(false);
   const loader = new Loader({
@@ -42,6 +47,8 @@ export default function Booking() {
     version: "weekly",
     libraries: ["places"],
   });
+  // const calendar= google.calendar({version: 'v3', auth:process.env.NEXT_PUBLIC_GOOGLE_API_KEY})
+  // console.log( calendar.events);
   useEffect(() => {
     loader.load().then(() => {
       setMapsLoaded(true);
@@ -54,7 +61,7 @@ export default function Booking() {
   const session = useAuthContext();
   let distanceInMiles;
   const [farePrice, setFarePrice] = useState(4);
-  let tripStartsAt = parseInt(data.time);
+  let tripStartsAt = parseInt(data.date);
   let tripPrice = 0;
   const [tripDistance, setTripDistance] = useState("loading...");
   const [totalTripPrice, setTotalTripPrice] = useState("loading...");
@@ -71,6 +78,15 @@ export default function Booking() {
   const [dataError, setDataError] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [shouldUsePreviousData,setShouldUsePreviousData]= useState(false)
+  const [differentPickup,setDifferentPickup]= useState(false)
+  const [differentDropoff,setDifferentDropoff]= useState(false)
+  const [returnLocation,setReturnLocation]= useState("")
+  const [returnDestination, setReturnDestiation]= useState("")
+  const [returnPassengers,setReturnPassengers]= useState("")
+  const [luggage,setLuggage]= useState(0)
+  const [returnLuggage,setReturnLuggage]= useState(0)
+  const [instructions,setInstructions]= useState("")
+  const [returnInstructions,setReturnInstructions]= useState("")
   let dataErrorDiv = (
     <div className="fixed overscroll-none w-screen mx-auto mt-1/2 flex pt-64 font-semibold tracking-wide p-8 h-screen z-[99] bg-black/95 text-pink-500 text-4xl">
       No booking data was found, redirecting...
@@ -118,11 +134,22 @@ export default function Booking() {
     formState: { errors },
     clearErrors,
   } = useForm(formOptions);
-
+useEffect(()=>{
+  data.return_location=returnLocation
+  data.return_destination=returnDestination
+  data.luggage=luggage
+  data.return_luggage=returnLuggage
+  data.instructions=instructions
+  data.return_instructions=returnInstructions
+  data.return_passengers=returnPassengers
+  console.log(data.return_location);
+  setData(data)
+},[returnLocation, returnDestination, luggage, returnLuggage,instructions,returnInstructions,returnPassengers])
   useEffect(() => {
-    console.log("useEffect");
-    // allow other functions to execute, otherwise component mounts before the variables update
-    setTimeout(() => {
+    console.log("dataaaa",data);
+   
+    setTimeout(() => { 
+      // allow other functions to execute, otherwise component mounts before the variables update
       setTripDistance(data.distance);
       setTotalTripPrice(data.total_trip_price);
       Object.assign(BOOKING_DATA, {
@@ -130,14 +157,14 @@ export default function Booking() {
         destination: data.destination,
         passengers: data.passengers,
         date: data.date,
-        time: data.time,
+        
         distance: data.distance,
         duration: data.duration,
         service: data.service,
         payment:data.payment
       });
-      console.log(BOOKING_DATA);
-      console.log("dadada", BOOKING_DATA);
+      
+      console.log("BOOKING_DATA: ", BOOKING_DATA);
       if (BOOKING_DATA.distance != undefined) {
         console.log("setting booking data");
         window.localStorage.setItem(
@@ -166,6 +193,7 @@ export default function Booking() {
     setData(data);
     console.log(data);
     savelocalStorage();
+    window.sessionStorage.setItem('shouldUsePreviousData',shouldUsePreviousData)
     console.log("useEffect");
   }, [shouldUsePreviousData]);
 
@@ -189,7 +217,12 @@ export default function Booking() {
       if (parsedDataIsValid) {
         //set booking details to saved data from localStorage
         setShowPopup(true);
-        if(shouldUsePreviousData){
+        if(window.sessionStorage.getItem('shouldUsePreviousData')){
+          setShowPopup(false);
+          setDataToParsedData(parsedData);
+           console.log("data is set to parsedData", parsedData);
+        }
+        else if(shouldUsePreviousData){
           setShowPopup(false);
           setDataToParsedData(parsedData);
            console.log("data is set to parsedData", parsedData);
@@ -205,6 +238,10 @@ export default function Booking() {
           passengers: data.passengers,
           date: data.date,
           time: data.time,
+          return:data.return,
+          return_date:data.return_date,
+          return_time:data.return_time,
+          flight_monitoring:data.flight_monitoring,
           distance: data.distance,
           duration: data.duration,
           service: data.service,
@@ -296,10 +333,11 @@ export default function Booking() {
     data.total_trip_price = tripPrice;
     window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
   }
-  function handleErrors() {
+  function handleErrors(e) {
     console.log(errors);
-
-    clearErrors();
+let target = e.target.id.toString()
+console.log(target)
+    clearErrors(target);
   }
 
   const handleSelectService = (e) => {
@@ -311,17 +349,27 @@ export default function Booking() {
     }
     //
   };
+//   async function supplementUndefinedData(){
+//     if(data.return_date=== undefined){
+//       data.return_date='none'
+//       setData(data)
+//     }
+// return true
+//   }
   function handleBooking() {
-    handleSubmitBooking(data);
-    handleRedirectToCheckout();
+  //  supplementUndefinedData().then((e)=>console.log(data))
+      
+    handleSubmitBooking(data).then((res)=>{console.log(res)}
+    );
+    // handleRedirectToCheckout();
   }
   function onSubmit(formData) {
     // handleSignup(data);
     data.name = formData.name;
     data.email = formData.email;
     data.phone = formData.phone;
-    console.log(data);
-
+    // console.log(data);
+console.log('form data',formData);
     // alert("SUCCESS!! :-)\n\n" + JSON.stringify(data, null, 4));
     return false;
   }
@@ -336,8 +384,30 @@ export default function Booking() {
     window.localStorage.removeItem("BOOKING_DATA");
     router.push("/");
   }
+  function handleCheckboxClick(e){
+    if (e.target.id==="different_pickup"){
+      if(e.target.checked){
+        setDifferentPickup(true)
+      }
+      else{
+        setDifferentPickup(false)
+        data.return_location=null
+      }
+    }
+    if (e.target.id==="different_dropoff"){
+      if(e.target.checked){
+        setDifferentDropoff(true)
+      }
+      else{
+        setDifferentDropoff(false);
+        data.return_destination=null
+      }
+    }
+
+  }
   return (
     <>
+    
       {dataError && dataErrorDiv}
       <Layout>
         {!session && showBanner && (
@@ -371,7 +441,7 @@ export default function Booking() {
                       destination={data.destination}
                       passengers={data.passengers}
                       date={data.date}
-                      time={data.time}
+                      
                       price={data.total_trip_price}
                       distance={data.distance}
                       duration={data.duration}
@@ -426,6 +496,13 @@ export default function Booking() {
                 selected={serviceSelected === "Bus" ? true : false}
               />
             </form>
+            <section>
+            <div className="flex items-stretch w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
+LUGGAGE
+            </div>
+            <StepperInput/>
+            </section>
+
             <section className="">
               <div className="flex items-stretch w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
                 <p className="grow"> PASSENGER DETAILS</p>
@@ -455,7 +532,7 @@ export default function Booking() {
                         <input
                           {...register("name")}
                           onChange={handleErrors}
-                          // onFocus={handleErrors}
+                          
                           name="name"
                           type="text"
                           id="name"
@@ -485,7 +562,7 @@ export default function Booking() {
                         <input
                           {...register("email")}
                           onChange={handleErrors}
-                          // onFocus={handleErrors}
+                         
                           name="email"
                           type="email"
                           id="email"
@@ -508,7 +585,11 @@ export default function Booking() {
                       <div className="flex relative mb-2 w-full shadow-sm">
                         <PhoneInput
                           {...register("phone")}
-                          className="inline-flex items-center pl-2 w-full text-lg text-gray-900 bg-gray-50 rounded-md border-r-2 shadow-sm"
+                        className={`inline-flex appearance-none items-center pl-2 w-full text-lg text-gray-900 bg-gray-50 rounded-md border-r-2 shadow-sm ${
+                            errors.phone
+                              ? "focus:ring-pink-400 "
+                              : "focus:ring-sky-500"
+                          }`}
                           defaultCountry="GB"
                           placeholder="Enter phone number"
                           value={phone}
@@ -538,6 +619,26 @@ export default function Booking() {
                 <PaymentSelect />
               </div>
             </section>
+           {<section >
+            
+            <div className="w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
+                RETURN
+              </div>
+              <div className="flex items-center justify-between">
+              <div className="gap-1 items-center flex">
+            <Checkbox onClick={handleCheckboxClick} id="different_pickup" />
+                <label className="self-center text-base text-gray-900" htmlFor="different_pickup">Different pick-up address on return?</label>
+             </div>
+             <div className="gap-1 items-center flex">
+              <Checkbox onClick={handleCheckboxClick} id="different_dropoff" />
+                <label htmlFor="different_dropoff">Different drop-off address on return?</label>
+             </div>
+
+            </div>
+            {differentPickup &&   <input type='text'value={returnLocation} onChange={e=>setReturnLocation(e.target.value)}/>}
+            
+          
+            </section>}
           </div>
           <div className="hidden lg:flex">
             <div className=" z-[7] -top-20  lg:relative right-0 float-right h-screen lg:h-full min-w-max overflow-auto">
@@ -547,12 +648,12 @@ export default function Booking() {
                   destination={data.destination}
                   passengers={data.passengers}
                   date={data.date}
-                  time={data.time}
+                 
                   price={data.total_trip_price}
                   distance={data.distance}
                   duration={data.duration}
                   onClick={handleBooking}
-                  disabled={canSubmit}
+                  disabled={!canSubmit}
                 />
               )}
             </div>

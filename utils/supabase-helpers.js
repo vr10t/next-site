@@ -19,6 +19,13 @@ export async function handleSignup(ev) {
   const { user } = await res.json();
   return user;
 }
+export async function getBookings(){
+  const { data,error}=await supabase.from("bookings").select()
+  if(data){
+    return data}
+
+    else{return error}
+}
 export async function handleSubmitBooking(ev) {
   console.log(ev);
   const res = await fetch("/api/submit-booking", {
@@ -30,7 +37,8 @@ export async function handleSubmitBooking(ev) {
       destination: ev.destination,
       passengers: ev.passengers,
       date: ev.date,
-      time: "20:30",
+      return_date: ev.return_date,
+      flight_number: ev.flight_number,
       distance: ev.distance,
       duration: ev.duration,
       service: ev.service,
@@ -42,5 +50,5 @@ export async function handleSubmitBooking(ev) {
   });
 
   const { booking } = await res.json();
-  console.log( booking);
+  return res
 }

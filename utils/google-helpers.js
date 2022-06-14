@@ -1,7 +1,6 @@
 import { Loader } from "@googlemaps/js-api-loader";
 
 
-
 export  function handleGetDistance(location, destination,callback) {
    
   let service

@@ -411,7 +411,7 @@ export default function Summary(props, children) {
               )}
             </div>
           </div>
-          {/* <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+          {data.time&&data.date!=="ASAP" &&<div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
             <div className="col-span-1 my-auto text-3xl text-gray-800">
               {" "}
               <div className={data.time ? completed : uncompleted}>
@@ -451,7 +451,7 @@ export default function Summary(props, children) {
                 </button>
               )}
             </div>
-          </div> */}
+          </div>}
           {
             <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
               <div className="col-span-1 my-auto text-3xl text-gray-800">
@@ -537,6 +537,33 @@ export default function Summary(props, children) {
                 </p>
                 {data.payment ? (
                   <p className={`text-sm text-gray-500`}>{data.payment}</p>
+                ) : (
+                  <p className="text-sm text-pink-400">Required</p>
+                )}
+              </div>
+
+              <div className="my-auto">
+                <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
+              </div>
+            </div>
+          }
+          { data.return_location &&
+            <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+              <div className="col-span-1 my-auto text-3xl text-gray-800">
+                {" "}
+                <div className={data.service ? completed : uncompleted}>
+                  {data.service ? (
+                    <FaCheck className="float-right text-sm" />
+                  ) : (
+                    ""
+                  )}
+                  <FaTaxi />
+                </div>
+              </div>
+              <div className="col-span-2 pt-1">
+                <p className="font-bold text-gray-800 lg:text-sm">Service</p>
+                {data.service ? (
+                  <p className={`text-sm text-gray-500`}>{data.service}</p>
                 ) : (
                   <p className="text-sm text-pink-400">Required</p>
                 )}
