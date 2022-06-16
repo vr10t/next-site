@@ -47,7 +47,6 @@ export default function Summary(props, children) {
   const [destination, setDestination] = useState("");
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
-  const [returnTab,setReturnTab]=useState(false)
   let dateObject = new Date();
   let minute = dateObject.getMinutes();
   let hour = dateObject.getHours() + 1;
@@ -219,54 +218,15 @@ export default function Summary(props, children) {
   }
   console.log(now);
   return (
-    <div className="flex w-screen bg-clip-content bg-gray-100 shadow-2xl lg:rounded-xl lg:w-full">
-      <div className="overflow-auto mt-24 w-full lg:mt-2 lg:max-w-lg">
-        <div className="">
-        
-          <h2 className="flex justify-center text-3xl font-bold text-left text-gray-800 mb-4 lg:my-10 lg:block lg:ml-16">
-            Summary
-          </h2>
-          <div className="w-5/6 m-auto  h-full  flex justify-between">
-          <span className="flex border-r-2 border-sky-500 rounded-t-lg px-10 py-2 w-full bg-gray-200 text-gray-900 text-xl tracking-tight font-medium justify-center  ">Departure</span>
-          <span className="flex rounded-t-lg px-10 py-2 w-full bg-gray-200 text-gray-900 text-xl tracking-tight font-medium justify-center" >Return</span>
-        </div>
-          <div className="flex rounded-b-2xl w-5/6 m-auto bg-gray-200 ">
-            <div className="flex flex-col gap-4 py-6 grow">
-              <div className="flex flex-row  m-auto  w-5/6 text-3xl font-bold text-gray-800">
-                {" "}
-                <div className="">
-                  <label className="sr-only">Distance</label>
-                  <Tooltip style="light" content="Distance">
-                    <FaRoute />
-                  </Tooltip>
-                </div>
-                <div className="h-1/2 mx-4 border-t-0 border-b-2 border-gray-400 border-dashed grow"></div>
-                <div className="self-center text-base font-bold">
-                  {data.distance==undefined?  <Spinner />:data.distance}
-                </div>
-              </div>
+    <>
+          
 
-              <div className="flex flex-row self-center m-auto  w-5/6 text-3xl font-bold text-gray-800">
-                {" "}
-                <div className="">
-                  <label className="sr-only">Estimated trip time</label>
-                  <Tooltip style="light" content="Estimated trip time">
-                    <FaHourglassHalf />
-                  </Tooltip>
-                </div>
-                <div className="h-1/2 mx-4 border-t-0 border-b-2 border-gray-400 border-dashed grow"></div>
-                <div className="self-center text-base font-bold">
-                {data.duration==undefined?  <Spinner />:data.duration}
-                </div>
-              </div>
-            </div>{" "}
-            <Receipt className="" />
-          </div>
+          
           <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
             <div className="col-span-1 my-auto text-3xl text-gray-800">
               {" "}
-              <div className={data.location ? completed : uncompleted}>
-                {data.location ? (
+              <div className={data.return_location ? completed : uncompleted}>
+                {data.return_location ? (
                   <FaCheck className="float-right text-sm" />
                 ) : (
                   ""
@@ -310,8 +270,8 @@ export default function Summary(props, children) {
           <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
             <div className="col-span-1 my-auto text-3xl text-gray-800">
               {" "}
-              <div className={data.destination ? completed : uncompleted}>
-                {data.destination ? (
+              <div className={data.return_destination ? completed : uncompleted}>
+                {data.return_destination ? (
                   <FaCheck className="float-right text-sm" />
                 ) : (
                   ""
@@ -330,7 +290,7 @@ export default function Summary(props, children) {
                   onSelect={handleSelectDestination}
                 />
               ) : (
-                <p className={`${data.destination}text-sm text-gray-500`}>
+                <p className={`${data.return_destination}text-sm text-gray-500`}>
                   {destination == "" ? props.destination : destination}
                 </p>
               )}
@@ -355,8 +315,8 @@ export default function Summary(props, children) {
           <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
             <div className="col-span-1 my-auto text-3xl text-gray-800">
               {" "}
-              <div className={data.passengers ? completed : uncompleted}>
-                {data.passengers ? (
+              <div className={data.return_passengers ? completed : uncompleted}>
+                {data.return_passengers ? (
                   <FaCheck className="float-right text-sm" />
                 ) : (
                   ""
@@ -401,8 +361,8 @@ export default function Summary(props, children) {
           <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
             <div className="col-span-1 my-auto text-3xl text-gray-800">
               {" "}
-              <div className={data.date ? completed : uncompleted}>
-                {data.date ? <FaCheck className="float-right text-sm" /> : ""}
+              <div className={data.return_date ? completed : uncompleted}>
+                {data.return_date ? <FaCheck className="float-right text-sm" /> : ""}
                 <BsCalendarFill />
               </div>
             </div>
@@ -419,7 +379,7 @@ export default function Summary(props, children) {
                 />
               ) : (
                 <p className={`text-sm text-gray-500`}>
-                  {date == "" ? data.date : date}
+                  {date == "" ? data.return_date : date}
                 </p>
               )}
             </div>
@@ -440,11 +400,11 @@ export default function Summary(props, children) {
               )}
             </div>
           </div>
-          {data.time&&data.date!=="ASAP" &&<div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+          {data.return_time&&data.return_date!=="ASAP" &&<div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
             <div className="col-span-1 my-auto text-3xl text-gray-800">
               {" "}
-              <div className={data.time ? completed : uncompleted}>
-                {data.time ? <FaCheck className="float-right text-sm" /> : ""}
+              <div className={data.return_time ? completed : uncompleted}>
+                {data.return_time ? <FaCheck className="float-right text-sm" /> : ""}
                 <BsClockFill />
               </div>
             </div>
@@ -460,7 +420,7 @@ export default function Summary(props, children) {
                 />
               ) : (
                 <p className={`text-sm text-gray-500`}>
-                  {data.time}
+                  {data.return_time}
                 </p>
               )}
             </div>
@@ -481,39 +441,13 @@ export default function Summary(props, children) {
               )}
             </div>
           </div>}
-          {data.flight_monitoring&&
+          
+          {data.return_luggage!=="0"&&
             <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
               <div className="col-span-1 my-auto text-3xl text-gray-800">
                 {" "}
-                <div className={data.flight_number ? completed : uncompleted}>
-                  {data.flight_number ? (
-                    <FaCheck className="float-right text-sm" />
-                  ) : (
-                    ""
-                  )}
-                  <FaPlaneDeparture />
-                </div>
-              </div>
-              <div className="col-span-2 pt-1">
-                <p className="font-bold text-gray-800 lg:text-sm">Flight Monitoring</p>
-                {data.flight_number ? (
-                  <p className={`text-sm text-gray-500`}>{data.flight_number}</p>
-                ) : (
-                  <p className="text-sm text-gray-500">You haven't provided any flight details.</p>
-                )}
-              </div>
-
-              <div className="my-auto">
-                <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
-              </div>
-            </div>
-          }
-          {data.luggage!=="0"&&
-            <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
-              <div className="col-span-1 my-auto text-3xl text-gray-800">
-                {" "}
-                <div className={data.luggage ? completed : uncompleted}>
-                  {data.luggage? (
+                <div className={data.return_luggage ? completed : uncompleted}>
+                  {data.return_luggage? (
                     <FaCheck className="float-right text-sm" />
                   ) : (
                     ""
@@ -524,7 +458,7 @@ export default function Summary(props, children) {
               <div className="col-span-2 pt-1">
                 <p className="font-bold text-gray-800 lg:text-sm">Luggage</p>
                 
-                  <p className={`text-sm text-gray-500`}>{data.luggage} (small)</p>
+                  <p className={`text-sm text-gray-500`}>{data.return_luggage} (small)</p>
                
               </div>
 
@@ -537,8 +471,8 @@ export default function Summary(props, children) {
             <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
               <div className="col-span-1 my-auto text-3xl text-gray-800">
                 {" "}
-                <div className={data.service ? completed : uncompleted}>
-                  {data.service ? (
+                <div className={data.return_service ? completed : uncompleted}>
+                  {data.return_service ? (
                     <FaCheck className="float-right text-sm" />
                   ) : (
                     ""
@@ -548,8 +482,8 @@ export default function Summary(props, children) {
               </div>
               <div className="col-span-2 pt-1">
                 <p className="font-bold text-gray-800 lg:text-sm">Service</p>
-                {data.service ? (
-                  <p className={`text-sm text-gray-500`}>{data.service}</p>
+                {data.return_service ? (
+                  <p className={`text-sm text-gray-500`}>{data.return_service}</p>
                 ) : (
                   <p className="text-sm text-pink-400">Required</p>
                 )}
@@ -600,92 +534,10 @@ export default function Summary(props, children) {
               </div>
             </div>
           }
-          {
-            <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
-              <div className="col-span-1 my-auto text-3xl text-gray-800">
-                {" "}
-                <div className={data.payment ? completed : uncompleted}>
-                  {data.payment ? (
-                    <FaCheck className="float-right text-sm" />
-                  ) : (
-                    ""
-                  )}
-                  <FaCreditCard />
-                </div>
-              </div>
-              <div className="col-span-2 pt-1">
-                <p className="font-bold text-gray-800 lg:text-sm">
-                  Payment Method
-                </p>
-                {data.payment ? (
-                  <p className={`text-sm text-gray-500`}>{data.payment}</p>
-                ) : (
-                  <p className="text-sm text-pink-400">Required</p>
-                )}
-              </div>
-
-              <div className="my-auto">
-                <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
-              </div>
-            </div>
-          }
-          { data.return_location &&
-            <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
-              <div className="col-span-1 my-auto text-3xl text-gray-800">
-                {" "}
-                <div className={data.service ? completed : uncompleted}>
-                  {data.service ? (
-                    <FaCheck className="float-right text-sm" />
-                  ) : (
-                    ""
-                  )}
-                  <FaTaxi />
-                </div>
-              </div>
-              <div className="col-span-2 pt-1">
-                <p className="font-bold text-gray-800 lg:text-sm">Service</p>
-                {data.service ? (
-                  <p className={`text-sm text-gray-500`}>{data.service}</p>
-                ) : (
-                  <p className="text-sm text-pink-400">Required</p>
-                )}
-              </div>
-
-              <div className="my-auto">
-                <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
-              </div>
-            </div>
-          }
-          <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 rounded-2xl bg-gray-100/25">
-            <div className="col-span-1 my-auto text-3xl font-medium text-gray-800">
-              {" "}
-              Total:{" "}
-              <hr className="h-[0.12rem] mt-1 bg-gray-400 absolute w-3/4" />
-            </div>
-            <div className="col-span-2 pt-1">
-              <p className="font-bold text-gray-800 lg:text-sm"></p>
-              <p className={`text-sm text-gray-500`}></p>
-            </div>
-
-            <div className="my-auto text-3xl">
-              <a className="text-3xl text-gray-500">
-                £
-                {props.price === undefined || props.price === NaN
-                  ? "loading.."
-                  : props.price}
-              </a>
-            </div>
-          </div>
-          <div className="h-10"></div>
-          <button
-            onClick={props.onClick}
-            disabled={props.disabled}
-            className="hidden justify-center p-4 m-auto w-5/6 text-3xl font-medium text-gray-50 bg-sky-500 rounded-lg lg:flex h-max disabled:bg-gray-400">
-            Book Now
-          </button>
-          <div className="h-10"></div>
-        </div>
-      </div>
-    </div>
+          
+          </>
+          
+          
+        
   );
 }

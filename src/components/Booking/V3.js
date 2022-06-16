@@ -116,6 +116,11 @@ data.return=addReturn
 data.return_date=returnDate
 data.return_time=returnTime
 data.flight_monitoring=addFlightMonitoring
+if(data.return===true){
+  data.return_location=destination
+data.return_destination=origin
+}
+
     setData(data);
    
     window.localStorage.removeItem("BOOKING_DATA");

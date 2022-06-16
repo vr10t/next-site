@@ -18,6 +18,7 @@
     "@supabase/supabase-js": "^1.35.2",
     "@tailwindcss/typography": "^0.5.2",
     "flowbite-react": "^0.0.25",
+    "formik": "^2.2.9",
     "fs": "^0.0.1-security",
     "moment": "^2.29.3",
     "nanoid": "^3.3.4",

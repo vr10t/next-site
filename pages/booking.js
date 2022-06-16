@@ -11,7 +11,7 @@ import { FaMapPin } from "@react-icons/all-files/fa/FaMapPin";
 import { BsCalendarFill } from "@react-icons/all-files/bs/BsCalendarFill";
 import { FaCreditCard } from "@react-icons/all-files/fa/FaCreditCard";
 import { BsFillPersonFill } from "@react-icons/all-files/bs/BsFillPersonFill";
-import { FaAngleUp } from "@react-icons/all-files/fa/FaAngleUp";
+import { FaAngleDown } from "@react-icons/all-files/fa/FaAngleDown";
 import { FaMoneyBill } from "@react-icons/all-files/fa/FaMoneyBill";
 import { FaUsers } from "@react-icons/all-files/fa/FaUsers";
 import { FaPhoneAlt } from "@react-icons/all-files/fa/FaPhoneAlt";
@@ -22,22 +22,29 @@ import Image from "next/image";
 import { Loader } from "@googlemaps/js-api-loader";
 import PaymentSelect from "../src/components/Booking/PaymentSelect";
 import { FaEnvelope } from "@react-icons/all-files/fa/FaEnvelope";
-import { useForm } from "react-hook-form";
+import { useFormik } from "formik";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import "react-phone-number-input/style.css";
 import ProgressIcons from "../src/components/Booking/ProgressIcons";
-import PhoneInput from "react-phone-number-input";
+import PhoneInput, {
+  formatPhoneNumber,
+  isPossiblePhoneNumber,
+} from "react-phone-number-input";
 import Service from "../src/components/Booking/Service";
 import getStripe from "../utils/getStripe";
 import { fetchPostJSON } from "../utils/api-helpers";
-import { getBookings, handleSignup, handleSubmitBooking } from "../utils/supabase-helpers";
+import {
+  getBookings,
+  handleSignup,
+  handleSubmitBooking,
+} from "../utils/supabase-helpers";
 import { useRouter } from "next/router";
 import { handleGetDistance as distanceMatrix } from "../utils/google-helpers";
 import Popup from "../src/components/Booking/Popup";
 import { supabase } from "../utils/supabaseClient";
 import { Checkbox } from "flowbite-react";
-import AutocompleteInput from "../src/components/Booking/AutocompleteInput"
+import AutocompleteInput from "../src/components/Booking/AutocompleteInput";
 import StepperInput from "../src/components/Booking/StepperInput";
 // import {google} from "googleapis"
 export default function Booking() {
@@ -68,25 +75,30 @@ export default function Booking() {
   const [showBanner, setShowBanner] = useState(true);
   const [showSummary, setShowSummary] = useState(false);
   const summaryClassNames = showSummary
-    ? "fixed flex  top-20 rotate-180 w-screen text-gray-50 text-3xl justify-center bg-sky-500 h-8"
-    : "fixed flex  bottom-32 w-screen text-gray-50 text-3xl justify-center bg-sky-500 h-8";
+    ? "fixed flex  top-20  drop-shadow-xl w-screen text-gray-50 text-3xl justify-center bg-sky-500 h-8"
+    : "fixed flex drop-shadow-md items-center rotate-180 bottom-32 w-screen text-gray-50 text-3xl justify-center bg-sky-500 h-8";
   const [serviceSelected, setServiceSelected] = useState(null);
 
   const [paymentMethod, setPaymentMethod] = useState(null);
   const [canSubmit, setCanSubmit] = useState(false);
-  const [phone, setPhone] = useState();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+
   const [dataError, setDataError] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  const [shouldUsePreviousData,setShouldUsePreviousData]= useState(false)
-  const [differentPickup,setDifferentPickup]= useState(false)
-  const [differentDropoff,setDifferentDropoff]= useState(false)
-  const [returnLocation,setReturnLocation]= useState("")
-  const [returnDestination, setReturnDestiation]= useState("")
-  const [returnPassengers,setReturnPassengers]= useState("")
-  const [luggage,setLuggage]= useState(0)
-  const [returnLuggage,setReturnLuggage]= useState(0)
-  const [instructions,setInstructions]= useState("")
-  const [returnInstructions,setReturnInstructions]= useState("")
+  const [shouldUsePreviousData, setShouldUsePreviousData] = useState(false);
+  const [differentPickup, setDifferentPickup] = useState(false);
+  const [differentDropoff, setDifferentDropoff] = useState(false);
+  const [returnLocation, setReturnLocation] = useState("");
+  const [returnDestination, setReturnDestiation] = useState("");
+  const [returnPassengers, setReturnPassengers] = useState("");
+  const [luggage, setLuggage] = useState(0);
+  const [returnLuggage, setReturnLuggage] = useState(0);
+  const [instructions, setInstructions] = useState("");
+  const [returnInstructions, setReturnInstructions] = useState("");
+  const [phoneError, setPhoneError] = useState("");
   let dataErrorDiv = (
     <div className="fixed overscroll-none w-screen mx-auto mt-1/2 flex pt-64 font-semibold tracking-wide p-8 h-screen z-[99] bg-black/95 text-pink-500 text-4xl">
       No booking data was found, redirecting...
@@ -101,54 +113,79 @@ export default function Booking() {
     distance: data.distance,
     duration: data.duration,
     service: data.service,
-    payment:data.payment
+    payment: data.payment,
   };
 
   let service;
-  const validationSchema = Yup.object().shape({
-    name: Yup.string()
-      .required("Name is required")
-      .matches(/[A-z ]{4}/, "Name is too short")
-      .matches(
-        /^[A-z]+(([',. [a-z ][A-Z ])?[-]?[a-zA-Z]*)*$/,
-        "Name must not contain invalid characters"
-      ),
-    phone: Yup.string()
-      .required("Phone number is required")
-      .matches(
-        /^(((\+44\s?\d{4}|\(?0\d{4}\)?)\s?\d{3}\s?\d{3})|((\+44\s?\d{3}|\(?0\d{3}\)?)\s?\d{3}\s?\d{4})|((\+44\s?\d{2}|\(?0\d{2}\)?)\s?\d{4}\s?\d{4}))(\s?\#(\d{4}|\d{3}))?$/,
-        "Phone number is invalid"
-      ),
-    email: Yup.string().required("Email is required").email("Email is invalid"),
-    acceptTerms: Yup.bool().oneOf([true], "Accept Ts & Cs is required"),
-  });
-  const formOptions = {
-    resolver: yupResolver(validationSchema),
-    reValidateMode: "onChange",
-  };
+  const { getFieldProps, handleSubmit, errors, touched } = useFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+    },
+    validationSchema: Yup.object().shape({
+      firstName: Yup.string()
+        .required("Name is required")
+        .min(2, "Name is too short")
+        .max(50, "Name is too long")
+        .matches(
+          /^[A-z]+(([',. [a-z ][A-Z ])?[-]?[a-zA-Z]*)*$/,
+          "Name must not contain invalid characters"
+        ),
 
-  // get functions to build form with useForm() hook
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    clearErrors,
-  } = useForm(formOptions);
-useEffect(()=>{
-  data.return_location=returnLocation
-  data.return_destination=returnDestination
-  data.luggage=luggage
-  data.return_luggage=returnLuggage
-  data.instructions=instructions
-  data.return_instructions=returnInstructions
-  data.return_passengers=returnPassengers
-  console.log(data.return_location);
-  setData(data)
-},[returnLocation, returnDestination, luggage, returnLuggage,instructions,returnInstructions,returnPassengers])
+      lastName: Yup.string()
+        .required("Name is required")
+        .min(2, "Name is too short")
+        .max(50, "Name is too long")
+        .matches(
+          /^[A-z]+(([',. [a-z ][A-Z ])?[-]?[a-zA-Z]*)*$/,
+          "Name must not contain invalid characters"
+        ),
+
+      email: Yup.string()
+        .required("Email is required")
+        .email("Email is invalid"),
+      acceptTerms: Yup.bool().oneOf([true], "Accept Ts & Cs is required"),
+    }),
+    onSubmit: (values) => {
+      // same shape as initial values
+      setFirstName(values.firstName);
+      setLastName(values.lastName);
+      setEmail(values.email);
+    },
+  });
+
   useEffect(() => {
-    console.log("dataaaa",data);
-   
-    setTimeout(() => { 
+    data.first_name = firstName;
+    data.last_name = lastName;
+    data.email = email;
+    data.phone = phone;
+    data.return_location = returnLocation;
+    data.return_destination = returnDestination;
+    data.luggage = luggage;
+    data.return_luggage = returnLuggage;
+    data.instructions = instructions;
+    data.return_instructions = returnInstructions;
+    data.return_passengers = returnPassengers;
+    console.log(data.return_location);
+    setData(data);
+  }, [
+    returnLocation,
+    returnDestination,
+    luggage,
+    returnLuggage,
+    instructions,
+    returnInstructions,
+    returnPassengers,
+    firstName,
+    lastName,
+    email,
+    phone,
+  ]);
+  useEffect(() => {
+    console.log("dataaaa", data);
+
+    setTimeout(() => {
       // allow other functions to execute, otherwise component mounts before the variables update
       setTripDistance(data.distance);
       setTotalTripPrice(data.total_trip_price);
@@ -157,13 +194,13 @@ useEffect(()=>{
         destination: data.destination,
         passengers: data.passengers,
         date: data.date,
-        
+
         distance: data.distance,
         duration: data.duration,
         service: data.service,
-        payment:data.payment
+        payment: data.payment,
       });
-      
+
       console.log("BOOKING_DATA: ", BOOKING_DATA);
       if (BOOKING_DATA.distance != undefined) {
         console.log("setting booking data");
@@ -182,18 +219,23 @@ useEffect(()=>{
       data.date !== undefined &&
       data.service !== undefined &&
       data.payment !== undefined &&
-      data.name !== undefined &&
+      data.first_name !== undefined &&
+      data.last_name!== undefined &&
       data.email !== undefined &&
       data.phone !== undefined
     ) {
       setCanSubmit(true);
     }
   }, [data]);
+  
   useEffect(() => {
     setData(data);
     console.log(data);
     savelocalStorage();
-    window.sessionStorage.setItem('shouldUsePreviousData',shouldUsePreviousData)
+    window.sessionStorage.setItem(
+      "shouldUsePreviousData",
+      shouldUsePreviousData
+    );
     console.log("useEffect");
   }, [shouldUsePreviousData]);
 
@@ -217,19 +259,15 @@ useEffect(()=>{
       if (parsedDataIsValid) {
         //set booking details to saved data from localStorage
         setShowPopup(true);
-        if(window.sessionStorage.getItem('shouldUsePreviousData')){
+        if (window.sessionStorage.getItem("shouldUsePreviousData")) {
           setShowPopup(false);
           setDataToParsedData(parsedData);
-           console.log("data is set to parsedData", parsedData);
-        }
-        else if(shouldUsePreviousData){
+          console.log("data is set to parsedData", parsedData);
+        } else if (shouldUsePreviousData) {
           setShowPopup(false);
           setDataToParsedData(parsedData);
-           console.log("data is set to parsedData", parsedData);
+          console.log("data is set to parsedData", parsedData);
         }
-        
-       
-       
       } else {
         //if no booking data is saved, get distance and save data
         Object.assign(BOOKING_DATA, {
@@ -238,10 +276,10 @@ useEffect(()=>{
           passengers: data.passengers,
           date: data.date,
           time: data.time,
-          return:data.return,
-          return_date:data.return_date,
-          return_time:data.return_time,
-          flight_monitoring:data.flight_monitoring,
+          return: data.return,
+          return_date: data.return_date,
+          return_time: data.return_time,
+          flight_monitoring: data.flight_monitoring,
           distance: data.distance,
           duration: data.duration,
           service: data.service,
@@ -288,7 +326,7 @@ useEffect(()=>{
     // Redirect to Checkout.
     const stripe = await getStripe();
     const { error } = await stripe.redirectToCheckout({
-      // Make the id field from the Checkout Session creation API response
+      // Make the id input from the Checkout Session creation API response
       // available to this file, so you can provide it as parameter here
       // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
       sessionId: response.id,
@@ -335,8 +373,8 @@ useEffect(()=>{
   }
   function handleErrors(e) {
     console.log(errors);
-let target = e.target.id.toString()
-console.log(target)
+    let target = e.target.id.toString();
+    console.log(target);
     clearErrors(target);
   }
 
@@ -349,34 +387,25 @@ console.log(target)
     }
     //
   };
-//   async function supplementUndefinedData(){
-//     if(data.return_date=== undefined){
-//       data.return_date='none'
-//       setData(data)
-//     }
-// return true
-//   }
+  //   async function supplementUndefinedData(){
+  //     if(data.return_date=== undefined){
+  //       data.return_date='none'
+  //       setData(data)
+  //     }
+  // return true
+  //   }
   function handleBooking() {
-  //  supplementUndefinedData().then((e)=>console.log(data))
-      
-    handleSubmitBooking(data).then((res)=>{console.log(res)}
-    );
+    //  supplementUndefinedData().then((e)=>console.log(data))
+
+    handleSubmitBooking(data).then((res) => {
+      console.log(res);
+    });
     // handleRedirectToCheckout();
   }
-  function onSubmit(formData) {
-    // handleSignup(data);
-    data.name = formData.name;
-    data.email = formData.email;
-    data.phone = formData.phone;
-    // console.log(data);
-console.log('form data',formData);
-    // alert("SUCCESS!! :-)\n\n" + JSON.stringify(data, null, 4));
-    return false;
-  }
+  
   function handleClosePopup(e) {
-    
     if (e.target.id !== "popup") {
-      setShouldUsePreviousData(true)
+      setShouldUsePreviousData(true);
       setShowPopup(false);
     }
   }
@@ -384,30 +413,43 @@ console.log('form data',formData);
     window.localStorage.removeItem("BOOKING_DATA");
     router.push("/");
   }
-  function handleCheckboxClick(e){
-    if (e.target.id==="different_pickup"){
-      if(e.target.checked){
-        setDifferentPickup(true)
-      }
-      else{
-        setDifferentPickup(false)
-        data.return_location=null
+  function handleCheckboxClick(e) {
+    if (e.target.id === "different_pickup") {
+      if (e.target.checked) {
+        setDifferentPickup(true);
+      } else {
+        setDifferentPickup(false);
+        data.return_location = null;
       }
     }
-    if (e.target.id==="different_dropoff"){
-      if(e.target.checked){
-        setDifferentDropoff(true)
-      }
-      else{
+    if (e.target.id === "different_dropoff") {
+      if (e.target.checked) {
+        setDifferentDropoff(true);
+      } else {
         setDifferentDropoff(false);
-        data.return_destination=null
+        data.return_destination = null;
       }
     }
-
+  }
+  function handlePhoneError() {
+    setPhoneError(null);
+    
+    if (!phone) {
+      setPhoneError("Phone number is required");
+    }
+    if (phone) {
+      console.log(isPossiblePhoneNumber(phone), "IS IT UNDEFINED"); 
+      if (isPossiblePhoneNumber(phone) === false) {
+        
+        setPhoneError("Invalid phone number");
+      } else {
+        console.log(phone);
+        setPhoneError(null);
+      }
+    }
   }
   return (
     <>
-    
       {dataError && dataErrorDiv}
       <Layout>
         {!session && showBanner && (
@@ -420,17 +462,15 @@ console.log('form data',formData);
           <div
             onClick={handleClosePopup}
             className="fixed z-[9999] flex flex-col items-center align-middle  overscroll-none h-screen w-screen bg-black/90">
-            <Popup
-             
-              onClick={handleRedirectToBooking}
-            />
+            <Popup onClick={handleRedirectToBooking} />
           </div>
-        )}<div className=" mt-10 bg-gray-100 w-full mx-auto h-32 flex items-center justify-center z-[7] text-4xl font-medium text-center text-gray-800">
-           <p className='z-20 '>Youre almost there!</p> 
-          </div>
+        )}
+        <div className=" mt-10 bg-gray-100 w-full mx-auto h-32 flex items-center justify-center z-[7] text-4xl  font-medium text-center text-gray-800">
+          <p className="z-20 ">Youre almost there!</p>
+        </div>
         <div className="static justify-center  mt-0 w-[95vw] sm:w-[97vw] mx-auto lg:  max-w-screen bg-gray-100 overflow-x-none flex flex-col lg:flex-row  ">
           <div className=""></div>
-          
+
           <div>
             {showSummary && (
               <div className="flex  lg:hidden">
@@ -441,7 +481,6 @@ console.log('form data',formData);
                       destination={data.destination}
                       passengers={data.passengers}
                       date={data.date}
-                      
                       price={data.total_trip_price}
                       distance={data.distance}
                       duration={data.duration}
@@ -457,7 +496,7 @@ console.log('form data',formData);
               <div
                 onClick={() => setShowSummary(!showSummary)}
                 className={summaryClassNames}>
-                <FaAngleUp />
+                <FaAngleDown />
               </div>
               {!showSummary && <ProgressIcons />}
 
@@ -497,10 +536,10 @@ console.log('form data',formData);
               />
             </form>
             <section>
-            <div className="flex items-stretch w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
-LUGGAGE
-            </div>
-            <StepperInput/>
+              <div className="flex items-stretch w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
+                LUGGAGE
+              </div>
+              <StepperInput for="luggage" />
             </section>
 
             <section className="">
@@ -518,35 +557,63 @@ LUGGAGE
               <div className="p-6 bg-gray-50 border-gray-400 shadow-sm lg:w-full border-y-2 group">
                 <div className="flex justify-between items-center cursor-pointer">
                   <div className="w-full">
-                    <form
-                      id="register"
-                      onBlur={handleSubmit(onSubmit)}
-                      className="flex flex-col gap-2">
+                    <form onBlur={handleSubmit} className="flex flex-col gap-2">
                       <div className="flex relative mb-2 w-full shadow-sm">
                         <span className="inline-flex items-center px-3 text-lg text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm h">
                           <BsFillPersonFill className="z-[2]" />
                         </span>
-                        <label htmlFor="name" className="sr-only">
-                          Full Name
+                        <label htmlFor="firstName" className="sr-only">
+                          First Name
                         </label>
                         <input
-                          {...register("name")}
-                          onChange={handleErrors}
-                          
-                          name="name"
+                          {...getFieldProps("firstName")}
+                          // onChange={formik.handleChange}
+                          // value={formik.values.firstName}
+
+                          name="firstName"
                           type="text"
-                          id="name"
-                          className={`flex-1 px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 ${
-                            errors.name
+                          id="firstName"
+                          className={`flex-1  px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 ${
+                            errors.firstName && touched.firstName
                               ? "focus:ring-pink-400 "
                               : "focus:ring-sky-500"
                           }`}
-                          placeholder="Your full name"
+                          placeholder="Your first name"
                         />
-                        {errors.name && (
-                          <div className="absolute w-full h-full text-sm font-medium text-pink-500 rounded-md ring-2 ring-pink-400">
+                        {errors.firstName && touched.firstName && (
+                          <div className="absolute pointer-events-none  w-full h-full text-sm font-medium text-pink-500 rounded-lg ring-2 ring-pink-400">
                             <p className="relative left-1 -top-3 px-2 w-max bg-gray-50">
-                              {errors.name?.message}
+                              {errors.firstName}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex relative mb-2 w-full shadow-sm">
+                        <span className="inline-flex items-center px-3 text-lg text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm h">
+                          <BsFillPersonFill className="z-[2]" />
+                        </span>
+                        <label htmlFor="lastName" className="sr-only">
+                          Last Name
+                        </label>
+                        <input
+                          {...getFieldProps("lastName")}
+                          // onChange={formik.handleChange}
+                          // value={formik.values.lastName}
+                          name="lastName"
+                          type="text"
+                          id="lastName"
+                          className={`flex-1 px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 ${
+                            errors.lastName && touched.lastName
+                              ? "focus:ring-pink-400 "
+                              : "focus:ring-sky-500"
+                          }`}
+                          placeholder="Your last name"
+                        />
+                        {errors.lastName && touched.lastName && (
+                          <div className="absolute pointer-events-none w-full h-full text-sm font-medium text-pink-500 rounded-lg ring-2 ring-pink-400">
+                            <p className="relative left-1 -top-3 px-2 w-max bg-gray-50">
+                              {errors.lastName}
                             </p>
                           </div>
                         )}
@@ -560,23 +627,23 @@ LUGGAGE
                           Email Address
                         </label>
                         <input
-                          {...register("email")}
-                          onChange={handleErrors}
-                         
+                          {...getFieldProps("email")}
+                          //   onChange={formik.handleChange}
+                          //  value={formik.values.email}
                           name="email"
                           type="email"
                           id="email"
                           className={`flex-1 px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 ${
-                            errors.email
+                            errors.email && touched.email
                               ? "focus:ring-pink-400 "
                               : "focus:ring-sky-500"
                           }`}
                           placeholder="Your email address"
                         />
-                        {errors.email && (
-                          <div className="absolute w-full h-full text-sm font-medium text-pink-500 rounded-md ring-2 ring-pink-400">
+                        {errors.email && touched.email && (
+                          <div className="absolute pointer-events-none w-full h-full text-sm font-medium text-pink-500 rounded-lg ring-2 ring-pink-400">
                             <p className="relative left-1 -top-3 px-2 w-max bg-gray-50">
-                              {errors.email?.message}
+                              {errors.email}
                             </p>
                           </div>
                         )}
@@ -584,21 +651,25 @@ LUGGAGE
 
                       <div className="flex relative mb-2 w-full shadow-sm">
                         <PhoneInput
-                          {...register("phone")}
-                        className={`inline-flex appearance-none items-center pl-2 w-full text-lg text-gray-900 bg-gray-50 rounded-md border-r-2 shadow-sm ${
-                            errors.phone
-                              ? "focus:ring-pink-400 "
-                              : "focus:ring-sky-500"
-                          }`}
+                          // {...getFieldProps("phone")}
+                          name="phone"
+                          id="phone"
+                          className={`inline-flex appearance-none items-center pl-2 w-full text-lg text-gray-900 bg-gray-50 rounded-lg border-r-2 focus:outline-none focus:ring-2 shadow-sm 
+                                
+                              `}
                           defaultCountry="GB"
-                          placeholder="Enter phone number"
+                          initialValueFormat="national"
+                          useNationalFormatForDefaultCountryValue
+                          placeholder="Your phone number"
                           value={phone}
+                          error={phoneError}
                           onChange={setPhone}
+                          onBlur={handlePhoneError}
                         />
-                        {errors.phone && (
-                          <div className="absolute w-full h-full text-sm font-medium text-pink-500 rounded-md ring-2 ring-pink-400">
+                        {phoneError && (
+                          <div className="absolute pointer-events-none w-full h-full -left-[1px] text-sm font-medium text-pink-500 rounded-lg  ring-[2px] ring-pink-400">
                             <p className="relative left-1 -top-3 px-2 w-max bg-gray-50">
-                              {errors.phone?.message}
+                              {phoneError}
                             </p>
                           </div>
                         )}
@@ -611,6 +682,38 @@ LUGGAGE
                 </div>
               </div>
             </section>
+            {data.flight_monitoring&& 
+              <div className="flex relative mb-2 w-full shadow-sm">
+                        <span className="inline-flex items-center px-3 text-lg text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm h">
+                          <BsFillPersonFill className="z-[2]" />
+                        </span>
+                        <label htmlFor="firstName" className="sr-only">
+                          First Name
+                        </label>
+                        <input
+                          {...getFieldProps("firstName")}
+                          // onChange={formik.handleChange}
+                          // value={formik.values.firstName}
+
+                          name="firstName"
+                          type="text"
+                          id="firstName"
+                          className={`flex-1  px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 ${
+                            errors.firstName && touched.firstName
+                              ? "focus:ring-pink-400 "
+                              : "focus:ring-sky-500"
+                          }`}
+                          placeholder="Your first name"
+                        />
+                        {errors.firstName && touched.firstName && (
+                          <div className="absolute pointer-events-none  w-full h-full text-sm font-medium text-pink-500 rounded-lg ring-2 ring-pink-400">
+                            <p className="relative left-1 -top-3 px-2 w-max bg-gray-50">
+                              {errors.firstName}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+            }
             <section className="">
               <div className="w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
                 PAYMENT
@@ -619,26 +722,42 @@ LUGGAGE
                 <PaymentSelect />
               </div>
             </section>
-           {<section >
-            
-            <div className="w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
-                RETURN
-              </div>
-              <div className="flex items-center justify-between">
-              <div className="gap-1 items-center flex">
-            <Checkbox onClick={handleCheckboxClick} id="different_pickup" />
-                <label className="self-center text-base text-gray-900" htmlFor="different_pickup">Different pick-up address on return?</label>
-             </div>
-             <div className="gap-1 items-center flex">
-              <Checkbox onClick={handleCheckboxClick} id="different_dropoff" />
-                <label htmlFor="different_dropoff">Different drop-off address on return?</label>
-             </div>
-
-            </div>
-            {differentPickup &&   <input type='text'value={returnLocation} onChange={e=>setReturnLocation(e.target.value)}/>}
-            
-          
-            </section>}
+            {
+              <section>
+                <div className="w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
+                  RETURN
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="gap-1 items-center flex">
+                    <Checkbox
+                      onClick={handleCheckboxClick}
+                      id="different_pickup"
+                    />
+                    <label
+                      className="self-center text-base text-gray-900"
+                      htmlFor="different_pickup">
+                      Different pick-up address on return?
+                    </label>
+                  </div>
+                  <div className="gap-1 items-center flex">
+                    <Checkbox
+                      onClick={handleCheckboxClick}
+                      id="different_dropoff"
+                    />
+                    <label htmlFor="different_dropoff">
+                      Different drop-off address on return?
+                    </label>
+                  </div>
+                </div>
+                {differentPickup && (
+                  <input
+                    type="text"
+                    value={returnLocation}
+                    onChange={(e) => setReturnLocation(e.target.value)}
+                  />
+                )}
+              </section>
+            }
           </div>
           <div className="hidden lg:flex">
             <div className=" z-[7] -top-20  lg:relative right-0 float-right h-screen lg:h-full min-w-max overflow-auto">
@@ -648,7 +767,6 @@ LUGGAGE
                   destination={data.destination}
                   passengers={data.passengers}
                   date={data.date}
-                 
                   price={data.total_trip_price}
                   distance={data.distance}
                   duration={data.duration}

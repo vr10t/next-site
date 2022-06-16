@@ -11,7 +11,7 @@ const {data} = useAppContext()
 const completed = "mx-auto py-2 text-sky-500 ";
   const uncompleted = "mx-auto py-2 text-gray-500 ";
     return(
-        <div className="grid absolute left-0 bottom-20 grid-cols-5 px-4 w-screen text-4xl bg-gray-100 max-w-screen">
+        <div className="grid  absolute left-0 bottom-20 grid-cols-5 px-4 w-screen text-4xl bg-gray-100 max-w-screen">
                 <div
                   className={
                     data.location && data.destination ? completed : uncompleted
@@ -40,8 +40,8 @@ const completed = "mx-auto py-2 text-sky-500 ";
                   )}
                   <FaTaxi className="px-1" />
                 </div>
-                <div className={data.name&&data.email&&data.phone ? completed : uncompleted}>
-                  {data.name&&data.email&&data.phone ? (
+                <div className={data.first_name&&data.last_name&&data.email&&data.phone ? completed : uncompleted}>
+                  {data.first_name&&data.email&&data.phone ? (
                     <FaCheck className="float-right text-sm" />
                   ) : (
                     ""
