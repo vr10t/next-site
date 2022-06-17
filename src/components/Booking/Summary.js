@@ -23,6 +23,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { FaSuitcase } from "@react-icons/all-files/fa/FaSuitcase";
 import { FaPlaneDeparture } from "@react-icons/all-files/fa/FaPlaneDeparture";
+import ReturnSummary from "./ReturnSummary"
 export default function Summary(props, children) {
   const { data, setData } = useAppContext();
   const completed =
@@ -47,7 +48,8 @@ export default function Summary(props, children) {
   const [destination, setDestination] = useState("");
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
-  const [returnTab,setReturnTab]=useState(false)
+  const [departureTabActive,setDepartureTabActive] = useState(true)
+  const [returnTabActive,setReturnTabActive] = useState(false)
   let dateObject = new Date();
   let minute = dateObject.getMinutes();
   let hour = dateObject.getHours() + 1;
@@ -216,8 +218,18 @@ export default function Summary(props, children) {
     if(data.location !=undefined&&data.destination!=undefined){
     handleGetDistance(data.location, data.destination, callback)
   }
+  
   }
-  console.log(now);
+  function handleChangeSummaryTab(e){
+    if (e.target.id==="departureTab") {
+      setDepartureTabActive(true)
+      setReturnTabActive(false)
+    }
+    if (e.target.id==="returnTab") {
+      setDepartureTabActive(false)
+      setReturnTabActive(true)
+    }
+  }
   return (
     <div className="flex w-screen bg-clip-content bg-gray-100 shadow-2xl lg:rounded-xl lg:w-full">
       <div className="overflow-auto mt-24 w-full lg:mt-2 lg:max-w-lg">
@@ -226,11 +238,12 @@ export default function Summary(props, children) {
           <h2 className="flex justify-center text-3xl font-bold text-left text-gray-800 mb-4 lg:my-10 lg:block lg:ml-16">
             Summary
           </h2>
-          <div className="w-5/6 m-auto  h-full  flex justify-between">
-          <span className="flex border-r-2 border-sky-500 rounded-t-lg px-10 py-2 w-full bg-gray-200 text-gray-900 text-xl tracking-tight font-medium justify-center  ">Departure</span>
-          <span className="flex rounded-t-lg px-10 py-2 w-full bg-gray-200 text-gray-900 text-xl tracking-tight font-medium justify-center" >Return</span>
-        </div>
-          <div className="flex rounded-b-2xl w-5/6 m-auto bg-gray-200 ">
+          {data.return&& <div className="w-5/6 m-auto my-4  h-full  flex justify-between">
+          <span id="departureTab" onClick={handleChangeSummaryTab} className={`flex cursor-pointer rounded-l-lg ring-1 ring-sky-500 px-10 py-2 w-full ${departureTabActive?"bg-sky-500 text-gray-50":"bg-gray-100 text-gray-900"} text-2xl tracking-tight font-medium justify-center  `}>Departure</span>
+          <span id="returnTab" onClick={handleChangeSummaryTab} className={`flex cursor-pointer rounded-r-lg ring-1 ring-sky-500 px-10 py-2 w-full ${returnTabActive?"bg-sky-500 text-gray-50":"bg-gray-100 text-gray-900"}  text-2xl tracking-tight font-medium justify-center`} >Return</span>
+        </div>}
+        {departureTabActive &&<>
+          <div className="flex rounded-2xl w-5/6 m-auto bg-gray-200 ">
             <div className="flex flex-col gap-4 py-6 grow">
               <div className="flex flex-row  m-auto  w-5/6 text-3xl font-bold text-gray-800">
                 {" "}
@@ -656,6 +669,10 @@ export default function Summary(props, children) {
               </div>
             </div>
           }
+          </>}
+
+          {returnTabActive &&
+          <ReturnSummary />}
           <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 rounded-2xl bg-gray-100/25">
             <div className="col-span-1 my-auto text-3xl font-medium text-gray-800">
               {" "}

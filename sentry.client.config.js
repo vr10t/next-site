@@ -7,6 +7,7 @@ import * as Sentry from '@sentry/nextjs';
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
 Sentry.init({
+  allowUrls:[ /https?:\/\/((cdn|www)\.)?vercel\.app/],
   dsn: SENTRY_DSN || 'https://fb24e3bf21c543e79edc9ab584450ad0@o1283659.ingest.sentry.io/6493486',
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: 1.0,

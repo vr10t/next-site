@@ -106,14 +106,21 @@ export default function Booking() {
   );
   let BOOKING_DATA = {
     location: data.location,
-    destination: data.destination,
-    passengers: data.passengers,
-    date: data.date,
-    time: data.time,
-    distance: data.distance,
-    duration: data.duration,
-    service: data.service,
-    payment: data.payment,
+        destination: data.destination,
+        passengers: data.passengers,
+        date: data.date,
+        distance: data.distance,
+        duration: data.duration,
+        service: data.service,
+        payment: data.payment,
+        luggage:data.luggage,
+        return_luggage:data.return_luggage,
+        return: data.return,
+        return_date: data.return_date,
+        return_time: data.return_time,
+        flight_monitoring: data.flight_monitoring,
+        return_location: data.return_location,
+        return_destination: data.return_destination,
   };
 
   let service;
@@ -194,11 +201,18 @@ export default function Booking() {
         destination: data.destination,
         passengers: data.passengers,
         date: data.date,
-
         distance: data.distance,
         duration: data.duration,
         service: data.service,
         payment: data.payment,
+        luggage:data.luggage,
+        return_luggage:data.return_luggage,
+        return: data.return,
+        return_date: data.return_date,
+        return_time: data.return_time,
+        flight_monitoring: data.flight_monitoring,
+        return_location: data.return_location,
+        return_destination: data.return_destination,
       });
 
       console.log("BOOKING_DATA: ", BOOKING_DATA);
@@ -220,14 +234,14 @@ export default function Booking() {
       data.service !== undefined &&
       data.payment !== undefined &&
       data.first_name !== undefined &&
-      data.last_name!== undefined &&
+      data.last_name !== undefined &&
       data.email !== undefined &&
       data.phone !== undefined
     ) {
       setCanSubmit(true);
     }
   }, [data]);
-  
+
   useEffect(() => {
     setData(data);
     console.log(data);
@@ -241,6 +255,7 @@ export default function Booking() {
 
   useEffect(() => {
     console.log("useEffect");
+    updateBookingData()
   }, [data]);
   function updateBookingData() {
     if (BOOKING_DATA.distance != undefined) {
@@ -279,6 +294,8 @@ export default function Booking() {
           return: data.return,
           return_date: data.return_date,
           return_time: data.return_time,
+          luggage:data.luggage,
+          return_luggage:data.return_luggage,
           flight_monitoring: data.flight_monitoring,
           distance: data.distance,
           duration: data.duration,
@@ -344,10 +361,17 @@ export default function Booking() {
     data.time = obj.time;
     data.distance = obj.distance;
     data.duration = obj.duration;
-    // data.total_trip_price = obj.total_trip_price;
     data.service = obj.service;
     data.payment = obj.payment;
     data.session = obj.session;
+    data.luggage=obj.luggage
+    data.return = obj.return;
+    data.return_date = obj.return_date;
+    data.return_time = obj.return_time;
+    data.return_luggage=obj.return_luggage
+    data.flight_monitoring = obj.flight_monitoring;
+    data.return_location = obj.return_location;
+    data.return_destination = obj.return_destination;
   }
   function calculatePrice() {
     try {
@@ -402,7 +426,7 @@ export default function Booking() {
     });
     // handleRedirectToCheckout();
   }
-  
+
   function handleClosePopup(e) {
     if (e.target.id !== "popup") {
       setShouldUsePreviousData(true);
@@ -433,14 +457,13 @@ export default function Booking() {
   }
   function handlePhoneError() {
     setPhoneError(null);
-    
+
     if (!phone) {
       setPhoneError("Phone number is required");
     }
     if (phone) {
-      console.log(isPossiblePhoneNumber(phone), "IS IT UNDEFINED"); 
+      console.log(isPossiblePhoneNumber(phone), "IS IT UNDEFINED");
       if (isPossiblePhoneNumber(phone) === false) {
-        
         setPhoneError("Invalid phone number");
       } else {
         console.log(phone);
@@ -682,38 +705,38 @@ export default function Booking() {
                 </div>
               </div>
             </section>
-            {data.flight_monitoring&& 
+            {data.flight_monitoring && (
               <div className="flex relative mb-2 w-full shadow-sm">
-                        <span className="inline-flex items-center px-3 text-lg text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm h">
-                          <BsFillPersonFill className="z-[2]" />
-                        </span>
-                        <label htmlFor="firstName" className="sr-only">
-                          First Name
-                        </label>
-                        <input
-                          {...getFieldProps("firstName")}
-                          // onChange={formik.handleChange}
-                          // value={formik.values.firstName}
+                <span className="inline-flex items-center px-3 text-lg text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm h">
+                  <BsFillPersonFill className="z-[2]" />
+                </span>
+                <label htmlFor="firstName" className="sr-only">
+                  First Name
+                </label>
+                <input
+                  {...getFieldProps("firstName")}
+                  // onChange={formik.handleChange}
+                  // value={formik.values.firstName}
 
-                          name="firstName"
-                          type="text"
-                          id="firstName"
-                          className={`flex-1  px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 ${
-                            errors.firstName && touched.firstName
-                              ? "focus:ring-pink-400 "
-                              : "focus:ring-sky-500"
-                          }`}
-                          placeholder="Your first name"
-                        />
-                        {errors.firstName && touched.firstName && (
-                          <div className="absolute pointer-events-none  w-full h-full text-sm font-medium text-pink-500 rounded-lg ring-2 ring-pink-400">
-                            <p className="relative left-1 -top-3 px-2 w-max bg-gray-50">
-                              {errors.firstName}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-            }
+                  name="firstName"
+                  type="text"
+                  id="firstName"
+                  className={`flex-1  px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 ${
+                    errors.firstName && touched.firstName
+                      ? "focus:ring-pink-400 "
+                      : "focus:ring-sky-500"
+                  }`}
+                  placeholder="Your first name"
+                />
+                {errors.firstName && touched.firstName && (
+                  <div className="absolute pointer-events-none  w-full h-full text-sm font-medium text-pink-500 rounded-lg ring-2 ring-pink-400">
+                    <p className="relative left-1 -top-3 px-2 w-max bg-gray-50">
+                      {errors.firstName}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
             <section className="">
               <div className="w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
                 PAYMENT

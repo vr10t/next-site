@@ -116,11 +116,12 @@ data.return=addReturn
 data.return_date=returnDate
 data.return_time=returnTime
 data.flight_monitoring=addFlightMonitoring
-if(data.return===true){
+if(addReturn===true){
   data.return_location=destination
 data.return_destination=origin
 }
-
+console.log(data.return_location,
+  data.return_destination);
     setData(data);
    
     window.localStorage.removeItem("BOOKING_DATA");
