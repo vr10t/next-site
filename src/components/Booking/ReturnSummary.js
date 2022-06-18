@@ -246,7 +246,7 @@ export default function Summary(props, children) {
                 />
               ) : (
                 <p className={`text-sm text-gray-500`}>
-                  {origin == "" ? props.location : origin}
+                  {origin == "" ? data.return_location : origin}
                 </p>
               )}
             </div>
@@ -291,7 +291,7 @@ export default function Summary(props, children) {
                 />
               ) : (
                 <p className={`${data.return_destination}text-sm text-gray-500`}>
-                  {destination == "" ? props.destination : destination}
+                  {destination == "" ? data.return_destination : destination}
                 </p>
               )}
             </div>
@@ -337,7 +337,7 @@ export default function Summary(props, children) {
                 />
               ) : (
                 <p className={`text-sm text-gray-500`}>
-                  {passengers == "" ? props.passengers : passengers}
+                  {passengers == "" ? data.return_passengers : passengers}
                 </p>
               )}
             </div>
@@ -442,7 +442,7 @@ export default function Summary(props, children) {
             </div>
           </div>}
           
-          {data.return_luggage!=="0"&&
+          {data.return_luggage!=="0"&&data.return_luggage!==0&&
             <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
               <div className="col-span-1 my-auto text-3xl text-gray-800">
                 {" "}
@@ -501,11 +501,11 @@ export default function Summary(props, children) {
                 <div
                   className={
                     
-                    data.first_name &&data.last_name&& data.email && data.phone
+                    data.return_first_name &&data.return_last_name&& data.return_email && data.return_phone
                       ? completed
                       : uncompleted
                   }>
-                  {data.first_name &&data.last_name&& data.email && data.phone ? (
+                  {data.return_first_name &&data.return_last_name&& data.return_email && data.return_phone ? (
                     <FaCheck className="float-right text-sm" />
                   ) : (
                     ""
@@ -518,11 +518,11 @@ export default function Summary(props, children) {
                   Passenger details
                 </p>
                
-                {data.first_name &&data.last_name&& data.email && data.phone ? (
+                {data.return_first_name &&data.return_last_name&& data.return_email && data.return_phone ? (
                   <>
-                    <p className={`text-sm text-gray-500`}>{data.first_name}{" "}{data.last_name}</p>
-                    <p className={`text-sm text-gray-500`}>{data.email}</p>
-                    <p className={`text-sm text-gray-500`}>{data.phone}</p>
+                    <p className={`text-sm text-gray-500`}>{data.return_first_name}{" "}{data.return_last_name}</p>
+                    <p className={`text-sm text-gray-500`}>{data.return_email}</p>
+                    <p className={`text-sm text-gray-500`}>{data.return_phone}</p>
                   </>
                 ) : (
                   <p className="text-sm text-pink-400">Required</p>

@@ -46,6 +46,7 @@ import { supabase } from "../utils/supabaseClient";
 import { Checkbox } from "flowbite-react";
 import AutocompleteInput from "../src/components/Booking/AutocompleteInput";
 import StepperInput from "../src/components/Booking/StepperInput";
+import FlightMonitoring from "../src/components/Booking/FlightMonitoring";
 // import {google} from "googleapis"
 export default function Booking() {
   const [mapsLoaded, setMapsLoaded] = useState(false);
@@ -705,38 +706,9 @@ export default function Booking() {
                 </div>
               </div>
             </section>
-            {data.flight_monitoring && (
-              <div className="flex relative mb-2 w-full shadow-sm">
-                <span className="inline-flex items-center px-3 text-lg text-gray-600 bg-gray-50 rounded-l-md border-r-2 shadow-sm h">
-                  <BsFillPersonFill className="z-[2]" />
-                </span>
-                <label htmlFor="firstName" className="sr-only">
-                  First Name
-                </label>
-                <input
-                  {...getFieldProps("firstName")}
-                  // onChange={formik.handleChange}
-                  // value={formik.values.firstName}
-
-                  name="firstName"
-                  type="text"
-                  id="firstName"
-                  className={`flex-1  px-4 py-2 w-full text-base placeholder-gray-400 text-gray-600 bg-gray-50 rounded-r-lg border-0 shadow-sm appearance-none focus:outline-none focus:ring-2 ${
-                    errors.firstName && touched.firstName
-                      ? "focus:ring-pink-400 "
-                      : "focus:ring-sky-500"
-                  }`}
-                  placeholder="Your first name"
-                />
-                {errors.firstName && touched.firstName && (
-                  <div className="absolute pointer-events-none  w-full h-full text-sm font-medium text-pink-500 rounded-lg ring-2 ring-pink-400">
-                    <p className="relative left-1 -top-3 px-2 w-max bg-gray-50">
-                      {errors.firstName}
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
+            {data.flight_monitoring && <>
+              <FlightMonitoring />
+            </>}
             <section className="">
               <div className="w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
                 PAYMENT
