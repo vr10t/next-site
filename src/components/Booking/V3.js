@@ -119,6 +119,7 @@ data.flight_monitoring=addFlightMonitoring
 if(addReturn===true){
   data.return_location=destination
 data.return_destination=origin
+data.return_passengers=passengers
 }
 console.log(data.return_location,
   data.return_destination);

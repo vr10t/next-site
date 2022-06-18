@@ -1,6 +1,6 @@
 export default function Receipt() {
   return (
-      <div className="hidden lg:flex overflow-visible relative float-right -top-44 right-2  w-44 h-44">
+      <div className="hidden pointer-events-none lg:flex overflow-visible relative float-right -top-44 right-2  w-44 h-44">
     <svg 
       xmlns="http://www.w3.org/2000/svg"
       data-name="Layer 1"

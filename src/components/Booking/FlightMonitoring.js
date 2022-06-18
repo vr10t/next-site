@@ -12,6 +12,7 @@ export default function FlightMonitoring() {
 data.plane_arriving_from=planeArrivingFrom
 data.airline_name=airlineName
 data.flight_number=flightNumber
+setData(data)
   },[planeArrivingFrom,airlineName,flightNumber])
   const { getFieldProps, handleSubmit, errors, touched } = useFormik({
     initialValues: {

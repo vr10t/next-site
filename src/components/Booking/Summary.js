@@ -23,7 +23,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { FaSuitcase } from "@react-icons/all-files/fa/FaSuitcase";
 import { FaPlaneDeparture } from "@react-icons/all-files/fa/FaPlaneDeparture";
-import ReturnSummary from "./ReturnSummary"
+import ReturnSummary from "./ReturnSummary";
 export default function Summary(props, children) {
   const { data, setData } = useAppContext();
   const completed =
@@ -48,8 +48,8 @@ export default function Summary(props, children) {
   const [destination, setDestination] = useState("");
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
-  const [departureTabActive,setDepartureTabActive] = useState(true)
-  const [returnTabActive,setReturnTabActive] = useState(false)
+  const [departureTabActive, setDepartureTabActive] = useState(true);
+  const [returnTabActive, setReturnTabActive] = useState(false);
   let dateObject = new Date();
   let minute = dateObject.getMinutes();
   let hour = dateObject.getHours() + 1;
@@ -101,25 +101,24 @@ export default function Summary(props, children) {
     },
   });
 
-  
   function callback(response, status) {
     console.log("status", status);
     try {
       // setDistance(response.rows[0].elements[0].distance.text);
       // setDuration(response.rows[0].elements[0].duration.text);
-      
+
       data.distance = response.rows[0].elements[0].distance.text;
       data.duration = response.rows[0].elements[0].duration.text;
-      setData(data)
-      setTimeout(()=>console.log(data.distance, data.duration),2000)
+      setData(data);
+      setTimeout(() => console.log(data.distance, data.duration), 2000);
       // setDistanceResults({ distance: distance, duration: duration });
 
       console.log(response, status);
     } catch (error) {
-      data.distance='error'
-      data.duration='error'
-      setData(data)
-      alert(`incorrect location or destination`)
+      data.distance = "error";
+      data.duration = "error";
+      setData(data);
+      alert(`incorrect location or destination`);
     }
   }
 
@@ -215,464 +214,550 @@ export default function Summary(props, children) {
       data.time = time;
     }
     setData(data);
-    if(data.location !=undefined&&data.destination!=undefined){
-    handleGetDistance(data.location, data.destination, callback)
-  }
-  
-  }
-  function handleChangeSummaryTab(e){
-    if (e.target.id==="departureTab") {
-      setDepartureTabActive(true)
-      setReturnTabActive(false)
+    if (data.location != undefined && data.destination != undefined) {
+      handleGetDistance(data.location, data.destination, callback);
     }
-    if (e.target.id==="returnTab") {
-      setDepartureTabActive(false)
-      setReturnTabActive(true)
+  }
+  function handleChangeSummaryTab(e) {
+    if (e.target.id === "departureTab") {
+      setDepartureTabActive(true);
+      setReturnTabActive(false);
+    }
+    if (e.target.id === "returnTab") {
+      setDepartureTabActive(false);
+      setReturnTabActive(true);
     }
   }
   return (
     <div className="flex w-screen bg-clip-content bg-gray-100 shadow-2xl lg:rounded-xl lg:w-full">
       <div className="overflow-auto mt-24 w-full lg:mt-2 lg:max-w-lg">
         <div className="">
-        
-          <h2 className="flex justify-center text-3xl font-bold text-left text-gray-800 mb-4 lg:my-10 lg:block lg:ml-16">
+          <h2 className="flex justify-center mb-4 text-3xl font-bold text-left text-gray-800 lg:my-10 lg:block lg:ml-16">
             Summary
           </h2>
-          {data.return&& <div className="w-5/6 m-auto my-4  h-full  flex justify-between">
-          <span id="departureTab" onClick={handleChangeSummaryTab} className={`flex cursor-pointer rounded-l-lg ring-1 ring-sky-500 px-10 py-2 w-full ${departureTabActive?"bg-sky-500 text-gray-50":"bg-gray-100 text-gray-900"} text-2xl tracking-tight font-medium justify-center  `}>Departure</span>
-          <span id="returnTab" onClick={handleChangeSummaryTab} className={`flex cursor-pointer rounded-r-lg ring-1 ring-sky-500 px-10 py-2 w-full ${returnTabActive?"bg-sky-500 text-gray-50":"bg-gray-100 text-gray-900"}  text-2xl tracking-tight font-medium justify-center`} >Return</span>
-        </div>}
-        {departureTabActive &&<>
-          <div className="flex rounded-2xl w-5/6 m-auto bg-gray-200 ">
-            <div className="flex flex-col gap-4 py-6 grow">
-              <div className="flex flex-row  m-auto  w-5/6 text-3xl font-bold text-gray-800">
-                {" "}
-                <div className="">
-                  <label className="sr-only">Distance</label>
-                  <Tooltip style="light" content="Distance">
-                    <FaRoute />
-                  </Tooltip>
+          {data.return && (
+            <div className="flex justify-between m-auto my-4 w-5/6 h-full">
+              <span
+                id="departureTab"
+                onClick={handleChangeSummaryTab}
+                className={`flex cursor-pointer rounded-l-lg ring-1 ring-sky-500 px-10 py-2 w-full ${
+                  departureTabActive
+                    ? "text-gray-50 bg-sky-500"
+                    : "text-gray-900 bg-gray-100"
+                } text-2xl tracking-tight font-medium justify-center  `}>
+                Departure
+              </span>
+              <span
+                id="returnTab"
+                onClick={handleChangeSummaryTab}
+                className={`flex cursor-pointer rounded-r-lg ring-1 ring-sky-500 px-10 py-2 w-full ${
+                  returnTabActive
+                    ? "text-gray-50 bg-sky-500"
+                    : "text-gray-900 bg-gray-100"
+                }  text-2xl tracking-tight font-medium justify-center`}>
+                Return
+              </span>
+            </div>
+          )}
+          {departureTabActive && (
+            <>
+              <div className="flex m-auto w-5/6 bg-gray-200 rounded-2xl">
+                <div className="flex flex-col gap-4 py-6 grow">
+                  <div className="flex flex-row m-auto w-5/6 text-3xl font-bold text-gray-800">
+                    {" "}
+                    <div className="">
+                      <label className="sr-only">Distance</label>
+                      <Tooltip style="light" content="Distance">
+                        <FaRoute />
+                      </Tooltip>
+                    </div>
+                    <div className="mx-4 h-1/2 border-t-0 border-b-2 border-gray-400 border-dashed grow"></div>
+                    <div className="self-center text-base font-bold">
+                      {data.distance == undefined ? <Spinner /> : data.distance}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-row self-center m-auto w-5/6 text-3xl font-bold text-gray-800">
+                    {" "}
+                    <div className="">
+                      <label className="sr-only">Estimated trip time</label>
+                      <Tooltip style="light" content="Estimated trip time">
+                        <FaHourglassHalf />
+                      </Tooltip>
+                    </div>
+                    <div className="mx-4 h-1/2 border-t-0 border-b-2 border-gray-400 border-dashed grow"></div>
+                    <div className="self-center text-base font-bold">
+                      {data.duration == undefined ? <Spinner /> : data.duration}
+                    </div>
+                  </div>
+                </div>{" "}
+                <Receipt className="" />
+              </div>
+              {
+                <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+                  <div className="col-span-1 my-auto text-3xl text-gray-800">
+                    {" "}
+                    <div className={data.location ? completed : uncompleted}>
+                      {data.location ? (
+                        <FaCheck className="float-right text-sm" />
+                      ) : (
+                        ""
+                      )}
+                      <FaMapMarkerAlt />
+                    </div>
+                  </div>
+                  <div className="col-span-2 pt-1">
+                    <p className="font-bold text-gray-800 lg:text-sm">
+                      Pickup address
+                    </p>
+                    {locationEditable ? (
+                      <AutocompleteInput
+                        value={origin}
+                        onChange={handleChangeOrigin}
+                        onSelect={handleSelectOrigin}
+                      />
+                    ) : (
+                      <p className={`text-sm text-gray-500`}>
+                        {origin == "" ? data.location : origin}
+                      </p>
+                    )}
+                  </div>
+
+                  <div id="location" className="my-auto">
+                    {locationEditable ? (
+                      <button
+                        onClick={save}
+                        className="mb-10 text-sm font-bold text-indigo-700 underline sm:mb-0 hover:no-underline hover:text-indigo-500">
+                        Save
+                      </button>
+                    ) : (
+                      <button
+                        onClick={edit}
+                        className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
+                        Change
+                      </button>
+                    )}
+                  </div>
                 </div>
-                <div className="h-1/2 mx-4 border-t-0 border-b-2 border-gray-400 border-dashed grow"></div>
-                <div className="self-center text-base font-bold">
-                  {data.distance==undefined?  <Spinner />:data.distance}
+              }
+              {
+                <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+                  <div className="col-span-1 my-auto text-3xl text-gray-800">
+                    {" "}
+                    <div className={data.destination ? completed : uncompleted}>
+                      {data.destination ? (
+                        <FaCheck className="float-right text-sm" />
+                      ) : (
+                        ""
+                      )}
+                      <FaMapPin />
+                    </div>
+                  </div>
+                  <div className="col-span-2 pt-1">
+                    <p className="font-bold text-gray-800 lg:text-sm">
+                      Dropoff address
+                    </p>
+                    {destinationEditable ? (
+                      <AutocompleteInput
+                        value={destination}
+                        onChange={handleChangeDestination}
+                        onSelect={handleSelectDestination}
+                      />
+                    ) : (
+                      <p className={`${data.destination}text-sm text-gray-500`}>
+                        {destination == "" ? data.destination : destination}
+                      </p>
+                    )}
+                  </div>
+
+                  <div id="destination" className="my-auto">
+                    {destinationEditable ? (
+                      <button
+                        onClick={save}
+                        className="mb-10 text-sm font-bold text-indigo-700 underline sm:mb-0 hover:no-underline hover:text-indigo-500">
+                        Save
+                      </button>
+                    ) : (
+                      <button
+                        onClick={edit}
+                        className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
+                        Change
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
+              }
 
-              <div className="flex flex-row self-center m-auto  w-5/6 text-3xl font-bold text-gray-800">
-                {" "}
-                <div className="">
-                  <label className="sr-only">Estimated trip time</label>
-                  <Tooltip style="light" content="Estimated trip time">
-                    <FaHourglassHalf />
-                  </Tooltip>
+              {
+                <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+                  <div className="col-span-1 my-auto text-3xl text-gray-800">
+                    {" "}
+                    <div className={data.passengers ? completed : uncompleted}>
+                      {data.passengers ? (
+                        <FaCheck className="float-right text-sm" />
+                      ) : (
+                        ""
+                      )}
+                      <BsFillPersonPlusFill />
+                    </div>
+                  </div>
+                  <div className="col-span-2 pt-1">
+                    <p className="font-bold text-gray-800 lg:text-sm">
+                      Passengers
+                    </p>
+                    {passengersEditable ? (
+                      <input
+                        className="flex flex-1 px-4 py-2 w-auto text-base placeholder-gray-500 text-gray-700 bg-gray-50 rounded-md border-0 ring-2 shadow-sm appearance-none grow focus-ring-full focus:outline-none focus:ring-2 focus:ring-sky-600"
+                        type="number"
+                        min="1"
+                        max="16"
+                        value={passengers}
+                        onChange={(e) => setPassengers(e.target.value)}
+                      />
+                    ) : (
+                      <p className={`text-sm text-gray-500`}>
+                        {passengers == "" ? data.passengers : passengers}
+                      </p>
+                    )}
+                  </div>
+
+                  <div id="passengers" className="my-auto">
+                    {passengersEditable ? (
+                      <button
+                        onClick={save}
+                        className="mb-10 text-sm font-bold text-indigo-700 underline sm:mb-0 hover:no-underline hover:text-indigo-500">
+                        Save
+                      </button>
+                    ) : (
+                      <button
+                        onClick={edit}
+                        className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
+                        Change
+                      </button>
+                    )}
+                  </div>
                 </div>
-                <div className="h-1/2 mx-4 border-t-0 border-b-2 border-gray-400 border-dashed grow"></div>
-                <div className="self-center text-base font-bold">
-                {data.duration==undefined?  <Spinner />:data.duration}
+              }
+
+              {
+                <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+                  <div className="col-span-1 my-auto text-3xl text-gray-800">
+                    {" "}
+                    <div className={data.date ? completed : uncompleted}>
+                      {data.date ? (
+                        <FaCheck className="float-right text-sm" />
+                      ) : (
+                        ""
+                      )}
+                      <BsCalendarFill />
+                    </div>
+                  </div>
+                  <div className="col-span-2 pt-1">
+                    <p className="font-bold text-gray-800 lg:text-sm">
+                      Pickup date
+                    </p>
+                    {dateEditable ? (
+                      <input
+                        className="flex flex-1 px-4 py-2 w-auto text-base placeholder-gray-500 text-gray-700 bg-gray-50 rounded-md border-0 ring-2 shadow-sm appearance-none grow focus-ring-full focus:outline-none focus:ring-2 focus:ring-sky-600"
+                        type="date"
+                        min={today}
+                        max={threeMonthsFromNow}
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                      />
+                    ) : (
+                      <p className={`text-sm text-gray-500`}>
+                        {date == "" ? data.date : date}
+                      </p>
+                    )}
+                  </div>
+
+                  <div id="date" className="my-auto">
+                    {dateEditable ? (
+                      <button
+                        onClick={save}
+                        className="mb-10 text-sm font-bold text-indigo-700 underline sm:mb-0 hover:no-underline hover:text-indigo-500">
+                        Save
+                      </button>
+                    ) : (
+                      <button
+                        onClick={edit}
+                        className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
+                        Change
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </div>{" "}
-            <Receipt className="" />
-          </div>
-          <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
-            <div className="col-span-1 my-auto text-3xl text-gray-800">
-              {" "}
-              <div className={data.location ? completed : uncompleted}>
-                {data.location ? (
-                  <FaCheck className="float-right text-sm" />
-                ) : (
-                  ""
-                )}
-                <FaMapMarkerAlt />
-              </div>
-            </div>
-            <div className="col-span-2 pt-1">
-              <p className="font-bold text-gray-800 lg:text-sm">
-                Pickup address
-              </p>
-              {locationEditable ? (
-                <AutocompleteInput
-                  value={origin}
-                  onChange={handleChangeOrigin}
-                  onSelect={handleSelectOrigin}
-                />
-              ) : (
-                <p className={`text-sm text-gray-500`}>
-                  {origin == "" ? props.location : origin}
-                </p>
-              )}
-            </div>
+              }
+              {data.time && data.date !== "ASAP" && (
+                <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+                  <div className="col-span-1 my-auto text-3xl text-gray-800">
+                    {" "}
+                    <div className={data.time ? completed : uncompleted}>
+                      {data.time ? (
+                        <FaCheck className="float-right text-sm" />
+                      ) : (
+                        ""
+                      )}
+                      <BsClockFill />
+                    </div>
+                  </div>
+                  <div className="col-span-2 pt-1">
+                    <p className="font-bold text-gray-800 lg:text-sm">
+                      Pickup time
+                    </p>
+                    {timeEditable ? (
+                      <input
+                        className="flex flex-1 px-4 py-2 w-auto text-base placeholder-gray-500 text-gray-700 bg-gray-50 rounded-md border-0 ring-2 shadow-sm appearance-none grow focus-ring-full focus:outline-none focus:ring-2 focus:ring-sky-600"
+                        type="time"
+                        min={now}
+                        value={time}
+                        onChange={(e) => setTime(e.target.value)}
+                      />
+                    ) : (
+                      <p className={`text-sm text-gray-500`}>{data.time}</p>
+                    )}
+                  </div>
 
-            <div id="location" className="my-auto">
-              {locationEditable ? (
-                <button
-                  onClick={save}
-                  className="text-sm mb-10 sm:mb-0 font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
-                  Save
-                </button>
-              ) : (
-                <button
-                  onClick={edit}
-                  className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
-                  Change
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
-            <div className="col-span-1 my-auto text-3xl text-gray-800">
-              {" "}
-              <div className={data.destination ? completed : uncompleted}>
-                {data.destination ? (
-                  <FaCheck className="float-right text-sm" />
-                ) : (
-                  ""
-                )}
-                <FaMapPin />
-              </div>
-            </div>
-            <div className="col-span-2 pt-1">
-              <p className="font-bold text-gray-800 lg:text-sm">
-                Dropoff address
-              </p>
-              {destinationEditable ? (
-                <AutocompleteInput
-                  value={destination}
-                  onChange={handleChangeDestination}
-                  onSelect={handleSelectDestination}
-                />
-              ) : (
-                <p className={`${data.destination}text-sm text-gray-500`}>
-                  {destination == "" ? props.destination : destination}
-                </p>
-              )}
-            </div>
-
-            <div id="destination" className="my-auto">
-              {destinationEditable ? (
-                <button
-                  onClick={save}
-                  className="text-sm mb-10 sm:mb-0 font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
-                  Save
-                </button>
-              ) : (
-                <button
-                  onClick={edit}
-                  className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
-                  Change
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
-            <div className="col-span-1 my-auto text-3xl text-gray-800">
-              {" "}
-              <div className={data.passengers ? completed : uncompleted}>
-                {data.passengers ? (
-                  <FaCheck className="float-right text-sm" />
-                ) : (
-                  ""
-                )}
-                <BsFillPersonPlusFill />
-              </div>
-            </div>
-            <div className="col-span-2 pt-1">
-              <p className="font-bold text-gray-800 lg:text-sm">Passengers</p>
-              {passengersEditable ? (
-                <input
-                  className=" w-auto  flex grow border-0 rounded-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-50 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none ring-2 focus:ring-2 focus:ring-sky-600"
-                  type="number"
-                  min="1"
-                  max="16"
-                  value={passengers}
-                  onChange={(e) => setPassengers(e.target.value)}
-                />
-              ) : (
-                <p className={`text-sm text-gray-500`}>
-                  {passengers == "" ? props.passengers : passengers}
-                </p>
-              )}
-            </div>
-
-            <div id="passengers" className="my-auto">
-              {passengersEditable ? (
-                <button
-                  onClick={save}
-                  className="text-sm  mb-10 sm:mb-0 font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
-                  Save
-                </button>
-              ) : (
-                <button
-                  onClick={edit}
-                  className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
-                  Change
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
-            <div className="col-span-1 my-auto text-3xl text-gray-800">
-              {" "}
-              <div className={data.date ? completed : uncompleted}>
-                {data.date ? <FaCheck className="float-right text-sm" /> : ""}
-                <BsCalendarFill />
-              </div>
-            </div>
-            <div className="col-span-2 pt-1">
-              <p className="font-bold text-gray-800 lg:text-sm">Pickup date</p>
-              {dateEditable ? (
-                <input
-                  className=" w-auto  flex grow border-0 rounded-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-50 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none ring-2 focus:ring-2 focus:ring-sky-600"
-                  type="date"
-                  min={today}
-                  max={threeMonthsFromNow}
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                />
-              ) : (
-                <p className={`text-sm text-gray-500`}>
-                  {date == "" ? data.date : date}
-                </p>
-              )}
-            </div>
-
-            <div id="date" className="my-auto">
-              {dateEditable ? (
-                <button
-                  onClick={save}
-                  className="text-sm  mb-10 sm:mb-0 font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
-                  Save
-                </button>
-              ) : (
-                <button
-                  onClick={edit}
-                  className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
-                  Change
-                </button>
-              )}
-            </div>
-          </div>
-          {data.time&&data.date!=="ASAP" &&<div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
-            <div className="col-span-1 my-auto text-3xl text-gray-800">
-              {" "}
-              <div className={data.time ? completed : uncompleted}>
-                {data.time ? <FaCheck className="float-right text-sm" /> : ""}
-                <BsClockFill />
-              </div>
-            </div>
-            <div className="col-span-2 pt-1">
-              <p className="font-bold text-gray-800 lg:text-sm">Pickup time</p>
-              {timeEditable ? (
-                <input
-                  className=" w-auto  flex grow border-0 rounded-md flex-1 appearance-none focus-ring-full py-2 px-4 bg-gray-50 text-gray-700 placeholder-gray-500 shadow-sm text-base focus:outline-none ring-2 focus:ring-2 focus:ring-sky-600"
-                  type="time"
-                  min={now}
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                />
-              ) : (
-                <p className={`text-sm text-gray-500`}>
-                  {data.time}
-                </p>
-              )}
-            </div>
-
-            <div id="time" className="my-auto">
-              {timeEditable ? (
-                <button
-                  onClick={save}
-                  className="text-sm mb-10 sm:mb-0 font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
-                  Save
-                </button>
-              ) : (
-                <button
-                  onClick={edit}
-                  className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
-                  Change
-                </button>
-              )}
-            </div>
-          </div>}
-          {data.flight_monitoring&&
-            <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
-              <div className="col-span-1 my-auto text-3xl text-gray-800">
-                {" "}
-                <div className={data.flight_number ? completed : uncompleted}>
-                  {data.flight_number ? (
-                    <FaCheck className="float-right text-sm" />
-                  ) : (
-                    ""
-                  )}
-                  <FaPlaneDeparture />
+                  <div id="time" className="my-auto">
+                    {timeEditable ? (
+                      <button
+                        onClick={save}
+                        className="mb-10 text-sm font-bold text-indigo-700 underline sm:mb-0 hover:no-underline hover:text-indigo-500">
+                        Save
+                      </button>
+                    ) : (
+                      <button
+                        onClick={edit}
+                        className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500">
+                        Change
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="col-span-2 pt-1">
-                <p className="font-bold text-gray-800 lg:text-sm">Flight Monitoring</p>
-                {data.flight_number ? (
-                  <p className={`text-sm text-gray-500`}>{data.flight_number}</p>
-                ) : (
-                  <p className="text-sm text-gray-500">You haven't provided any flight details.</p>
-                )}
-              </div>
+              )}
+              {data.flight_monitoring && (
+                <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+                  <div className="col-span-1 my-auto text-3xl text-gray-800">
+                    {" "}
+                    <div
+                      className={
+                        data.flight_number &&
+                        data.plane_arriving_from &&
+                        data.airline_name
+                          ? completed
+                          : uncompleted
+                      }>
+                      {data.flight_number &&
+                      data.plane_arriving_from &&
+                      data.airline_name ? (
+                        <FaCheck className="float-right text-sm" />
+                      ) : (
+                        ""
+                      )}
+                      <FaPlaneDeparture />
+                    </div>
+                  </div>
+                  <div className="col-span-2 pt-1">
+                    <p className="font-bold text-gray-800 lg:text-sm">
+                      Flight Monitoring
+                    </p>
+                    {data.flight_number &&
+                    data.plane_arriving_from &&
+                    data.airline_name ? (
+                      <>
+                        <p className={`text-sm text-gray-500`}>
+                          {data.plane_arriving_from}
+                        </p>
+                        <p className={`text-sm text-gray-500`}>
+                          {" "}
+                          {data.airline_name}
+                        </p>
+                        <p className={`text-sm text-gray-500`}>
+                          {data.flight_number}
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-sm text-gray-500">
+                        You haven't provided any flight details.
+                      </p>
+                    )}
+                  </div>
 
-              <div className="my-auto">
-                <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
-              </div>
-            </div>
-          }
-          {data.luggage!=="0"&&
-            <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
-              <div className="col-span-1 my-auto text-3xl text-gray-800">
-                {" "}
-                <div className={data.luggage ? completed : uncompleted}>
-                  {data.luggage? (
-                    <FaCheck className="float-right text-sm" />
-                  ) : (
-                    ""
-                  )}
-                  <FaSuitcase />
+                  <div className="my-auto">
+                    <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
+                  </div>
                 </div>
-              </div>
-              <div className="col-span-2 pt-1">
-                <p className="font-bold text-gray-800 lg:text-sm">Luggage</p>
-                
-                  <p className={`text-sm text-gray-500`}>{data.luggage} (small)</p>
-               
-              </div>
+              )}
+              {data.luggage !== "0" && (
+                <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+                  <div className="col-span-1 my-auto text-3xl text-gray-800">
+                    {" "}
+                    <div className={data.luggage ? completed : uncompleted}>
+                      {data.luggage ? (
+                        <FaCheck className="float-right text-sm" />
+                      ) : (
+                        ""
+                      )}
+                      <FaSuitcase />
+                    </div>
+                  </div>
+                  <div className="col-span-2 pt-1">
+                    <p className="font-bold text-gray-800 lg:text-sm">
+                      Luggage
+                    </p>
 
-              <div className="my-auto">
-                <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
-              </div>
-            </div>
-          }
-          {
-            <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
-              <div className="col-span-1 my-auto text-3xl text-gray-800">
-                {" "}
-                <div className={data.service ? completed : uncompleted}>
-                  {data.service ? (
-                    <FaCheck className="float-right text-sm" />
-                  ) : (
-                    ""
-                  )}
-                  <FaTaxi />
+                    <p className={`text-sm text-gray-500`}>
+                      {data.luggage} (small)
+                    </p>
+                  </div>
+
+                  <div className="my-auto">
+                    <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
+                  </div>
                 </div>
-              </div>
-              <div className="col-span-2 pt-1">
-                <p className="font-bold text-gray-800 lg:text-sm">Service</p>
-                {data.service ? (
-                  <p className={`text-sm text-gray-500`}>{data.service}</p>
-                ) : (
-                  <p className="text-sm text-pink-400">Required</p>
-                )}
-              </div>
+              )}
+              {
+                <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+                  <div className="col-span-1 my-auto text-3xl text-gray-800">
+                    {" "}
+                    <div className={data.service ? completed : uncompleted}>
+                      {data.service ? (
+                        <FaCheck className="float-right text-sm" />
+                      ) : (
+                        ""
+                      )}
+                      <FaTaxi />
+                    </div>
+                  </div>
+                  <div className="col-span-2 pt-1">
+                    <p className="font-bold text-gray-800 lg:text-sm">
+                      Service
+                    </p>
+                    {data.service ? (
+                      <p className={`text-sm text-gray-500`}>{data.service}</p>
+                    ) : (
+                      <p className="text-sm text-pink-400">Required</p>
+                    )}
+                  </div>
 
-              <div className="my-auto">
-                <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
-              </div>
-            </div>
-          }
-          {
-            <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
-              <div className="col-span-1 my-auto text-3xl text-gray-800">
-                {" "}
-                <div
-                  className={
-                    
-                    data.first_name &&data.last_name&& data.email && data.phone
-                      ? completed
-                      : uncompleted
-                  }>
-                  {data.first_name &&data.last_name&& data.email && data.phone ? (
-                    <FaCheck className="float-right text-sm" />
-                  ) : (
-                    ""
-                  )}
-                  <BsFillPersonFill />
+                  <div className="my-auto">
+                    <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
+                  </div>
                 </div>
-              </div>
-              <div className="col-span-2 pt-1">
-                <p className="font-bold text-gray-800 lg:text-sm">
-                  Passenger details
-                </p>
-               
-                {data.first_name &&data.last_name&& data.email && data.phone ? (
-                  <>
-                    <p className={`text-sm text-gray-500`}>{data.first_name}{" "}{data.last_name}</p>
-                    <p className={`text-sm text-gray-500`}>{data.email}</p>
-                    <p className={`text-sm text-gray-500`}>{data.phone}</p>
-                  </>
-                ) : (
-                  <p className="text-sm text-pink-400">Required</p>
-                )}
-              </div>
+              }
+              {
+                <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+                  <div className="col-span-1 my-auto text-3xl text-gray-800">
+                    {" "}
+                    <div
+                      className={
+                        data.first_name &&
+                        data.last_name &&
+                        data.email &&
+                        data.phone
+                          ? completed
+                          : uncompleted
+                      }>
+                      {data.first_name &&
+                      data.last_name &&
+                      data.email &&
+                      data.phone ? (
+                        <FaCheck className="float-right text-sm" />
+                      ) : (
+                        ""
+                      )}
+                      <BsFillPersonFill />
+                    </div>
+                  </div>
+                  <div className="col-span-2 pt-1">
+                    <p className="font-bold text-gray-800 lg:text-sm">
+                      Passenger details
+                    </p>
 
-              <div className="my-auto">
-                <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
-              </div>
-            </div>
-          }
-          {
-            <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
-              <div className="col-span-1 my-auto text-3xl text-gray-800">
-                {" "}
-                <div className={data.payment ? completed : uncompleted}>
-                  {data.payment ? (
-                    <FaCheck className="float-right text-sm" />
-                  ) : (
-                    ""
-                  )}
-                  <FaCreditCard />
+                    {data.first_name &&
+                    data.last_name &&
+                    data.email &&
+                    data.phone ? (
+                      <>
+                        <p className={`text-sm text-gray-500`}>
+                          {data.first_name} {data.last_name}
+                        </p>
+                        <p className={`text-sm text-gray-500`}>{data.email}</p>
+                        <p className={`text-sm text-gray-500`}>{data.phone}</p>
+                      </>
+                    ) : (
+                      <p className="text-sm text-pink-400">Required</p>
+                    )}
+                  </div>
+
+                  <div className="my-auto">
+                    <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
+                  </div>
                 </div>
-              </div>
-              <div className="col-span-2 pt-1">
-                <p className="font-bold text-gray-800 lg:text-sm">
-                  Payment Method
-                </p>
-                {data.payment ? (
-                  <p className={`text-sm text-gray-500`}>{data.payment}</p>
-                ) : (
-                  <p className="text-sm text-pink-400">Required</p>
-                )}
-              </div>
+              }
+              {
+                <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+                  <div className="col-span-1 my-auto text-3xl text-gray-800">
+                    {" "}
+                    <div className={data.payment ? completed : uncompleted}>
+                      {data.payment ? (
+                        <FaCheck className="float-right text-sm" />
+                      ) : (
+                        ""
+                      )}
+                      <FaCreditCard />
+                    </div>
+                  </div>
+                  <div className="col-span-2 pt-1">
+                    <p className="font-bold text-gray-800 lg:text-sm">
+                      Payment Method
+                    </p>
+                    {data.payment ? (
+                      <p className={`text-sm text-gray-500`}>{data.payment}</p>
+                    ) : (
+                      <p className="text-sm text-pink-400">Required</p>
+                    )}
+                  </div>
 
-              <div className="my-auto">
-                <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
-              </div>
-            </div>
-          }
-          { data.return_location &&
-            <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
-              <div className="col-span-1 my-auto text-3xl text-gray-800">
-                {" "}
-                <div className={data.service ? completed : uncompleted}>
-                  {data.service ? (
-                    <FaCheck className="float-right text-sm" />
-                  ) : (
-                    ""
-                  )}
-                  <FaTaxi />
+                  <div className="my-auto">
+                    <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
+                  </div>
                 </div>
-              </div>
-              <div className="col-span-2 pt-1">
-                <p className="font-bold text-gray-800 lg:text-sm">Service</p>
-                {data.service ? (
-                  <p className={`text-sm text-gray-500`}>{data.service}</p>
-                ) : (
-                  <p className="text-sm text-pink-400">Required</p>
-                )}
-              </div>
+              }
+              {data.return_location && (
+                <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+                  <div className="col-span-1 my-auto text-3xl text-gray-800">
+                    {" "}
+                    <div className={data.service ? completed : uncompleted}>
+                      {data.service ? (
+                        <FaCheck className="float-right text-sm" />
+                      ) : (
+                        ""
+                      )}
+                      <FaTaxi />
+                    </div>
+                  </div>
+                  <div className="col-span-2 pt-1">
+                    <p className="font-bold text-gray-800 lg:text-sm">
+                      Service
+                    </p>
+                    {data.service ? (
+                      <p className={`text-sm text-gray-500`}>{data.service}</p>
+                    ) : (
+                      <p className="text-sm text-pink-400">Required</p>
+                    )}
+                  </div>
 
-              <div className="my-auto">
-                <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
-              </div>
-            </div>
-          }
-          </>}
+                  <div className="my-auto">
+                    <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
 
-          {returnTabActive &&
-          <ReturnSummary />}
+          {returnTabActive && <ReturnSummary />}
           <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 rounded-2xl bg-gray-100/25">
             <div className="col-span-1 my-auto text-3xl font-medium text-gray-800">
               {" "}
@@ -687,9 +772,12 @@ export default function Summary(props, children) {
             <div className="my-auto text-3xl">
               <a className="text-3xl text-gray-500">
                 £
-                {props.price === undefined || props.price === NaN
-                  ? "loading.."
-                  : props.price}
+                {data.total_trip_price === undefined ||
+                data.total_trip_price === NaN ? (
+                  <Spinner />
+                ) : (
+                  data.total_trip_price
+                )}
               </a>
             </div>
           </div>
