@@ -161,7 +161,7 @@ console.log(data.return_location,
 
   const debounceHandleGetDistance = throttle(5000, handleGetDistance);
   const handleChangeOrigin = (e) => {
-    while (origin.length < 2) {
+    while (origin.length < 1) {
       setShouldFetchOriginSuggestions(false);
       setOrigin(e);
       data.location = origin;
@@ -190,7 +190,7 @@ console.log(data.return_location,
     setData(data);
   };
   const handleChangeDestination = (e) => {
-    while (destination.length < 2) {
+    while (destination.length < 1) {
       setShouldFetchDestinationSuggestions(false);
 
       setDestination(e);

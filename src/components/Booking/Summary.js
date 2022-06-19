@@ -229,8 +229,8 @@ export default function Summary(props, children) {
     }
   }
   return (
-    <div className="flex w-screen bg-clip-content bg-gray-100 shadow-2xl lg:rounded-xl lg:w-full">
-      <div className="overflow-auto mt-24 w-full lg:mt-2 lg:max-w-lg">
+    <div className="flex fixed lg:static w-screen h-screen lg:h-auto bg-clip-content bg-gray-100 shadow-2xl lg:rounded-xl lg:w-full">
+      <div className="overflow-auto mb-24 mt-24 w-full lg:mt-2 lg:max-w-lg">
         <div className="">
           <h2 className="flex justify-center mb-4 text-3xl font-bold text-left text-gray-800 lg:my-10 lg:block lg:ml-16">
             Summary

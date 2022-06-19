@@ -14,7 +14,7 @@ export default function Service(props) {
   return (
     <label
       htmlFor={props.for}
-      className={`${props.selected && selectedServiceClass} hover:scale-105 
+      className={`${props.selected? selectedServiceClass:""} hover:scale-105 
                 hover:ring-sky-500 
                 hover:ring-2 
                 duration-200 
@@ -22,7 +22,7 @@ export default function Service(props) {
                 flex 
                 flex-col
                 xs:flex-row
-                grow 
+                 
                 gap-1 
                 items-center 
                 appearance-none 
@@ -37,7 +37,7 @@ export default function Service(props) {
                 focus:ring-2 focus:ring-sky-500 active:ring-sky-500 
                 xs:h-44`}
                 >
-      {/* <div className="w-20 min-w-max h-20 sm:py-5 sm:w-32 sm:h-32">
+      <div className="w-20 min-w-max h-20 sm:py-5 sm:w-32 sm:h-32">
         <div className="flex items-center w-32 h-20">
           <Image
             src={`/${props.image}.webp`}
@@ -46,22 +46,22 @@ export default function Service(props) {
             layout=""
           />
         </div>
-      </div> */}
-      <div className="flex justify-center w-full">
+      </div>
+      <div className="flex justify-center  w-96">
         <div className="hidden xs:flex flex-col gap-1 w-full max-w-full max-h-full xs:text-left">
           <p className="hidden text-lg text-center xs:block">{props.name}</p>
-          <ul className="hidden overflow-auto flex-col max-h-32 xs:mr-2 text-sm text-gray-500 xs:flex">
+          <ul className="hidden max-w-32  flex-col max-h-32 xs:mr-2 text-sm text-gray-500 xs:flex">
             Includes:
             <li className="flex overflow-ellipsis">
-              <FaCheck className="self-center pr-2 z-[7] min-w-max text-green-400 text-md" />{" "}
+              <FaCheck className="self-center pr-2 z-[7]  text-green-400 text-md" />{" "}
               Free cancelation up to 24 hours before pickup
             </li>
             <li className="flex truncate">
-              <FaCheck className="self-center pr-2 z-[7] min-w-max text-green-400 text-md" />{" "}
+              <FaCheck className="self-center pr-2 z-[7]  text-green-400 text-md" />{" "}
               Taxes & Fees included
             </li>
             <li className="flex truncate">
-              <FaCheck className="self-center pr-2 z-[7] min-w-max text-green-400 text-md" />{" "}
+              <FaCheck className="self-center pr-2 z-[7]  text-green-400 text-md" />{" "}
               60 min. Free Waiting Time
             </li>
           </ul>
@@ -80,18 +80,18 @@ export default function Service(props) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0 ">
             <div>
-              <ul className="flex mx-auto px-2  overflow-auto flex-col h-32 text-sm text-gray-500 xs:flex">
+              <ul className="flex mx-auto px-2 flex-col h-32 text-sm text-gray-500 xs:flex">
                 Includes:
                 <li className="flex overflow-ellipsis">
-                  <FaCheck className="self-center pr-2 z-[7] min-w-max text-green-400 text-md" />{" "}
+                  <FaCheck className="self-center pr-2 z-[7] text-green-400 text-md" />{" "}
                   Free cancelation up to 24 hours before pickup
                 </li>
                 <li className="flex truncate">
-                  <FaCheck className="self-center pr-2 z-[7] min-w-max text-green-400 text-md" />{" "}
+                  <FaCheck className="self-center pr-2 z-[7]  text-green-400 text-md" />{" "}
                   Taxes & Fees included
                 </li>
                 <li className="flex truncate">
-                  <FaCheck className="self-center pr-2 z-[7] min-w-max text-green-400 text-md" />{" "}
+                  <FaCheck className="self-center pr-2 z-[7]  text-green-400 text-md" />{" "}
                   60 min. Free Waiting Time
                 </li>
               </ul>

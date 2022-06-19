@@ -457,7 +457,7 @@ export default function Booking() {
               </button>
             </div>
           </div>
-          <div className="max-w-full xs:px-4 sm:px-8 lg:w-full">
+          <div className="max-w-full xs:px-4 sm:px-8 lg:w-[32rem]">
             <form onClick={handleSelectService} className="">
               <div className="w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
                 CHOOSE YOUR SERVICE
