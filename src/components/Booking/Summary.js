@@ -29,13 +29,7 @@ export default function Summary(props, children) {
   const completed =
     "flex flex-row-reverse justify-start float-left px-1 gap-1 text-sky-500 ";
   const uncompleted = "mx-auto py-2 text-gray-500 ";
-  const [editable, setEditable] = useState({
-    location: false,
-    destination: false,
-    passengers: false,
-    date: false,
-    time: false,
-  });
+ 
   const [locationEditable, setLocationEditable] = useState(false);
   const [destinationEditable, setDestinationEditable] = useState(false);
   const [passengersEditable, setPassengersEditable] = useState(false);
@@ -44,6 +38,7 @@ export default function Summary(props, children) {
   const [passengers, setPassengers] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
+  const [dateAndTime,setDateAndTime]=useState("")
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [distance, setDistance] = useState("");
@@ -217,6 +212,7 @@ export default function Summary(props, children) {
     if (data.location != undefined && data.destination != undefined) {
       handleGetDistance(data.location, data.destination, callback);
     }
+    
   }
   function handleChangeSummaryTab(e) {
     if (e.target.id === "departureTab") {
@@ -228,13 +224,21 @@ export default function Summary(props, children) {
       setReturnTabActive(true);
     }
   }
+  function handleDateAndTimeChange(e){
+    setDateAndTime(e.target.value)
+    let d = dateAndTime.split("T");
+    setDate(d[0]);
+    setTime(d[1]);
+    setData(data)
+  }
   return (
-    <div className="flex fixed overflow-hidden overscroll-contain lg:static w-screen h-screen lg:h-auto bg-clip-content bg-gray-100 shadow-2xl lg:rounded-xl lg:w-full">
-      <div className="overflow-auto py-24 w-full lg:mt-2 lg:max-w-lg">
+    <div className="flex fixed lg:sticky overflow-hidden  lg:top-0 lg:self-end lg:right-0 lg:overflow-auto w-screen h-screen lg:h-full bg-clip-content bg-gray-100 shadow-md lg:rounded-sm lg:w-[32rem]">
+      <div className="overflow-auto lg:h-fit py-24 w-full lg:mt-2 lg:max-w-lg">
+      <div className="flex  top-10 bg-gray-100 w-full lg:w-[32rem] self-center h-20   justify-center mb-4 text-3xl font-bold  text-gray-800 lg:my-10  ">
+            <p className="self-center">Summary</p>
+          </div>
         <div className="">
-          <h2 className="flex justify-center mb-4 text-3xl font-bold text-left text-gray-800 lg:my-10 lg:block lg:ml-16">
-            Summary
-          </h2>
+          
           {data.return && (
             <div className="flex justify-between m-auto my-4 w-5/6 h-full">
               <span
@@ -268,7 +272,7 @@ export default function Summary(props, children) {
                     <div className="">
                       <label className="sr-only">Distance</label>
                       <Tooltip style="light" content="Distance">
-                        <FaRoute />
+                        <FaRoute className="z-2" />
                       </Tooltip>
                     </div>
                     <div className="mx-4 h-1/2 border-t-0 border-b-2 border-gray-400 border-dashed grow"></div>
@@ -299,11 +303,11 @@ export default function Summary(props, children) {
                     {" "}
                     <div className={data.location ? completed : uncompleted}>
                       {data.location ? (
-                        <FaCheck className="float-right text-sm" />
+                        <FaCheck className="float-right z-[4] text-sm" />
                       ) : (
                         ""
                       )}
-                      <FaMapMarkerAlt />
+                      <FaMapMarkerAlt className="z-[4]" />
                     </div>
                   </div>
                   <div className="col-span-2 pt-1">
@@ -346,11 +350,11 @@ export default function Summary(props, children) {
                     {" "}
                     <div className={data.destination ? completed : uncompleted}>
                       {data.destination ? (
-                        <FaCheck className="float-right text-sm" />
+                        <FaCheck className="float-right text-sm z-[4]" />
                       ) : (
                         ""
                       )}
-                      <FaMapPin />
+                      <FaMapPin className="z-[4]" />
                     </div>
                   </div>
                   <div className="col-span-2 pt-1">
@@ -394,11 +398,11 @@ export default function Summary(props, children) {
                     {" "}
                     <div className={data.passengers ? completed : uncompleted}>
                       {data.passengers ? (
-                        <FaCheck className="float-right text-sm" />
+                        <FaCheck className="float-right text-sm z-[4]" />
                       ) : (
                         ""
                       )}
-                      <BsFillPersonPlusFill />
+                      <BsFillPersonPlusFill className="z-[4]" />
                     </div>
                   </div>
                   <div className="col-span-2 pt-1">
@@ -445,19 +449,26 @@ export default function Summary(props, children) {
                     {" "}
                     <div className={data.date ? completed : uncompleted}>
                       {data.date ? (
-                        <FaCheck className="float-right text-sm" />
+                        <FaCheck className="float-right text-sm z-[4]" />
                       ) : (
                         ""
                       )}
-                      <BsCalendarFill />
+                      <BsCalendarFill className="z-[4]" />
                     </div>
                   </div>
                   <div className="col-span-2 pt-1">
                     <p className="font-bold text-gray-800 lg:text-sm">
                       Pickup date
                     </p>
-                    {dateEditable ? (
-                      <input
+                    {dateEditable ? (data.date==="ASAP"?
+                    <input
+                        className="flex flex-1 px-4 py-2 w-auto text-base placeholder-gray-500 text-gray-700 bg-gray-50 rounded-md border-0 ring-2 shadow-sm appearance-none grow focus-ring-full focus:outline-none focus:ring-2 focus:ring-sky-600"
+                        type="datetime-local"
+                        min={today}
+                        max={threeMonthsFromNow}
+                        value={dateAndTime}
+                        onChange={handleDateAndTimeChange}
+                      />:<input
                         className="flex flex-1 px-4 py-2 w-auto text-base placeholder-gray-500 text-gray-700 bg-gray-50 rounded-md border-0 ring-2 shadow-sm appearance-none grow focus-ring-full focus:outline-none focus:ring-2 focus:ring-sky-600"
                         type="date"
                         min={today}
@@ -495,11 +506,11 @@ export default function Summary(props, children) {
                     {" "}
                     <div className={data.time ? completed : uncompleted}>
                       {data.time ? (
-                        <FaCheck className="float-right text-sm" />
+                        <FaCheck className="float-right text-sm z-[4]" />
                       ) : (
                         ""
                       )}
-                      <BsClockFill />
+                      <BsClockFill className="z-[4]" />
                     </div>
                   </div>
                   <div className="col-span-2 pt-1">
@@ -551,11 +562,11 @@ export default function Summary(props, children) {
                       {data.flight_number &&
                       data.plane_arriving_from &&
                       data.airline_name ? (
-                        <FaCheck className="float-right text-sm" />
+                        <FaCheck className="float-right text- z-[4]" />
                       ) : (
                         ""
                       )}
-                      <FaPlaneDeparture />
+                      <FaPlaneDeparture className="z-[4]" />
                     </div>
                   </div>
                   <div className="col-span-2 pt-1">
@@ -595,11 +606,11 @@ export default function Summary(props, children) {
                     {" "}
                     <div className={data.luggage ? completed : uncompleted}>
                       {data.luggage ? (
-                        <FaCheck className="float-right text-sm" />
+                        <FaCheck className="float-right text-sm z-[4]" />
                       ) : (
                         ""
                       )}
-                      <FaSuitcase />
+                      <FaSuitcase className="z-[4]" />
                     </div>
                   </div>
                   <div className="col-span-2 pt-1">
@@ -623,11 +634,11 @@ export default function Summary(props, children) {
                     {" "}
                     <div className={data.service ? completed : uncompleted}>
                       {data.service ? (
-                        <FaCheck className="float-right text-sm" />
+                        <FaCheck className="float-right text-sm z-[4]" />
                       ) : (
                         ""
                       )}
-                      <FaTaxi />
+                      <FaTaxi className="z-[4]" />
                     </div>
                   </div>
                   <div className="col-span-2 pt-1">
@@ -663,11 +674,11 @@ export default function Summary(props, children) {
                       data.last_name &&
                       data.email &&
                       data.phone ? (
-                        <FaCheck className="float-right text-sm" />
+                        <FaCheck className="float-right text-sm z-[4]" />
                       ) : (
                         ""
                       )}
-                      <BsFillPersonFill />
+                      <BsFillPersonFill className="z-[4]" />
                     </div>
                   </div>
                   <div className="col-span-2 pt-1">
@@ -702,11 +713,11 @@ export default function Summary(props, children) {
                     {" "}
                     <div className={data.payment ? completed : uncompleted}>
                       {data.payment ? (
-                        <FaCheck className="float-right text-sm" />
+                        <FaCheck className="float-right text-sm z-[4]" />
                       ) : (
                         ""
                       )}
-                      <FaCreditCard />
+                      <FaCreditCard className="z-[4]" />
                     </div>
                   </div>
                   <div className="col-span-2 pt-1">
@@ -731,11 +742,11 @@ export default function Summary(props, children) {
                     {" "}
                     <div className={data.service ? completed : uncompleted}>
                       {data.service ? (
-                        <FaCheck className="float-right text-sm" />
+                        <FaCheck className="float-right text-sm z-[4]" />
                       ) : (
                         ""
                       )}
-                      <FaTaxi />
+                      <FaTaxi className="z-[4]" />
                     </div>
                   </div>
                   <div className="col-span-2 pt-1">

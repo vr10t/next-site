@@ -366,16 +366,9 @@ export default function Booking() {
     }
     //
   };
-  //   async function supplementUndefinedData(){
-  //     if(data.return_date=== undefined){
-  //       data.return_date='none'
-  //       setData(data)
-  //     }
-  // return true
-  //   }
+ 
   function handleBooking() {
-    //  supplementUndefinedData().then((e)=>console.log(data))
-
+    
     handleSubmitBooking(data).then((res) => {
       console.log(res);
     });
@@ -431,13 +424,13 @@ export default function Booking() {
         <div
           className={`${
             showSummary ? "h-0" : ""
-          } mt-10 bg-gray-100 w-full mx-auto h-32 flex items-center justify-center z-[7] text-4xl  font-medium text-center text-gray-800`}>
+          } mt-10 bg-gray-100 w-full mx-auto h-32 flex items-center justify-center lg:justify-start lg:indent-4 z-[7] text-4xl  font-medium text-center text-gray-800`}>
           <p className="z-20">Youre almost there!</p>
         </div>
         <div
           className={`${
             showSummary ? "h-0 overflow-hidden" : ""
-          }static  justify-center  mt-0 w-[95vw] sm:w-[97vw] mx-auto lg:  max-w-screen bg-gray-100 overflow-x-none flex flex-col lg:flex-row  `}>
+          }static  justify-center lg:justify-start lg:pl-[2%] mt-0 w-[95vw] sm:w-[97vw] mx-auto lg:  max-w-screen bg-gray-100  flex flex-col lg:flex-row  `}>
           <div className=""></div>
 
           <div>
@@ -626,13 +619,13 @@ export default function Booking() {
               </section>
             }
           </div>
-          <div className="hidden lg:flex">
+          {/* <div className="hidden lg:flex">
             <div className=" z-[7] -top-20  lg:relative right-0 float-right h-screen lg:h-full min-w-max overflow-auto">
               {mapsLoaded && (
                 <Summary onClick={handleBooking} disabled={!canSubmit} />
               )}
             </div>
-          </div>
+          </div> */}
         </div>
         <div className={`${showSummary ? "h-0" : "h-40"} `}></div>
       </Layout>

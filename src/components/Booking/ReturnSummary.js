@@ -227,11 +227,11 @@ export default function Summary(props, children) {
               {" "}
               <div className={data.return_location ? completed : uncompleted}>
                 {data.return_location ? (
-                  <FaCheck className="float-right text-sm" />
+                  <FaCheck className="float-right text-sm z-[4] " />
                 ) : (
                   ""
                 )}
-                <FaMapMarkerAlt />
+                <FaMapMarkerAlt className="z-[4]" />
               </div>
             </div>
             <div className="col-span-2 pt-1">
@@ -272,11 +272,11 @@ export default function Summary(props, children) {
               {" "}
               <div className={data.return_destination ? completed : uncompleted}>
                 {data.return_destination ? (
-                  <FaCheck className="float-right text-sm" />
+                  <FaCheck className="float-right text-sm z-[4] " />
                 ) : (
                   ""
                 )}
-                <FaMapPin />
+                <FaMapPin className="z-[4]" />
               </div>
             </div>
             <div className="col-span-2 pt-1">
@@ -317,11 +317,11 @@ export default function Summary(props, children) {
               {" "}
               <div className={data.return_passengers ? completed : uncompleted}>
                 {data.return_passengers ? (
-                  <FaCheck className="float-right text-sm" />
+                  <FaCheck className="float-right text-sm z-[4] " />
                 ) : (
                   ""
                 )}
-                <BsFillPersonPlusFill />
+                <BsFillPersonPlusFill className="z-[4]" />
               </div>
             </div>
             <div className="col-span-2 pt-1">
@@ -362,8 +362,8 @@ export default function Summary(props, children) {
             <div className="col-span-1 my-auto text-3xl text-gray-800">
               {" "}
               <div className={data.return_date ? completed : uncompleted}>
-                {data.return_date ? <FaCheck className="float-right text-sm" /> : ""}
-                <BsCalendarFill />
+                {data.return_date ? <FaCheck className="float-right text-sm z-[4] " /> : ""}
+                <BsCalendarFill className="z-[4]" />
               </div>
             </div>
             <div className="col-span-2 pt-1">
@@ -404,8 +404,8 @@ export default function Summary(props, children) {
             <div className="col-span-1 my-auto text-3xl text-gray-800">
               {" "}
               <div className={data.return_time ? completed : uncompleted}>
-                {data.return_time ? <FaCheck className="float-right text-sm" /> : ""}
-                <BsClockFill />
+                {data.return_time ? <FaCheck className="float-right text-sm z-[4] " /> : ""}
+                <BsClockFill className="z-[4]" />
               </div>
             </div>
             <div className="col-span-2 pt-1">
@@ -448,11 +448,11 @@ export default function Summary(props, children) {
                 {" "}
                 <div className={data.return_luggage ? completed : uncompleted}>
                   {data.return_luggage? (
-                    <FaCheck className="float-right text-sm" />
+                    <FaCheck className="float-right text-sm z-[4] " />
                   ) : (
                     ""
                   )}
-                  <FaSuitcase />
+                  <FaSuitcase className="z-[4]" />
                 </div>
               </div>
               <div className="col-span-2 pt-1">
@@ -473,7 +473,7 @@ export default function Summary(props, children) {
                 {" "}
                 <div className={data.return_service ? completed : uncompleted}>
                   {data.return_service ? (
-                    <FaCheck className="float-right text-sm" />
+                    <FaCheck className="float-right text-sm z-[4] " />
                   ) : (
                     ""
                   )}
@@ -506,7 +506,7 @@ export default function Summary(props, children) {
                       : uncompleted
                   }>
                   {data.return_first_name &&data.return_last_name&& data.return_email && data.return_phone ? (
-                    <FaCheck className="float-right text-sm" />
+                    <FaCheck className="float-right text-sm z-[4] " />
                   ) : (
                     ""
                   )}

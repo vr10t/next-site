@@ -6,7 +6,7 @@ import { FaInstagram } from "@react-icons/all-files/fa/FaInstagram";
 import Link from "next/link";
 export default function Footer() {
   return (
-    <div className="shadow ">
+    <div className="shadow sticky z-[29]">
       <footer className="text-center text-white bg-gradient-to-br from-sky-500 to-sky-600">
         <div className="p-4">
           <section className="mb-4 ">
