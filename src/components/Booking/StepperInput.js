@@ -18,7 +18,7 @@ useEffect(()=>{
       
     console.log(data.luggage, 'data.luggage');
     
-    data.luggage=value
+    data.luggage=parseInt(value)
     
   }
   if (props.for==="return_luggage"){

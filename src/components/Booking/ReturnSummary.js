@@ -105,16 +105,16 @@ export default function Summary(props, children) {
       // setDistance(response.rows[0].elements[0].distance.text);
       // setDuration(response.rows[0].elements[0].duration.text);
       
-      data.distance = response.rows[0].elements[0].distance.text;
-      data.duration = response.rows[0].elements[0].duration.text;
+      data.return_distance = response.rows[0].elements[0].distance.text;
+      data.return_duration = response.rows[0].elements[0].duration.text;
       setData(data)
       setTimeout(()=>console.log(data.distance, data.duration),2000)
       // setDistanceResults({ distance: distance, duration: duration });
 
       console.log(response, status);
     } catch (error) {
-      data.distance='error'
-      data.duration='error'
+      data.return_distance='error'
+      data.return_duration='error'
       setData(data)
       alert(`incorrect location or destination`)
     }
@@ -197,23 +197,23 @@ export default function Summary(props, children) {
         break;
     }
     if (origin != "") {
-      data.location = origin;
+      data.return_location = origin;
     }
     if (destination != "") {
-      data.destination = destination;
+      data.return_destination = destination;
     }
     if (passengers != "") {
-      data.passengers = passengers;
+      data.return_passengers = passengers;
     }
     if (date != "") {
-      data.date = date;
+      data.return_date = date;
     }
     if (time != "") {
-      data.time = time;
+      data.return_time = time;
     }
     setData(data);
-    if(data.location !=undefined&&data.destination!=undefined){
-    handleGetDistance(data.location, data.destination, callback)
+    if(data.return_location !=undefined&&data.return_destination!=undefined){
+    handleGetDistance(data.return_location, data.return_destination, callback)
   }
   }
   console.log(now);
@@ -467,7 +467,7 @@ export default function Summary(props, children) {
               </div>
             </div>
           }
-          {
+          {/* {
             <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
               <div className="col-span-1 my-auto text-3xl text-gray-800">
                 {" "}
@@ -493,8 +493,8 @@ export default function Summary(props, children) {
                 <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
               </div>
             </div>
-          }
-          {
+          } */}
+          {data.return_first_name &&data.return_last_name&& data.return_email && data.return_phone&&
             <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
               <div className="col-span-1 my-auto text-3xl text-gray-800">
                 {" "}

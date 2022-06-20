@@ -12,13 +12,13 @@ const methods = [
     id: 1,
     name: "Cash",
     unavailable: false,
-    icon: <FaMoneyBill className="z-0 text-2xl ml-2 text-sky-600" />,
+    icon: <FaMoneyBill className="z-0 text-2xl ml-2 text-sky-500" />,
   },
   {
     id: 2,
     name: "Card",
     unavailable: false,
-    icon: <FaCreditCard className="z-0 text-2xl ml-2 text-sky-600" />,
+    icon: <FaCreditCard className="z-0 text-2xl ml-2 text-sky-500" />,
   },
 ];
 
@@ -46,7 +46,7 @@ export default function PaymentSelect() {
   }
   return (
     <Listbox value={selectedMethod} onChange={setSelectedMethod}>
-      <Listbox.Button className="bg-sky-600 flex items-center justify-between px-8 text-lg text-white rounded-lg h-12">
+      <Listbox.Button className="bg-sky-600 flex items-center justify-between px-8 text-lg text-white rounded-lg h-10">
         <div className="text-left self-center grow">{selectedMethod.name}</div>
 
         {}
@@ -54,7 +54,7 @@ export default function PaymentSelect() {
       </Listbox.Button>
       <Listbox.Options
         style={{ borderRadius: "10px" }}
-        className="border-[2px] py-2 border-t-0  border-gray-400 rounded-b-2xl">
+        className="absolute mt-[9.5rem] ml-  bg-gray-100 w-5/6 border-[2px] py-1 border-t-0  border-gray-200 rounded-b-2xl">
         {methods.map((method) => (
           <Listbox.Option
             className=" "

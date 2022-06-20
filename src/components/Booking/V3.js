@@ -25,12 +25,12 @@ import { handleGetDistance } from "../../../utils/google-helpers";
 import { throttle, debounce } from "throttle-debounce";
 import { AutocompleteInput } from "./AutocompleteInput";
 import { reverseGeocode } from "../../../utils/google-helpers";
-import DateSelect from "./DateSelect"
+import DateSelect from "./DateSelect";
 const PlacesAutocomplete = dynamic(() => import("react-places-autocomplete"));
 
 // const HCaptcha = dynamic(() => import("@hcaptcha/react-hcaptcha"));
 
-function Form(){
+function Form() {
   const [mapsLoaded, setMapsLoaded] = useState(false);
   const [shouldFetchOriginSuggestions, setShouldFetchOriginSuggestions] =
     useState(false);
@@ -54,15 +54,15 @@ function Form(){
   useCallback(() => {}, [onSubmit]);
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
-  const [passengers,setPassengers] = useState(1)
-  const [dateAndTime,setDateAndTime] = useState("ASAP")
-  const [date,setDate] = useState("ASAP")
-  const [time,setTime] = useState("")
+  const [passengers, setPassengers] = useState(1);
+  const [dateAndTime, setDateAndTime] = useState("ASAP");
+  const [date, setDate] = useState("ASAP");
+  const [time, setTime] = useState("");
   const [returnDateAndTime, setReturnDateAndTime] = useState("");
   const [returnDate, setReturnDate] = useState("");
-  const [returnTime, setReturnTime] = useState("")
-  const [addReturn,setAddReturn]= useState(false)
-  const [addFlightMonitoring,setAddFlightMonitoring]= useState(false)
+  const [returnTime, setReturnTime] = useState("");
+  const [addReturn, setAddReturn] = useState(false);
+  const [addFlightMonitoring, setAddFlightMonitoring] = useState(false);
   let dateObject = new Date();
   let day = dateObject.getDate();
   let month = dateObject.getMonth() + 1;
@@ -85,51 +85,50 @@ function Form(){
     date: Yup.string(),
     return_date: Yup.string(),
   });
-useEffect(()=>{
-  // setTime(date?.split())
-  let d =dateAndTime.split('T')
-setDate(d[0])
-setTime(d[1])
-  console.log(date,time);
-},[dateAndTime])
-useEffect(()=>{
-  // setTime(date?.split())
-  let d =returnDateAndTime.split('T')
-setReturnDate(d[0])
-setReturnTime(d[1])
-  console.log(returnDate,returnTime);
-},[returnDateAndTime])
+  useEffect(() => {
+    // setTime(date?.split())
+    let d = dateAndTime.split("T");
+    setDate(d[0]);
+    setTime(d[1]);
+    console.log(date, time);
+  }, [dateAndTime]);
+  useEffect(() => {
+    // setTime(date?.split())
+    let d = returnDateAndTime.split("T");
+    setReturnDate(d[0]);
+    setReturnTime(d[1]);
+    console.log(returnDate, returnTime);
+  }, [returnDateAndTime]);
   const formOptions = { resolver: yupResolver(validationSchema) };
 
   // get functions to build form with useForm() hook
   const { register, handleSubmit, reset, formState } = useForm(formOptions);
   const { errors } = formState;
   function onSubmit() {
-    
-console.log(origin,destination)
-data.location= origin
-data.destination=destination;
-data.passengers=passengers;
-data.date=date;
-data.time=time;
-data.return=addReturn
-data.return_date=returnDate
-data.return_time=returnTime
-data.flight_monitoring=addFlightMonitoring
-if(addReturn===true){
-  data.return_location=destination
-data.return_destination=origin
-data.return_passengers=passengers
-}
-console.log(data.return_location,
-  data.return_destination);
+    console.log(origin, destination);
+    data.location = origin;
+    data.destination = destination;
+    data.passengers = passengers;
+    data.date = date;
+    data.time = time;
+    data.return = addReturn;
+    data.return_date = returnDate;
+    data.return_time = returnTime;
+    data.flight_monitoring = addFlightMonitoring;
+    console.log(addReturn);
+    if (addReturn === true) {
+      data.return_location = destination;
+      data.return_destination = origin;
+      data.return_passengers = passengers;
+    }
+    console.log(data.return_location, data.return_destination);
     setData(data);
-   
+
     window.localStorage.removeItem("BOOKING_DATA");
-    router.push("/booking");
-    return false;
+    router.push("/booking")
+    return false
   }
-  
+
   useEffect(() => {
     setData(data);
 
@@ -165,7 +164,7 @@ console.log(data.return_location,
       setShouldFetchOriginSuggestions(false);
       setOrigin(e);
       data.location = origin;
-      setData(data)
+      setData(data);
       return;
     }
     setShouldFetchDirections(false);
@@ -184,7 +183,7 @@ console.log(data.return_location,
   }
   const handleSelectOrigin = (e) => {
     setOrigin(e);
-    
+
     data.location = origin;
     console.log(origin);
     setData(data);
@@ -211,18 +210,16 @@ console.log(data.return_location,
   function getLocation() {
     navigator.geolocation.getCurrentPosition(showPosition);
   }
-  function handleChangePassengers(e){
-    setPassengers(e.target.value)
-    data.passengers=passengers
-    setData(data)
-    }
-function handleChangeDate(e){
-setDateAndTime(e.target.value)
-
-}
-function handleChangeReturnDate(e){
-  setReturnDateAndTime(e.target.value)
- 
+  function handleChangePassengers(e) {
+    setPassengers(e.target.value);
+    data.passengers = passengers;
+    setData(data);
+  }
+  function handleChangeDate(e) {
+    setDateAndTime(e.target.value);
+  }
+  function handleChangeReturnDate(e) {
+    setReturnDateAndTime(e.target.value);
   }
   function showPosition(position) {
     console.log(
@@ -237,29 +234,23 @@ function handleChangeReturnDate(e){
       }
     );
   }
-  useEffect(()=>console.log(data),[data])
-  useEffect(()=>setData(data),[addFlightMonitoring])
-function handleAddReturn(e){
-  
-    setAddReturn(e.target.checked)
-  
-  data.return=addReturn
-  
-setData(data)
-  
-}
-function handleAddFlightMonitoring(e){
- 
-    setAddFlightMonitoring(e.target.checked)
-    
- 
-  console.log('addflightmon',addFlightMonitoring)
-data.flight_monitoring=addFlightMonitoring
-data.flight_number=""
-setData(data)
-  
-   
-}
+  useEffect(() => console.log(data), [data]);
+  useEffect(() => setData(data), [addFlightMonitoring]);
+  function handleAddReturn(e) {
+    setAddReturn(e.target.checked);
+
+    data.return = addReturn;
+
+    setData(data);
+  }
+  function handleAddFlightMonitoring(e) {
+    setAddFlightMonitoring(e.target.checked);
+
+    console.log("addflightmon", addFlightMonitoring);
+    data.flight_monitoring = addFlightMonitoring;
+    data.flight_number = "";
+    setData(data);
+  }
 
   return (
     <div className="relative  z-[9]  justify-center mx-auto  w-full bg-none py-4 ">
@@ -494,7 +485,9 @@ setData(data)
           </div>
           {data.date !== "ASAP" && (
             <div className="flex flex-col w-80  max-w-96">
-            <div className="text-lg text-gray-800 font-semibold">Departure date</div>
+              <div className="text-lg text-gray-800 font-semibold">
+                Departure date
+              </div>
               <div className="flex flex-row col-span-3 rounded-lg  w-full border-1 border-gray-900">
                 {" "}
                 <span className="inline-flex  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadow-sm text-lg">
@@ -514,7 +507,7 @@ setData(data)
           )}
           {addReturn && (
             <div className="flex flex-col justify-between  w-80  max-w-96">
-            <div className="text-lg text-gray-800 font-semibold">Return</div>
+              <div className="text-lg text-gray-800 font-semibold">Return</div>
               <div className="flex flex-row col-span-3 rounded-lg  w-full border-1 border-gray-900">
                 {" "}
                 <span className="inline-flex  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadow-sm text-lg">
@@ -532,23 +525,26 @@ setData(data)
               </div>
             </div>
           )}
-          <div className='flex gap-12'>
-          <div className="flex ml-1 gap-2 items-center">
-            <Checkbox onClick={handleAddReturn} id="return" />
-            <Label htmlFor="return" className="text-base text-gray-800">
-              Add return
-            </Label>
-          </div>{" "}
-          
-          <div className="flex gap-2 items-center">
-            <Checkbox onClick={handleAddFlightMonitoring} id="flightMonitoring" />
-            <Label htmlFor="flightMonitoring" className="text-base text-gray-800">
-              Add Flight Monitoring
-            </Label>
-          </div>{" "}
-          
+          <div className="flex gap-12">
+            <div className="flex ml-1 gap-2 items-center">
+              <Checkbox onClick={handleAddReturn} id="return" />
+              <Label htmlFor="return" className="text-base text-gray-800">
+                Add return
+              </Label>
+            </div>{" "}
+            <div className="flex gap-2 items-center">
+              <Checkbox
+                onClick={handleAddFlightMonitoring}
+                id="flightMonitoring"
+              />
+              <Label
+                htmlFor="flightMonitoring"
+                className="text-base text-gray-800">
+                Add Flight Monitoring
+              </Label>
+            </div>{" "}
           </div>
-          
+
           <div className="flex flex-row rounded-lg mx-1 w-80">
             <button
               type="submit"
@@ -560,5 +556,5 @@ setData(data)
       </form>
     </div>
   );
-};
+}
 export default Form;

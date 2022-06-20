@@ -89,15 +89,15 @@ export default function Booking() {
   const [returnLuggage, setReturnLuggage] = useState(0);
   const [instructions, setInstructions] = useState("");
   const [returnInstructions, setReturnInstructions] = useState("");
-  const [showReturnServices,setShowReturnServices]= useState(false)
+  const [showReturnServices, setShowReturnServices] = useState(false);
 
   let dataErrorDiv = (
     <div className="fixed overscroll-none w-screen mx-auto mt-1/2 flex pt-64 font-semibold tracking-wide p-8 h-screen z-[99] bg-black/95 text-pink-500 text-4xl">
       No booking data was found, redirecting...
     </div>
   );
-  let BOOKING_DATA = {
-    location: data.location,
+  let parsedData
+  let BOOKING_DATA = { location: data.location,
     destination: data.destination,
     passengers: data.passengers,
     date: data.date,
@@ -112,19 +112,18 @@ export default function Booking() {
     return_time: data.return_time,
     flight_monitoring: data.flight_monitoring,
     return_location: data.return_location,
-    return_destination: data.return_destination,
-  };
+    return_destination: data.return_destination,}||parsedData;
 
-  let service;
 
   useEffect(() => {
-    data.return_location = returnLocation;
-    data.return_destination = returnDestination;
-    data.luggage = luggage;
-    data.return_luggage = returnLuggage;
-    data.instructions = instructions;
-    data.return_instructions = returnInstructions;
-    data.return_passengers = returnPassengers;
+     parsedData = JSON.parse(window.localStorage.getItem("BOOKING_DATA"))
+    data.return_location = returnLocation||data.return_location
+    data.return_destination = returnDestination||data.return_destination
+    data.luggage = luggage||data.luggage;
+    data.return_luggage = returnLuggage||data.return_luggage;
+    data.instructions = instructions||data.instructions;
+    data.return_instructions = returnInstructions||data.return_instructions;
+    data.return_passengers = returnPassengers||data.return_passengers;
     console.log(data.return_location);
     setData(data);
   }, [
@@ -139,60 +138,28 @@ export default function Booking() {
   useEffect(() => {
     console.log("dataaaa", data);
 
-    setTimeout(() => {
-      // allow other functions to execute, otherwise component mounts before the variables update
-      setTripDistance(data.distance);
-      setTotalTripPrice(data.total_trip_price);
-      Object.assign(BOOKING_DATA, {
-        location: data.location,
-        destination: data.destination,
-        passengers: data.passengers,
-        date: data.date,
-        distance: data.distance,
-        duration: data.duration,
-        service: data.service,
-        payment: data.payment,
-        luggage: data.luggage,
-        return_luggage: data.return_luggage,
-        return: data.return,
-        return_date: data.return_date,
-        return_time: data.return_time,
-        flight_monitoring: data.flight_monitoring,
-        return_location: data.return_location,
-        return_destination: data.return_destination,
-      });
+    // allow other functions to execute, otherwise component mounts before the variables update
+    console.log("1 one", data.distance);
+  if (data.distance!==undefined){
+    
+    setBookingDataVarToContextData()
+    setTripDistance(data.distance);
+    setTotalTripPrice(data.total_trip_price);
+  }
+  if (data.distance===undefined) {
+    savelocalStorage()
+    
+  }
 
-      console.log("BOOKING_DATA: ", BOOKING_DATA);
-      if (BOOKING_DATA.distance != undefined) {
-        console.log("setting booking data");
-        window.localStorage.setItem(
-          "BOOKING_DATA",
-          JSON.stringify(BOOKING_DATA)
-        );
+    console.log("BOOKING_DATA: ", BOOKING_DATA);
 
-        calculatePrice();
-      }
-    }, 2000);
-    // setData(data)
-    if (
-      data.location !== undefined &&
-      data.destination !== undefined &&
-      data.passengers !== undefined &&
-      data.date !== undefined &&
-      data.service !== undefined &&
-      data.payment !== undefined &&
-      data.first_name !== undefined &&
-      data.last_name !== undefined &&
-      data.email !== undefined &&
-      data.phone !== undefined
-    ) {
-      setCanSubmit(true);
-    }
+    calculatePrice();
+
+    verifyDataIsValidBeforeEnablingSubmitButton();
   }, [data]);
 
   useEffect(() => {
-    setData(data);
-    console.log(data);
+    
     savelocalStorage();
     window.sessionStorage.setItem(
       "shouldUsePreviousData",
@@ -203,59 +170,26 @@ export default function Booking() {
 
   useEffect(() => {
     console.log("useEffect");
-    updateBookingData();
+    setLocalStorageToBookingDataVar();
   }, [data]);
-  function updateBookingData() {
-    if (BOOKING_DATA.distance != undefined) {
-      console.log("setting booking data");
-      window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
-    }
-  }
 
   function savelocalStorage() {
-    try {
-      // check whether booking data is present
-      let parsedData = JSON.parse(window.localStorage.getItem("BOOKING_DATA"));
-      // console.log("parsedData:", parsedData);
-      let parsedDataIsValid = validateParsedData(parsedData);
-      console.log(parsedDataIsValid);
-      if (parsedDataIsValid) {
-        //set booking details to saved data from localStorage
-        setShowPopup(true);
-        if (window.sessionStorage.getItem("shouldUsePreviousData")) {
-          setShowPopup(false);
-          setDataToParsedData(parsedData);
-          console.log("data is set to parsedData", parsedData);
-        } else if (shouldUsePreviousData) {
-          setShowPopup(false);
-          setDataToParsedData(parsedData);
-          console.log("data is set to parsedData", parsedData);
-        }
-      } else {
-        //if no booking data is saved, get distance and save data
-        Object.assign(BOOKING_DATA, {
-          location: data.location,
-          destination: data.destination,
-          passengers: data.passengers,
-          date: data.date,
-          time: data.time,
-          return: data.return,
-          return_date: data.return_date,
-          return_time: data.return_time,
-          luggage: data.luggage,
-          return_luggage: data.return_luggage,
-          flight_monitoring: data.flight_monitoring,
-          distance: data.distance,
-          duration: data.duration,
-          service: data.service,
-        });
-        console.log(BOOKING_DATA);
-        updateBookingData();
+    
+      setShowPopup(true);
+      if (window.sessionStorage.getItem("shouldUsePreviousData")) {
+        setShowPopup(false);
+        setContextDataToLocalStorageData();
+       
       }
-    } catch (error) {
-      console.log(error);
-    }
-    // console.log("data:", data);
+      if (shouldUsePreviousData) {
+        setShowPopup(false);
+        setContextDataToLocalStorageData();
+        
+      } else {
+        
+        setLocalStorageToBookingDataVar();
+      }
+    
   }
   function validateParsedData(obj) {
     console.log(
@@ -276,6 +210,95 @@ export default function Booking() {
       return true;
     }
   }
+
+  function setContextDataToLocalStorageData() {
+    // check whether booking data is present
+    let parsedData = JSON.parse(window.localStorage.getItem("BOOKING_DATA"));
+    // console.log("parsedData:", parsedData);
+    try {
+      const parsedDataIsValid = validateParsedData(parsedData);
+      if (parsedDataIsValid) {
+        console.log("parsed data is valid. setting data...");
+        data.location = parsedData.location;
+        data.destination = parsedData.destination;
+        data.passengers = parsedData.passengers;
+        data.date = parsedData.date;
+        data.time = parsedData.time;
+        data.distance = parsedData.distance;
+        data.duration = parsedData.duration;
+        data.service = parsedData.service;
+        data.payment = parsedData.payment;
+        data.session = parsedData.session;
+        data.luggage = parsedData.luggage;
+        data.return = parsedData.return;
+        data.return_date = parsedData.return_date;
+        data.return_time = parsedData.return_time;
+        data.return_luggage = parsedData.return_luggage;
+        data.flight_monitoring = parsedData.flight_monitoring;
+        data.return_location = parsedData.return_location;
+        data.return_destination = parsedData.return_destination;
+  
+        data.return_passengers = parsedData.return_passengers;
+        setData(data)
+      }
+    } catch (error) {
+      console.log("parsed data is not valid. aborting...", parsedData);
+    }
+    
+    
+  }
+
+  function verifyDataIsValidBeforeEnablingSubmitButton() {
+    setCanSubmit(false);
+    if (
+      data.location !== undefined &&
+      data.destination !== undefined &&
+      data.passengers !== undefined &&
+      data.date !== undefined &&
+      data.service !== undefined &&
+      data.payment !== undefined &&
+      data.first_name !== undefined &&
+      data.first_name !== "" &&
+      data.last_name !== undefined &&
+      data.last_name !== "" &&
+      data.email !== undefined &&
+      data.email !== "" &&
+      data.phone !== undefined &&
+      data.phone !== ""
+    ) {
+      setCanSubmit(true);
+    }
+  }
+  function setLocalStorageToBookingDataVar() {
+    console.log(BOOKING_DATA.distance!==undefined, "snjansj");
+    if (BOOKING_DATA.distance != undefined) {
+      console.log("setting booking data");
+      window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
+    }
+  }
+  function setBookingDataVarToContextData() {
+    Object.assign(BOOKING_DATA, {
+      location: data.location,
+      destination: data.destination,
+      passengers: data.passengers,
+      date: data.date,
+      time: data.time,
+      return: data.return,
+      return_date: data.return_date,
+      return_time: data.return_time,
+      luggage: data.luggage,
+      return_luggage: data.return_luggage,
+      flight_monitoring: data.flight_monitoring,
+      distance: data.distance,
+      duration: data.duration,
+      service: data.service,
+
+      return_location: data.return_location,
+      return_destination: data.return_destination,
+      return_passengers: data.return_passengers,
+    });
+  }
+  
 
   async function handleRedirectToCheckout() {
     // Create a Checkout Session.
@@ -301,26 +324,7 @@ export default function Booking() {
     // using `error.message`.
     console.warn(error.message);
   }
-  function setDataToParsedData(obj) {
-    data.location = obj.location;
-    data.destination = obj.destination;
-    data.passengers = obj.passengers;
-    data.date = obj.date;
-    data.time = obj.time;
-    data.distance = obj.distance;
-    data.duration = obj.duration;
-    data.service = obj.service;
-    data.payment = obj.payment;
-    data.session = obj.session;
-    data.luggage = obj.luggage;
-    data.return = obj.return;
-    data.return_date = obj.return_date;
-    data.return_time = obj.return_time;
-    data.return_luggage = obj.return_luggage;
-    data.flight_monitoring = obj.flight_monitoring;
-    data.return_location = obj.return_location;
-    data.return_destination = obj.return_destination;
-  }
+  
   function calculatePrice() {
     try {
       //Extract the float
@@ -341,7 +345,7 @@ export default function Booking() {
     tripPrice = Math.round(farePrice * distanceInMiles * 100) / 100;
     data.price_per_mile = farePrice;
     data.total_trip_price = tripPrice;
-    window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
+    
   }
 
   const handleSelectService = (e) => {
@@ -349,7 +353,7 @@ export default function Booking() {
       setServiceSelected(e.target.id);
       data.service = e.target.id;
       console.log(data.service);
-      window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
+      
     }
     //
   };
@@ -358,7 +362,7 @@ export default function Booking() {
       setReturnServiceSelected(e.target.id);
       data.return_service = e.target.id;
       console.log(data.return_service);
-      window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
+      
     }
     //
   };
@@ -410,7 +414,7 @@ export default function Booking() {
   return (
     <>
       {dataError && dataErrorDiv}
-      <Layout >
+      <Layout>
         {!session && showBanner && (
           <Announcement
             onClick={() => setShowBanner(false)}
@@ -424,19 +428,23 @@ export default function Booking() {
             <Popup onClick={handleRedirectToBooking} />
           </div>
         )}
-        <div className={`${showSummary?"h-0":""} mt-10 bg-gray-100 w-full mx-auto h-32 flex items-center justify-center z-[7] text-4xl  font-medium text-center text-gray-800`}>
+        <div
+          className={`${
+            showSummary ? "h-0" : ""
+          } mt-10 bg-gray-100 w-full mx-auto h-32 flex items-center justify-center z-[7] text-4xl  font-medium text-center text-gray-800`}>
           <p className="z-20">Youre almost there!</p>
         </div>
-        <div className={`${showSummary?"h-0 overflow-hidden":""}static  justify-center  mt-0 w-[95vw] sm:w-[97vw] mx-auto lg:  max-w-screen bg-gray-100 overflow-x-none flex flex-col lg:flex-row  `}>
+        <div
+          className={`${
+            showSummary ? "h-0 overflow-hidden" : ""
+          }static  justify-center  mt-0 w-[95vw] sm:w-[97vw] mx-auto lg:  max-w-screen bg-gray-100 overflow-x-none flex flex-col lg:flex-row  `}>
           <div className=""></div>
 
           <div>
             {showSummary && (
               <div className="flex lg:hidden">
                 <div className="overscroll-contain z-[21] top-20  fixed  left-0 h-screen overflow-auto">
-                  {mapsLoaded && (
-                    <Summary onClick={handleBooking} disabled={!canSubmit} />
-                  )}
+                  {mapsLoaded && <Summary onClick={handleBooking} />}
                 </div>
               </div>
             )}
@@ -463,7 +471,7 @@ export default function Booking() {
                 CHOOSE YOUR SERVICE
               </div>
               <Service
-              name="Standard"
+                name="Standard"
                 for="Standard"
                 image="standard"
                 passengers="3"
@@ -471,7 +479,7 @@ export default function Booking() {
                 selected={serviceSelected === "Standard" ? true : false}
               />
               <Service
-              name="Select"
+                name="Select"
                 for="Select"
                 image="select"
                 passengers="5"
@@ -479,65 +487,67 @@ export default function Booking() {
                 selected={serviceSelected === "Select" ? true : false}
               />
               <Service
-              name="Bus"
+                name="Bus"
                 for="Bus"
                 image="bus"
                 passengers="16"
                 luggage="16"
                 selected={serviceSelected === "Bus" ? true : false}
               />
-              
             </form>
-            <><div className="flex py-2 items-center justify-between">
-                  <div className="gap-1 items-center flex">
-                    <Checkbox
-                      onClick={handleCheckboxClick}
-                      id="different_return_service"
-                    />
-                    <label
-                      className="self-center text-base text-gray-900"
-                      htmlFor="different_return_service">
-                      Different service on return?
-                    </label>
-                  </div>
-                  </div>
-                  
-    {showReturnServices && 
-      <form onClick={handleSelectReturnService} className="">
-              <div className="w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
-                RETURN SERVICE
+            <>
+              <div className="flex py-2 items-center justify-between">
+                <div className="gap-1 items-center flex">
+                  <Checkbox
+                    onClick={handleCheckboxClick}
+                    id="different_return_service"
+                  />
+                  <label
+                    className="self-center text-base text-gray-900"
+                    htmlFor="different_return_service">
+                    Different service on return?
+                  </label>
+                </div>
               </div>
-              <Service
-              name="Standard"
-                for="StandardReturn"
-                image="standard"
-                passengers="3"
-                luggage="3"
-                selected={returnServiceSelected === "StandardReturn" ? true : false}
-              />
-              <Service
-              name="Select"
-                for="SelectReturn"
-                image="select"
-                passengers="5"
-                luggage="4"
-                selected={returnServiceSelected === "SelectReturn" ? true : false}
-              />
-              <Service
-              name="Bus"
-                for="BusReturn"
-                image="bus"
-                passengers="16"
-                luggage="16"
-                selected={returnServiceSelected === "BusReturn" ? true : false}
-              />
-              
-            </form>
-    }
-    
-   
-   
-    </>
+
+              {showReturnServices && (
+                <form onClick={handleSelectReturnService} className="">
+                  <div className="w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
+                    RETURN SERVICE
+                  </div>
+                  <Service
+                    name="Standard"
+                    for="StandardReturn"
+                    image="standard"
+                    passengers="3"
+                    luggage="3"
+                    selected={
+                      returnServiceSelected === "StandardReturn" ? true : false
+                    }
+                  />
+                  <Service
+                    name="Select"
+                    for="SelectReturn"
+                    image="select"
+                    passengers="5"
+                    luggage="4"
+                    selected={
+                      returnServiceSelected === "SelectReturn" ? true : false
+                    }
+                  />
+                  <Service
+                    name="Bus"
+                    for="BusReturn"
+                    image="bus"
+                    passengers="16"
+                    luggage="16"
+                    selected={
+                      returnServiceSelected === "BusReturn" ? true : false
+                    }
+                  />
+                </form>
+              )}
+            </>
             <section>
               <div className="flex items-stretch w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
                 LUGGAGE
@@ -548,12 +558,13 @@ export default function Booking() {
             <section className="">
               <div className="flex items-stretch w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
                 <p className="grow"> PASSENGER DETAILS</p>
-                <p className="self-end mr-2 text-sm"> or </p>
-                <Link href="/signin">
-                  <a className="self-end text-sm text-sky-600 hover:text-sky-400">
-                    Sign In
-                  </a>
-                </Link>
+                <span className="flex self-center tracking-tight text-sm">
+                  <p className=" mr-2  "> or </p>
+                  <Link href="/signin">
+                    <a className=" text-sky-600 hover:text-sky-400">Sign In</a>
+                  </Link>
+                </span>
+
                 {/* <div>or </div> */}
               </div>
 
@@ -623,10 +634,9 @@ export default function Booking() {
             </div>
           </div>
         </div>
-        <div className={`${showSummary?"h-0":"h-40"} `}></div>
-       
+        <div className={`${showSummary ? "h-0" : "h-40"} `}></div>
       </Layout>
-      <div className={`${showSummary?"h-0":"h-40 lg:h-0"} `}></div>
+      <div className={`${showSummary ? "h-0" : "h-40 lg:h-0"} `}></div>
     </>
   );
 }
