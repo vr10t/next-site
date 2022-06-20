@@ -430,7 +430,7 @@ export default function Booking() {
         <div
           className={`${
             showSummary ? "h-0 overflow-hidden" : ""
-          }static  justify-center lg:justify-start lg:pl-[2%] mt-0 w-[95vw] sm:w-[97vw] mx-auto lg:  max-w-screen bg-gray-100  flex flex-col lg:flex-row  `}>
+          }static  justify-center lg:justify-start lg:pl-[5%] xl:pl-[20%] mt-0 w-[95vw] sm:w-[97vw] mx-auto lg:  max-w-screen bg-gray-100  flex flex-col lg:flex-row  `}>
           <div className=""></div>
 
           <div>
