@@ -103,7 +103,7 @@ export default function ContactDetails() {
       <>
       <p className="text-gray-600 font-medium py-2  uppercase">Contact Information</p>
     <form onBlur={handleSubmit} className="flex flex-col ">
-    <label htmlFor="firstName" className="text-gray-900 text-base font-medium">
+    <label htmlFor="firstName" className="text-gray-900 pb-2 text-base font-medium">
           First Name
         </label>
       <div className="flex relative mb-2 w-full shadow-sm">
@@ -134,7 +134,7 @@ export default function ContactDetails() {
           </div>
         )}
       </div>
-      <label htmlFor="lastName" className="text-gray-900 text-base font-medium">
+      <label htmlFor="lastName" className="text-gray-900 pb-2 text-base font-medium">
           Last Name
         </label>
       <div className="flex relative mb-2 w-full shadow-sm">
@@ -164,7 +164,7 @@ export default function ContactDetails() {
           </div>
         )}
       </div>
-<label htmlFor="email" className="text-gray-900 text-base font-medium">
+<label htmlFor="email" className="text-gray-900 pb-2 text-base font-medium">
           Email Address
         </label>
       <div className="flex relative mb-2 w-full shadow-sm">
@@ -194,7 +194,7 @@ export default function ContactDetails() {
           </div>
         )}
       </div>
-      <label htmlFor="phone" className="text-gray-900 text-base font-medium">
+      <label htmlFor="phone" className="text-gray-900 pb-2 text-base font-medium">
          Phone
         </label>
       <div className="flex relative mb-2 w-full shadow-sm">
@@ -202,7 +202,7 @@ export default function ContactDetails() {
           // {...getFieldProps("phone")}
           name="phone"
           id="phone"
-          className={`inline-flex items-center pl-2 w-full text-lg text-gray-900 bg-gray-50 rounded-lg border-r-2 shadow-sm appearance-none focus:outline-none focus:ring-2`}
+          className={`inline-flex items-center pl-2 w-full text-lg text-gray-900 pb-2 bg-gray-50 rounded-lg border-r-2 shadow-sm appearance-none focus:outline-none focus:ring-2`}
           defaultCountry="GB"
           initialValueFormat="national"
           useNationalFormatForDefaultCountryValue
@@ -227,7 +227,7 @@ export default function ContactDetails() {
                       id="different_return_details"
                     />
                     <label
-                      className="self-center text-base text-gray-900"
+                      className="self-center text-base text-gray-900 pb-2"
                       htmlFor="different_return_details">
                       Different contact information on return?
                     </label>

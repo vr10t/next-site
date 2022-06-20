@@ -88,7 +88,7 @@ export default function ReturnContact() {
       <>
        <p className="text-gray-600 font-medium py-2 uppercase">Return Details</p>
     <form onBlur={handleSubmit} className="flex flex-col "> 
-    <label htmlFor="returnFirstName" className="text-gray-900 text-base font-medium">
+    <label htmlFor="returnFirstName" className="text-gray-900 pb-2 text-base font-medium">
           First Name
         </label>
       <div className="flex relative mb-2 w-full shadow-sm">
@@ -119,7 +119,7 @@ export default function ReturnContact() {
           </div>
         )}
       </div>
-<label htmlFor="returnLastName" className="text-gray-900 text-base font-medium">
+<label htmlFor="returnLastName" className="text-gray-900 pb-2 text-base font-medium">
           Last Name
         </label>
       <div className="flex relative mb-2 w-full shadow-sm">
@@ -149,7 +149,7 @@ export default function ReturnContact() {
           </div>
         )}
       </div>
-<label htmlFor="returnEmail" className="text-gray-900 text-base font-medium">
+<label htmlFor="returnEmail" className="text-gray-900 pb-2 text-base font-medium">
           Email Address
         </label>
       <div className="flex relative mb-2 w-full shadow-sm">
@@ -179,7 +179,7 @@ export default function ReturnContact() {
           </div>
         )}
       </div>
-      <label htmlFor="returnPhone" className="text-gray-900 text-base font-medium">
+      <label htmlFor="returnPhone" className="text-gray-900 pb-2 text-base font-medium">
           Phone
         </label>
       <div className="flex relative mb-2 w-full shadow-sm">
@@ -187,7 +187,7 @@ export default function ReturnContact() {
           // {...getFieldProps("phone")}
           name="returnPhone"
           id="returnPhone"
-          className={`inline-flex items-center pl-2 w-full text-lg text-gray-900 bg-gray-50 rounded-lg border-r-2 shadow-sm appearance-none focus:outline-none focus:ring-2`}
+          className={`inline-flex items-center pl-2 w-full text-lg text-gray-900 pb-2 bg-gray-50 rounded-lg border-r-2 shadow-sm appearance-none focus:outline-none focus:ring-2`}
           defaultCountry="GB"
           initialValueFormat="national"
           useNationalFormatForDefaultCountryValue

@@ -410,7 +410,7 @@ export default function Booking() {
   return (
     <>
       {dataError && dataErrorDiv}
-      <Layout>
+      <Layout >
         {!session && showBanner && (
           <Announcement
             onClick={() => setShowBanner(false)}
@@ -424,16 +424,16 @@ export default function Booking() {
             <Popup onClick={handleRedirectToBooking} />
           </div>
         )}
-        <div className=" mt-10 bg-gray-100 w-full mx-auto h-32 flex items-center justify-center z-[7] text-4xl  font-medium text-center text-gray-800">
+        <div className={`${showSummary?"h-0":""} mt-10 bg-gray-100 w-full mx-auto h-32 flex items-center justify-center z-[7] text-4xl  font-medium text-center text-gray-800`}>
           <p className="z-20">Youre almost there!</p>
         </div>
-        <div className="static justify-center  mt-0 w-[95vw] sm:w-[97vw] mx-auto lg:  max-w-screen bg-gray-100 overflow-x-none flex flex-col lg:flex-row  ">
+        <div className={`${showSummary?"h-0 overflow-hidden":""}static  justify-center  mt-0 w-[95vw] sm:w-[97vw] mx-auto lg:  max-w-screen bg-gray-100 overflow-x-none flex flex-col lg:flex-row  `}>
           <div className=""></div>
 
           <div>
             {showSummary && (
               <div className="flex lg:hidden">
-                <div className="overscroll-contain z-[21] top-20  fixed lg:relative left-0 h-[80vh] lg:h-max overflow-auto">
+                <div className="overscroll-contain z-[21] top-20  fixed  left-0 h-screen overflow-auto">
                   {mapsLoaded && (
                     <Summary onClick={handleBooking} disabled={!canSubmit} />
                   )}
@@ -557,7 +557,7 @@ export default function Booking() {
                 {/* <div>or </div> */}
               </div>
 
-              <div className="px-6 bg-gray-100 border-gray-400 shadow-sm lg:w-full border-y-2 group">
+              <div className="px- bg-gray-100 border-gray-400 shadow-sm lg:w-full ">
                 <div className="flex justify-between items-center cursor-pointer">
                   <div className="w-full">
                     <ContactDetails />
@@ -623,16 +623,10 @@ export default function Booking() {
             </div>
           </div>
         </div>
-        <div className="h-40"></div>
-        <button
-          onClick={() => {
-            setTripDistance(data.distance);
-            setTotalTripPrice(data.total_trip_price);
-          }}>
-          Update
-        </button>
+        <div className={`${showSummary?"h-0":"h-40"} `}></div>
+       
       </Layout>
-      <div className="h-40 lg:h-0"></div>
+      <div className={`${showSummary?"h-0":"h-40 lg:h-0"} `}></div>
     </>
   );
 }

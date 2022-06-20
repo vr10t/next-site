@@ -79,7 +79,7 @@ export default function Navbar({ children}) {
           </div>
         </div>
         {expanded && (
-          <div className={"  transition-all duration-1000 ease-in-out md:hidden"}>
+          <div className={" z-[22] transition-all duration-1000 ease-in-out md:hidden"}>
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               <Link href="/#">
                 <a className="text-slate-50 no-underline block px-3 py-2 rounded-md text-base font-medium">

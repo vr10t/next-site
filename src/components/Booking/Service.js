@@ -52,16 +52,16 @@ export default function Service(props) {
           <p className="hidden text-lg text-center xs:block">{props.name}</p>
           <ul className="hidden max-w-32  flex-col max-h-32 xs:mr-2 text-sm text-gray-500 xs:flex">
             Includes:
-            <li className="flex overflow-ellipsis">
-              <FaCheck className="self-center pr-2 z-[7]  text-green-400 text-md" />{" "}
-              Free cancelation up to 24 hours before pickup
+            <li className="flex ">
+              <FaCheck className="self-center mr-2 z-[7]  text-green-400 text-md" />{" "}
+              Free cancelation up to 24 hours
             </li>
             <li className="flex truncate">
-              <FaCheck className="self-center pr-2 z-[7]  text-green-400 text-md" />{" "}
+              <FaCheck className="self-center mr-2 z-[7]  text-green-400 text-md" />{" "}
               Taxes & Fees included
             </li>
             <li className="flex truncate">
-              <FaCheck className="self-center pr-2 z-[7]  text-green-400 text-md" />{" "}
+              <FaCheck className="self-center mr-2 z-[7]  text-green-400 text-md" />{" "}
               60 min. Free Waiting Time
             </li>
           </ul>
@@ -82,16 +82,16 @@ export default function Service(props) {
             <div>
               <ul className="flex mx-auto px-2 flex-col h-32 text-sm text-gray-500 xs:flex">
                 Includes:
-                <li className="flex overflow-ellipsis">
-                  <FaCheck className="self-center pr-2 z-[7] text-green-400 text-md" />{" "}
-                  Free cancelation up to 24 hours before pickup
+                <li className="flex ">
+                  <FaCheck className="self-center mr-2 z-[7] text-green-400 text-md" />{" "}
+                  Free cancelation up to 24 hours 
                 </li>
-                <li className="flex truncate">
-                  <FaCheck className="self-center pr-2 z-[7]  text-green-400 text-md" />{" "}
+                <li className="flex">
+                  <FaCheck className="self-center mr-2 z-[7]  text-green-400 text-md" />{" "}
                   Taxes & Fees included
                 </li>
-                <li className="flex truncate">
-                  <FaCheck className="self-center pr-2 z-[7]  text-green-400 text-md" />{" "}
+                <li className="flex ">
+                  <FaCheck className="self-center mr-2 z-[7]  text-green-400 text-md" />{" "}
                   60 min. Free Waiting Time
                 </li>
               </ul>
