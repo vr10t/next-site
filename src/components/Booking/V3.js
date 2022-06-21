@@ -63,6 +63,7 @@ function Form() {
   const [returnTime, setReturnTime] = useState("");
   const [addReturn, setAddReturn] = useState(false);
   const [addFlightMonitoring, setAddFlightMonitoring] = useState(false);
+  const [canSearch,setCanSearch]=useState(false)
   let dateObject = new Date();
   let day = dateObject.getDate();
   let month = dateObject.getMonth() + 1;
@@ -125,17 +126,27 @@ function Form() {
     setData(data);
 
     window.localStorage.removeItem("BOOKING_DATA");
-    router.push("/booking")
-    return false
+    router.push("/booking");
+    return false;
   }
+useEffect(()=>{
 
+if(data.distance!==undefined&&
+  data.distance!=="error"&&
+  data.passengers!==undefined){
+  setCanSearch(true)
+}
+else{
+  setCanSearch(false)
+}
+},[data])
   useEffect(() => {
     setData(data);
 
     setTimeout(() => {
       console.log(data);
     }, 1000);
-  }, [origin, destination]);
+  }, [origin, destination,passengers,dateAndTime,returnDateAndTime,addReturn,addFlightMonitoring]);
   function callback(response, status) {
     console.log("status", status);
     setShouldFetchDirections(false);
@@ -265,12 +276,12 @@ function Form() {
               shouldFetchDirections={shouldFetchDirections}>
               {" "}
             </Map>
-            {distance && (
+            {data.distance && (
               <span className="w-full h-full text-center text-white text-2xl bg-black/50 z-[9999]">
                 Est. distance: {data.distance}
               </span>
             )}
-            {duration && (
+            {data.duration && (
               <span className="w-full h-full text-center text-white text-2xl bg-black/50 z-[9999]">
                 Est. duration: {data.duration}
               </span>
@@ -279,13 +290,16 @@ function Form() {
         )}
       </div>
       <form id="booking" onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-col gap-2  items-center mx-auto grow  w-full   ">
+        <div className="flex flex-col gap-2  items-center mx-auto grow  w-80   ">
+          {" "}
+          <label
+            htmlFor="location"
+            className="text-gray-900 justify-start self-start text-base font-medium">
+            Pickup 
+          </label>
           <div className="flex flex-row rounded-lg   w-80  ">
             {" "}
             <span className="inline-flex  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadow-sm text-lg">
-              <label htmlFor="location" className="sr-only ">
-                From
-              </label>
               <FaMapMarkerAlt />
             </span>
             {mapsLoaded && (
@@ -364,13 +378,13 @@ function Form() {
                 </Tooltip>
               </button>
             </span>
-          </div>
+          </div><label htmlFor="destination" className="text-gray-900 justify-start self-start text-base font-medium">
+                Dropoff
+              </label>
           <div className="flex flex-row rounded-lg w-80  border-1 border-gray-900">
             {" "}
             <span className="inline-flex  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadosm text-lg">
-              <label htmlFor="destination" className="sr-only ">
-                To
-              </label>
+              
               <FaMapPin />
             </span>
             {mapsLoaded && (
@@ -442,13 +456,13 @@ function Form() {
                 )}
               </PlacesAutocomplete>
             )}
-          </div>
+          </div><label htmlFor="passangers" className="text-gray-900 justify-start self-start text-base font-medium">
+                Passangers
+              </label>
           <div className="flex flex-row rounded-lg w-80  border-1 border-gray-900">
             {" "}
             <span className="inline-flex  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadosm text-lg">
-              <label htmlFor="passangers" className="sr-only ">
-                Passangers
-              </label>
+              
               <BsFillPersonPlusFill />
             </span>
             <input
@@ -464,12 +478,12 @@ function Form() {
               min="1"
               max="16"
             />
-          </div>
+          </div> <label htmlFor="date" className="text-gray-900 justify-start self-start text-base font-medium">Pickup Date</label>
           <div className="flex justify-between gap-2 w-80 max-w-96">
             <div className="flex flex-row col-span-3 rounded-lg  w-full border-1 border-gray-900">
               {" "}
               <span className="inline-flex  rounded-l-md  items-center px-3  bg-sky-100  text-gray-700 shadow-sm text-lg">
-                <label htmlFor="date" className="sr-only "></label>
+               
                 <BsCalendarFill />
               </span>
               {/* <select
@@ -544,11 +558,11 @@ function Form() {
               </Label>
             </div>{" "}
           </div>
-
           <div className="flex flex-row rounded-lg mx-1 w-80">
             <button
               type="submit"
-              className="  lg:max-lg shadosm py-2 px-4 xs:mx-auto mx-1 w-80  rounded-full bg-sky-500 text-stone-50 text-xl   font-bold transition-all duration-1000 ease-in-out  ">
+              disabled={!canSearch}
+              className="  lg:max-lg shadosm py-2 px-4 xs:mx-auto mx-1 w-80  rounded-full bg-sky-500 disabled:bg-gray-500 text-stone-50 text-xl   font-bold transition-all duration-1000 ease-in-out  ">
               Search
             </button>
           </div>

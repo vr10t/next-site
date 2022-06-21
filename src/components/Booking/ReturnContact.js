@@ -35,13 +35,13 @@ export default function ReturnContact() {
     setFirstName(values.firstName);
     setLastName(values.lastName);
     setEmail(values.email);
-    if(errors!=={}){
-      console.log("errors setting data");
-      data.canSubmit=false
-    }
-    else{
-      data.canSubmit=true
-    }
+    // if(errors!=={}){
+    //   console.log("errors setting data");
+    //   data.canSubmit=false
+    // }
+    // else{
+    //   data.canSubmit=true
+    // }
     // console.log(errors, "VALUES");
     
   }
