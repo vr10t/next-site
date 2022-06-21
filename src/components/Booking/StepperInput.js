@@ -27,9 +27,9 @@ export default function StepperInput(props) {
         console.log(data.luggage, "data.luggage");
         data.luggage = parseInt(value);
       }
-      // if (props.for === "return_luggage") {
-      //   data.return_luggage = value;
-      // }
+      if (props.for === "return_luggage") {
+        data.return_luggage = parseInt(value);
+      }
 
       setData(data);
       console.log(
@@ -42,14 +42,14 @@ export default function StepperInput(props) {
     } else {
       
       if (props.for === "luggage") {
-        setValue(data.luggage);
+        setValue(data.luggage||0);
 
         console.log(data.luggage, "data.luggage");
 
         // data.luggage=parseInt(value)
       }
       if (props.for === "return_luggage") {
-        data.return_luggage = value;
+        setValue(data.return_luggage||0);
       }
       renders.current++;
     }
@@ -62,6 +62,13 @@ export default function StepperInput(props) {
     console.log(data.luggage, 'data.luggage');
 
   }
+  if (props.for==="return_luggage"){
+
+    setValue(parseInt(data.return_luggage))
+
+console.log(data.return_luggage, 'data.return_luggage');
+
+}
 
     },[])
 

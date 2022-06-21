@@ -561,7 +561,7 @@ else{
           <div className="flex flex-row rounded-lg mx-1 w-80">
             <button
               type="submit"
-              disabled={!canSearch}
+              disabled={canSearch}
               className="  lg:max-lg shadosm py-2 px-4 xs:mx-auto mx-1 w-80  rounded-full bg-sky-500 disabled:bg-gray-500 text-stone-50 text-xl   font-bold transition-all duration-1000 ease-in-out  ">
               Search
             </button>

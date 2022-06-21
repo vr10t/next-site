@@ -440,10 +440,11 @@ setReturnServiceSelected(data.return_service)
             <Popup onClick={handleRedirectToBooking} />
           </div>
         )}
+      
         <div
           className={`${
             showSummary ? "h-0" : ""
-          } mt-10 bg-gray-100 w-full mx-auto h-32 flex items-center justify-center lg:justify-start lg:indent-4 z-[7] text-4xl  font-medium text-center text-gray-800`}>
+          } mt-10 bg-gray-100 w-full lg:w-1/2 mx-auto h-32 flex items-center justify-center lg:justify-start  z-[7] text-4xl  font-medium text-center text-gray-800`}>
           <p className="z-20">Youre almost there!</p>
         </div>
         <div
@@ -460,7 +461,7 @@ setReturnServiceSelected(data.return_service)
                 </div>
               </div>
             )}
-
+              
             <div className="lg:hidden  z-[21] h-20 fixed bottom-0 left-0  flex justify-center max-w-screen w-screen   bg-gray-100 ">
               <div
                 onClick={()=>setShowSummary(!showSummary)}
@@ -638,11 +639,12 @@ setReturnServiceSelected(data.return_service)
               </section>
             }
           </div>
+          <div className="hidden sticky lg:flex float-right ">{mapsLoaded && (
+                <Summary onClick={handleBooking} disabled={!canSubmit} />
+              )}</div>
           {/* <div className="hidden lg:flex">
             <div className=" z-[7] -top-20  lg:relative right-0 float-right h-screen lg:h-full min-w-max overflow-auto">
-              {mapsLoaded && (
-                <Summary onClick={handleBooking} disabled={!canSubmit} />
-              )}
+              
             </div>
           </div> */}
         </div>

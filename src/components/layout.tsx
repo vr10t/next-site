@@ -24,7 +24,7 @@ const Layout = ({ children, title }: Props) => (
       <meta name="og:title" content={title} />
       <meta name="twitter:card" content="summary_large_image" />
     </Head>
-<div className="hidden lg:flex float-right "><Summary /></div>
+
     <Navbar />
     <div className="h-20 bg-transparent"></div>
     <main className="overflow-hidden">{children}</main>
