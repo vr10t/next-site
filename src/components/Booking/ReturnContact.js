@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import * as Yup from "yup";
-import { useFormik } from "formik";
+import { Formik, Form,Field} from "formik";
 import PhoneInput, {
   formatPhoneNumber,
   isPossiblePhoneNumber,
@@ -17,57 +17,34 @@ export default function ReturnContact() {
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [phoneError, setPhoneError] = useState("");
-    const [showReturnDetails,setShowReturnDetails]=useState(false)
+
     const {data, setData}= useAppContext()
     useEffect(() => {
         data.return_first_name = firstName;
         data.return_last_name = lastName;
         data.return_email = email;
         data.return_phone = phone;
-        
+        console.log("setting data");
         setData(data);
       }, [
        firstName,lastName,email,phone
       ]);
 
-  const { getFieldProps, handleSubmit, errors, touched } = useFormik({
-    initialValues: {
-      returnFirstName: "",
-      returnLastName: "",
-      returnEmail: "",
-    },
-    validationSchema: Yup.object().shape({
-      returnFirstName: Yup.string()
-        .required("Name is required")
-        .min(2, "Name is too short")
-        .max(50, "Name is too long")
-        .matches(
-          /^[A-z]+(([',. [a-z ][A-Z ])?[-]?[a-zA-Z]*)*$/,
-          "Name must not contain invalid characters"
-        ),
 
-      returnLastName: Yup.string()
-        .required("Name is required")
-        .min(2, "Name is too short")
-        .max(50, "Name is too long")
-        .matches(
-          /^[A-z]+(([',. [a-z ][A-Z ])?[-]?[a-zA-Z]*)*$/,
-          "Name must not contain invalid characters"
-        ),
-
-      returnEmail: Yup.string()
-        .required("Email is required")
-        .email("Email is invalid"),
-      returnacceptTerms: Yup.bool().oneOf([true], "Accept Ts & Cs is required"),
-    }),
-    onSubmit: (values) => {
-      // same shape as initial values
-      setFirstName(values.returnFirstName);
-      setLastName(values.returnLastName);
-      setEmail(values.returnEmail);
-    },
-  });
-
+  function handleFormChange(values,errors){
+    setFirstName(values.firstName);
+    setLastName(values.lastName);
+    setEmail(values.email);
+    if(errors!=={}){
+      console.log("errors setting data");
+      data.canSubmit=false
+    }
+    else{
+      data.canSubmit=true
+    }
+    // console.log(errors, "VALUES");
+    
+  }
   function handlePhoneError() {
     setPhoneError(null);
 
@@ -75,19 +52,57 @@ export default function ReturnContact() {
       setPhoneError("Phone number is required");
     }
     if (phone) {
-      console.log(isPossiblePhoneNumber(phone), "IS IT UNDEFINED");
       if (isPossiblePhoneNumber(phone) === false) {
         setPhoneError("Invalid phone number");
       } else {
         console.log(phone);
-        setPhoneError(null);
+        setPhoneError("");
       }
     }
   }
+  
   return (
       <>
        <p className="text-gray-600 font-medium py-2 uppercase">Return Details</p>
-    <form onBlur={handleSubmit} className="flex flex-col "> 
+       <Formik
+       initialValues= {{
+        returnFirstName: "",
+        returnLastName: "",
+        returnEmail: "",}
+      }
+      validationSchema= {Yup.object().shape({
+        returnFirstName: Yup.string()
+          .required("Name is required")
+          .min(2, "Name is too short")
+          .max(50, "Name is too long")
+          .matches(
+            /^[A-z]+(([',. [a-z ][A-Z ])?[-]?[a-zA-Z]*)*$/,
+            "Name must not contain invalid characters"
+          ),
+
+        returnLastName: Yup.string()
+          .required("Name is required")
+          .min(2, "Name is too short")
+          .max(50, "Name is too long")
+          .matches(
+            /^[A-z]+(([',. [a-z ][A-Z ])?[-]?[a-zA-Z]*)*$/,
+            "Name must not contain invalid characters"
+          ),
+
+        returnEmail: Yup.string()
+          .required("Email is required")
+          .email("Email is invalid"),
+       
+      })}
+       >
+    {({
+            setFieldValue,
+            setFieldTouched,
+            values,
+            errors,
+            touched,
+          }) => (
+      <Form onChange={handleFormChange(values,errors)} className="flex flex-col "> 
     <label htmlFor="returnFirstName" className="text-gray-900 pb-2 text-base font-medium">
           First Name
         </label>
@@ -96,11 +111,8 @@ export default function ReturnContact() {
           <BsFillPersonFill className="z-[2]" />
         </span>
        
-        <input
-          {...getFieldProps("returnFirstName")}
-          // onChange={formik.handleChange}
-          // value={formik.values.firstName}
-
+        <Field
+         
           name="returnFirstName"
           type="text"
           id="returnFirstName"
@@ -127,10 +139,8 @@ export default function ReturnContact() {
           <BsFillPersonFill className="z-[2]" />
         </span>
         
-        <input
-          {...getFieldProps("returnLastName")}
-          // onChange={formik.handleChange}
-          // value={formik.values.lastName}
+        <Field
+          
           name="returnLastName"
           type="text"
           id="returnLastName"
@@ -157,10 +167,8 @@ export default function ReturnContact() {
           <FaEnvelope className="z-[2]" />
         </span>
         
-        <input
-          {...getFieldProps("returnEmail")}
-          //   onChange={formik.handleChange}
-          //  value={formik.values.email}
+        <Field
+         
           name="returnEmail"
           type="email"
           id="returnEmail"
@@ -178,34 +186,35 @@ export default function ReturnContact() {
             </p>
           </div>
         )}
-      </div>
+      </div> 
+      </Form>)}</Formik>
       <label htmlFor="returnPhone" className="text-gray-900 pb-2 text-base font-medium">
           Phone
         </label>
-      <div className="flex relative mb-2 w-full shadow-sm">
-        <PhoneInput
-          // {...getFieldProps("phone")}
-          name="returnPhone"
-          id="returnPhone"
-          className={`inline-flex items-center pl-2 w-full text-lg text-gray-900 pb-2 bg-gray-50 rounded-lg border-r-2 shadow-sm appearance-none focus:outline-none focus:ring-2`}
-          defaultCountry="GB"
-          initialValueFormat="national"
-          useNationalFormatForDefaultCountryValue
-          placeholder="Your phone number"
-          value={phone}
-          error={phoneError}
-          onChange={setPhone}
-          onBlur={handlePhoneError}
-        />
-        {phoneError && (
-          <div className="absolute pointer-events-none w-full h-full -left-[1px] text-sm font-medium text-pink-500 rounded-lg  ring-[2px] ring-pink-400">
-            <p className="relative left-1 -top-3 px-2 w-max bg-gray-50">
-              {phoneError}
-            </p>
-          </div>
-        )}
-      </div>
+        <div className="flex relative my-2 w-full shadow-sm">
+          <PhoneInput
+            // {...getFieldProps("phone")}
+            name="returnPhone"
+            id="returnPhone"
+            className={`inline-flex items-center pl-2 w-full text-lg text-gray-900  bg-gray-50 rounded-lg border-r-2 shadow-sm appearance-none focus:outline-none focus:ring-2`}
+            defaultCountry="GB"
+            initialValueFormat="national"
+            useNationalFormatForDefaultCountryValue={true}
+            placeholder="Your phone number"
+            value={phone}
+            error={phoneError}
+            onChange={setPhone}
+            onBlur={handlePhoneError}
+          />
+          {phoneError && (
+            <div className="absolute pointer-events-none w-full h-full -left-[1px] text-sm font-medium text-pink-500 rounded-lg  ring-[2px] ring-pink-400">
+              <p className="relative left-1 -top-3 px-2 w-max bg-gray-50">
+                {phoneError}
+              </p>
+            </div>
+          )}
+        </div>
      
-    </form></>
+   </>
   );
 }

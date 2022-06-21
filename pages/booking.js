@@ -1,4 +1,4 @@
-import { useContext, useEffect, useCallback, useState } from "react";
+import { useContext, useEffect, useCallback, useState,useRef } from "react";
 import { useAppContext, useAuthContext } from "../src/context/state";
 
 import Layout from "../src/components/layout";
@@ -21,7 +21,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Loader } from "@googlemaps/js-api-loader";
 import PaymentSelect from "../src/components/Booking/PaymentSelect";
-
+import {throttle, debounce} from "throttle-debounce"
 import ProgressIcons from "../src/components/Booking/ProgressIcons";
 
 import Service from "../src/components/Booking/Service";
@@ -90,7 +90,7 @@ export default function Booking() {
   const [instructions, setInstructions] = useState("");
   const [returnInstructions, setReturnInstructions] = useState("");
   const [showReturnServices, setShowReturnServices] = useState(false);
-
+  const renders = useRef(0);
   let dataErrorDiv = (
     <div className="fixed overscroll-none w-screen mx-auto mt-1/2 flex pt-64 font-semibold tracking-wide p-8 h-screen z-[99] bg-black/95 text-pink-500 text-4xl">
       No booking data was found, redirecting...
@@ -136,26 +136,27 @@ export default function Booking() {
     returnPassengers,
   ]);
   useEffect(() => {
+    data.showSummary=false
     console.log("dataaaa", data);
 
     // allow other functions to execute, otherwise component mounts before the variables update
     console.log("1 one", data.distance);
   if (data.distance!==undefined){
-    
-    setBookingDataVarToContextData()
-    setTripDistance(data.distance);
-    setTotalTripPrice(data.total_trip_price);
+    debounce(5000,console.log("DEBOUNCING"))
+   debounce(1000,setBookingDataVarToContextData()) 
+   debounce(1000,setTripDistance(data.distance))
+   debounce(1000,setTotalTripPrice(data.total_trip_price))
   }
   if (data.distance===undefined) {
-    savelocalStorage()
+    debounce(1000,savelocalStorage())
     
   }
 
     console.log("BOOKING_DATA: ", BOOKING_DATA);
 
-    calculatePrice();
+    debounce(1000,calculatePrice())
 
-    verifyDataIsValidBeforeEnablingSubmitButton();
+    debounce(1000,verifyDataIsValidBeforeEnablingSubmitButton())
   }, [data]);
 
   useEffect(() => {
@@ -239,6 +240,7 @@ export default function Booking() {
         data.return_destination = parsedData.return_destination;
   
         data.return_passengers = parsedData.return_passengers;
+        console.log("setting data parsing data");
         setData(data)
       }
     } catch (error) {
@@ -264,9 +266,12 @@ export default function Booking() {
       data.email !== undefined &&
       data.email !== "" &&
       data.phone !== undefined &&
-      data.phone !== ""
+      data.phone !== ""&&data.canSubmit===true
     ) {
-      setCanSubmit(true);
+      
+      console.log("setting data inside cansubmit",data.canSubmit);
+      // setData(data)
+      setCanSubmit(data.canSubmit);
     }
   }
   function setLocalStorageToBookingDataVar() {
@@ -347,7 +352,10 @@ export default function Booking() {
     data.total_trip_price = tripPrice;
     
   }
-
+useEffect(()=>{
+setServiceSelected(data.service)
+setReturnServiceSelected(data.return_service)
+},[])
   const handleSelectService = (e) => {
     if (e.target.id !== "") {
       setServiceSelected(e.target.id);
@@ -403,6 +411,10 @@ export default function Booking() {
       }
     }
   }
+  function handleShowSummary(){
+    data.showSummary=!data.showSummary
+    setShowSummary(data.showSummary)
+  }
 
   return (
     <>
@@ -433,10 +445,10 @@ export default function Booking() {
           }static  justify-center lg:justify-start lg:pl-[5%] xl:pl-[20%] mt-0 w-[95vw] sm:w-[97vw] mx-auto lg:  max-w-screen bg-gray-100  flex flex-col lg:flex-row  `}>
           <div className=""></div>
 
-          <div>
+          <div className="bg-fixed overscroll-none">
             {showSummary && (
-              <div className="flex lg:hidden">
-                <div className="overscroll-contain z-[21] top-20  fixed  left-0 h-screen overflow-auto">
+              <div className="flex bg-fixed lg:hidden">
+                <div className="overscroll-contain bg-fixed z-[21] top-20  fixed  left-0 h-screen overflow-auto">
                   {mapsLoaded && <Summary onClick={handleBooking} />}
                 </div>
               </div>
@@ -444,7 +456,7 @@ export default function Booking() {
 
             <div className="lg:hidden  z-[21] h-20 fixed bottom-0 left-0  flex justify-center max-w-screen w-screen   bg-gray-100 ">
               <div
-                onClick={() => setShowSummary(!showSummary)}
+                onClick={handleShowSummary}
                 className={summaryClassNames}>
                 <FaAngleDown />
               </div>

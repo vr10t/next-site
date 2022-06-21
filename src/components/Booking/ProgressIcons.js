@@ -41,7 +41,7 @@ const completed = "mx-auto py-2 text-sky-500 ";
                   <FaTaxi className="px-1" />
                 </div>
                 <div className={data.first_name&&data.last_name&&data.email&&data.phone ? completed : uncompleted}>
-                  {data.first_name&&data.email&&data.phone ? (
+                  {data.first_name&&data.last_name&&data.email&&data.phone ? (
                     <FaCheck className="float-right text-sm" />
                   ) : (
                     ""

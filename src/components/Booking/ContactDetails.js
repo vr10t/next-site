@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import * as Yup from "yup";
-import { Field, Formik, useFormik } from "formik";
+import { Field, Formik, useFormik, Form } from "formik";
 import PhoneInput, {
   formatPhoneNumber,
   isPossiblePhoneNumber,
@@ -11,8 +11,9 @@ import { BsFillPersonFill } from "@react-icons/all-files/bs/BsFillPersonFill";
 import { useAppContext } from "../../context/state";
 import { Checkbox } from "flowbite-react";
 import ReturnContact from "./ReturnContact";
+import {throttle} from "throttle-debounce"
 
-export default function ContactDetails() {
+export default function ContactDetails(props) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,57 +21,15 @@ export default function ContactDetails() {
   const [phoneError, setPhoneError] = useState("");
   const [showReturnDetails, setShowReturnDetails] = useState(false);
   const { data, setData } = useAppContext();
- const ref = useRef(null);
-  const { getFieldProps, handleSubmit, errors, touched, values, handleChange  } = useFormik(
-    {
-      initialValues: {
-        firstName: "",
-        lastName: "",
-        email: "",
-      },
-      validationSchema: Yup.object().shape({
-        firstName: Yup.string()
-          .required("Name is required")
-          .min(2, "Name is too short")
-          .max(50, "Name is too long")
-          .matches(
-            /^[A-z]+(([',. [a-z ][A-Z ])?[-]?[a-zA-Z]*)*$/,
-            "Name must not contain invalid characters"
-          ),
-
-        lastName: Yup.string()
-          .required("Name is required")
-          .min(2, "Name is too short")
-          .max(50, "Name is too long")
-          .matches(
-            /^[A-z]+(([',. [a-z ][A-Z ])?[-]?[a-zA-Z]*)*$/,
-            "Name must not contain invalid characters"
-          ),
-
-        email: Yup.string()
-          .required("Email is required")
-          .email("Email is invalid"),
-        acceptTerms: Yup.bool().oneOf([true], "Accept Ts & Cs is required"),
-      }),
-      
-innerRef:ref
-    }
-  );
  
-  useEffect(() => {
-    setFirstName(values.firstName);
-    setLastName(values.lastName);
-    setEmail(values.email);
-    console.log(ref.current, "VALUES");
-    
-  }, [ref.current]);
+ 
   useEffect(() => {
     data.first_name = firstName;
     data.last_name = lastName;
     data.email = email;
     data.phone = phone;
     console.log(data, "FORMDATAAAA");
-    
+    console.log("setting data");
     setData(data);
   }, [firstName, lastName, email, phone]);
   function handlePhoneError() {
@@ -99,17 +58,85 @@ innerRef:ref
         data.return_last_name = null;
         data.return_email = null;
         data.return_phone = null;
+        console.log("setting data");
         setData(data);
       }
     }
+  }
+  function handleFormChange(values,errors){
+    setFirstName(values.firstName);
+    setLastName(values.lastName);
+    setEmail(values.email);
+    useEffect(()=>{
+      if(errors&&Object.keys(errors).length>0){
+        data.canSubmit=false
+        setData(data)
+      }
+      if(errors&&Object.keys(errors).length===0){
+        data.canSubmit=true
+        setData(data)
+      }
+      if(errors&&Object.keys(errors).length===1){
+        data.canSubmit=false
+        setData(data)
+      }
+    },[Object.keys(errors).length])
+    console.log(Object.keys(errors).length,"errors is not empty");
+    // if(Object.keys(errors).length>0){
+    //   console.log("THROTTLING")
+    //   data.canSubmit=false
+    //  throttle(2000,) 
+    //   console.log(errors," errors setting data",data.canSubmit);
+    // }
+    // else{
+    //   data.canSubmit=true
+    // }
   }
   return (
     <div >
       <p className="text-gray-600 font-medium py-2  uppercase">
         Contact Information
       </p>
+<Formik
+ initialValues= {{
+        firstName: "",
+        lastName: "",
+        email: "",}
+      }
+      validationSchema= {Yup.object().shape({
+        firstName: Yup.string()
+          .required("Name is required")
+          .min(2, "Name is too short")
+          .max(50, "Name is too long")
+          .matches(
+            /^[A-z]+(([',. [a-z ][A-Z ])?[-]?[a-zA-Z]*)*$/,
+            "Name must not contain invalid characters"
+          ),
 
-      <form   className="flex flex-col ">
+        lastName: Yup.string()
+          .required("Name is required")
+          .min(2, "Name is too short")
+          .max(50, "Name is too long")
+          .matches(
+            /^[A-z]+(([',. [a-z ][A-Z ])?[-]?[a-zA-Z]*)*$/,
+            "Name must not contain invalid characters"
+          ),
+
+        email: Yup.string()
+          .required("Email is required")
+          .email("Email is invalid"),
+        acceptTerms: Yup.bool().oneOf([true], "Accept Ts & Cs is required"),
+      })}
+ >
+{({
+            setFieldValue,
+            setFieldTouched,
+            values,
+            errors,
+            touched,
+          }) => (
+      <Form onChange={handleFormChange(values,errors)} className="flex flex-col ">
+
         <label
           htmlFor="firstName"
           className="text-gray-900 pb-2 text-base font-medium">
@@ -120,8 +147,8 @@ innerRef:ref
             <BsFillPersonFill className="z-[2]" />
           </span>
 
-          <input
-            {...getFieldProps("firstName")}
+          <Field
+            // {...getFieldProps("firstName")}
             // onChange={(e)=>console.log(e)}
             // value={formik.values.firstName}
 
@@ -153,8 +180,8 @@ innerRef:ref
             <BsFillPersonFill className="z-[2]" />
           </span>
 
-          <input
-            {...getFieldProps("lastName")}
+          <Field
+            // {...getFieldProps("lastName")}
             // onChange={formik.handleChange}
             // value={formik.values.lastName}
             name="lastName"
@@ -185,8 +212,8 @@ innerRef:ref
             <FaEnvelope className="z-[2]" />
           </span>
 
-          <input
-            {...getFieldProps("email")}
+          <Field
+            // {...getFieldProps("email")}
             //   onChange={formik.handleChange}
             //  value={formik.values.email}
             name="email"
@@ -207,12 +234,14 @@ innerRef:ref
             </div>
           )}
         </div>
+        </Form>)}
+        </Formik>
         <label
           htmlFor="phone"
           className="text-gray-900 pb-2 text-base font-medium">
           Phone
         </label>
-        <div className="flex relative mb-2 w-full shadow-sm">
+        <div className="flex relative my-2  w-full shadow-sm">
           <PhoneInput
             // {...getFieldProps("phone")}
             name="phone"
@@ -248,7 +277,7 @@ innerRef:ref
             </label>
           </div>
         </div>
-      </form>
+     
       {showReturnDetails && <ReturnContact />}
     </div>
   );

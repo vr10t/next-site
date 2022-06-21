@@ -232,12 +232,12 @@ export default function Summary(props, children) {
     setData(data)
   }
   return (
-    <div className="flex fixed lg:sticky overflow-hidden  lg:top-0 lg:self-end lg:right-0 lg:overflow-auto w-screen h-screen lg:h-full bg-clip-content bg-gray-100 shadow-md lg:rounded-sm lg:w-[32rem]">
-      <div className="overflow-auto lg:h-fit py-24 w-full lg:mt-2 lg:max-w-lg">
-      <div className="flex  top-10 bg-gray-100 w-full lg:w-[32rem] self-center h-20   justify-center mb-4 text-3xl font-bold  text-gray-800 lg:my-10  ">
+    <div className="flex fixed lg:sticky overflow-hidden bg-fixed lg:top-0 lg:self-end lg:right-0 lg:overflow-auto w-screen h-screen lg:h-full bg-clip-content bg-gray-100 shadow-md lg:rounded-sm lg:w-[32rem]">
+      <div className="overflow-auto ovescroll-none  lg:h-fit pb-32 bg-fixed py-20 lg:pt-24 lg:pb-24 w-full lg:mt-2 lg:max-w-lg">
+      <div className="flex ovescroll-none top-10 bg-gray-100 w-full lg:w-[32rem] self-center h-20   justify-center mb-4 text-3xl font-bold  text-gray-800 lg:my-10  ">
             <p className="self-center">Summary</p>
           </div>
-        <div className="">
+        <div className="bg-fixed overscroll-none">
           
           {data.return && (
             <div className="flex justify-between m-auto my-4 w-5/6 h-full">

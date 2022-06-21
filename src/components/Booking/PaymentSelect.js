@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Listbox } from "@headlessui/react";
 import { FaCheck } from "@react-icons/all-files/fa/FaCheck";
 import { FaMoneyBill } from "@react-icons/all-files/fa/FaMoneyBill";
@@ -23,13 +23,33 @@ const methods = [
 ];
 
 export default function PaymentSelect() {
+  const renders = useRef(0)
   const { data,setData } = useAppContext();
   const [state,updateState]= useState(false)
   const [selectedMethod, setSelectedMethod] = useState(methods[0]);
-
+useEffect(()=>{
+  if(renders.current<=1){
+    console.log(eval("data.payment"),"evaling");
+  if(data.payment){
+    console.log("data.payment",data.payment,"selectedMethod",selectedMethod);
+    selectedMethod.name=data.payment
+  setSelectedMethod(selectedMethod)
+  }
+  }
+  
+  
+},[data])
   useEffect(() => {
-    setPaymentMethod()
+    if(renders.current>1){
+      console.log("if");
+      setPaymentMethod()
     setData(data)
+    }
+    else{
+      console.log("else");
+      renders.current++
+    }
+    
   }, [selectedMethod]);
  
   function setPaymentMethod(){

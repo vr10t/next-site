@@ -11,6 +11,7 @@ export default function AutocompleteInput(props){
                   );
                   clearSuggestions();
                 }}
+                
                 shouldFetchSuggestions={props.shouldFetchSuggestions}
                 searchOptions={{
                   componentRestrictions: { country: "gb" },
@@ -22,7 +23,7 @@ export default function AutocompleteInput(props){
                   getSuggestionItemProps,
                   loading,
                 }) => (
-                  <div>
+                  <div >
                     <input
                      
                       {...getInputProps({
@@ -36,7 +37,7 @@ export default function AutocompleteInput(props){
                       })}
                     />
 
-                    <div className="absolute bg-gray-50 z-[999] w-auto max-w-[12rem] xs:max-w-[15rem] overflow-auto ">
+                    <div className="relative top-0 max-h-[10rem] bg-gray-50 z-[999] w-auto max-w-[12rem] xs:max-w-[15rem] overflow-auto ">
                       {loading && <div>Loading...</div>}
                       {suggestions.map((suggestion) => {
                         let className = suggestion.active
@@ -52,7 +53,7 @@ export default function AutocompleteInput(props){
                               backgroundColor: "rgb(249 250 251)",
                               cursor: "pointer",
                             };
-                        let key = suggestion.id;
+                        let key = 1;
                         return (
                           <div
                             {...getSuggestionItemProps(suggestion, {
