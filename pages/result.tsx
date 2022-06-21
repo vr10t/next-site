@@ -8,10 +8,12 @@ import ClearCart from '../src/components/ClearCart';
 
 import { fetchGetJSON } from '../utils/api-helpers';
 import useSWR from 'swr';
+import { useAppContext } from '../src/context/state';
+import {cancelBooking} from "../utils/supabase-helpers"
 
 const ResultPage: NextPage = () => {
   const router = useRouter();
-
+const {bookingData,setData}= useAppContext()
   // Fetch CheckoutSession from static page via
   // https://nextjs.org/docs/basic-features/data-fetching#static-generation
   const { data, error } = useSWR(
@@ -21,7 +23,11 @@ const ResultPage: NextPage = () => {
     fetchGetJSON
   );
 
-  if (error) return <div>failed to load</div>;
+  if (error) {
+    setData(bookingData)
+    let id = bookingData.id
+cancelBooking(id)
+  };
 
   return (
     <Layout title="Checkout Payment Result | Next.js + TypeScript Example">

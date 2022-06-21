@@ -28,6 +28,7 @@ import Service from "../src/components/Booking/Service";
 import getStripe from "../utils/getStripe";
 import { fetchPostJSON } from "../utils/api-helpers";
 import {
+  cancelBooking,
   getBookings,
   handleSignup,
   handleSubmitBooking,
@@ -101,6 +102,7 @@ export default function Booking() {
     destination: data.destination,
     passengers: data.passengers,
     date: data.date,
+    time:data.time,
     distance: data.distance,
     duration: data.duration,
     service: data.service,
@@ -377,10 +379,18 @@ setReturnServiceSelected(data.return_service)
  
   function handleBooking() {
     
-    handleSubmitBooking(data).then((res) => {
-      console.log(res);
-    });
-    // handleRedirectToCheckout();
+    handleSubmitBooking(data)
+    .then((res) => {
+      data.id=res[0].id
+      console.log(res[0].id);
+     
+     })
+      
+    
+    .then(
+       handleRedirectToCheckout()
+    )
+   
   }
 
   function handleClosePopup(e) {
@@ -411,10 +421,7 @@ setReturnServiceSelected(data.return_service)
       }
     }
   }
-  function handleShowSummary(){
-    data.showSummary=!data.showSummary
-    setShowSummary(data.showSummary)
-  }
+ 
 
   return (
     <>
@@ -456,7 +463,7 @@ setReturnServiceSelected(data.return_service)
 
             <div className="lg:hidden  z-[21] h-20 fixed bottom-0 left-0  flex justify-center max-w-screen w-screen   bg-gray-100 ">
               <div
-                onClick={handleShowSummary}
+                onClick={()=>setShowSummary(!showSummary)}
                 className={summaryClassNames}>
                 <FaAngleDown />
               </div>
