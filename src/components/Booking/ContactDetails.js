@@ -264,7 +264,7 @@ export default function ContactDetails(props) {
             </div>
           )}
         </div>
-        <div className="flex py-2 items-center justify-between">
+       {data.return && <div className="flex py-2 items-center justify-between">
           <div className="gap-1 items-center flex">
             <Checkbox
               onClick={handleCheckboxClick}
@@ -276,7 +276,7 @@ export default function ContactDetails(props) {
               Different contact information on return?
             </label>
           </div>
-        </div>
+        </div>}
      
       {showReturnDetails && <ReturnContact />}
     </div>

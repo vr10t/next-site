@@ -46,7 +46,7 @@ export default function DateSelect() {
   }
   return (
     <Listbox  value={selectedMethod} onChange={setSelectedMethod}>
-      <Listbox.Button className="bg-gray-100 flex items-center justify-between w-80 px-8 text-base text-gray-800 rounded-r-lg h-10">
+      <Listbox.Button className="bg-gray-100 shadow-md flex items-center justify-between w-80 px-4 text-base text-gray-800 rounded-r-lg h-10">
         <div className="text-left self-center grow">{selectedMethod.name}</div>
 
         {}
@@ -54,7 +54,7 @@ export default function DateSelect() {
       </Listbox.Button>
       <Listbox.Options
         style={{ borderRadius: "10px" }}
-        className="absolute mt-10 ml-10  bg-gray-100 w-72 border-[2px] py-1 border-t-0  border-gray-200 rounded-b-2xl">
+        className="absolute mt-10 ml-10  bg-gray-100 w-[17.6rem] border-[2px] py-1 border-t-0  border-gray-200 rounded-b-2xl">
         {methods.map((method) => (
           <Listbox.Option
             className=" "

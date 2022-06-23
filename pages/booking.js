@@ -445,7 +445,7 @@ setReturnServiceSelected(data.return_service)
           className={`${
             showSummary ? "h-0" : ""
           } mt-10 bg-gray-100 w-full lg:w-1/2 mx-auto h-32 flex items-center justify-center lg:justify-start  z-[7] text-4xl  font-medium text-center text-gray-800`}>
-          <p className="z-20">Youre almost there!</p>
+          <p className="z-20">You're almost there!</p>
         </div>
         <div
           className={`${
@@ -509,7 +509,7 @@ setReturnServiceSelected(data.return_service)
               />
             </form>
             <>
-              <div className="flex py-2 items-center justify-between">
+              {data.return && <div className="flex py-2 items-center justify-between">
                 <div className="gap-1 items-center flex">
                   <Checkbox
                     onClick={handleCheckboxClick}
@@ -522,7 +522,7 @@ setReturnServiceSelected(data.return_service)
                   </label>
                 </div>
               </div>
-
+}
               {showReturnServices && (
                 <form onClick={handleSelectReturnService} className="">
                   <div className="w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
@@ -602,42 +602,7 @@ setReturnServiceSelected(data.return_service)
                 <PaymentSelect />
               </div>
             </section>
-            {
-              <section>
-                <div className="w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
-                  RETURN
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex gap-1 items-center">
-                    <Checkbox
-                      onClick={handleCheckboxClick}
-                      id="different_pickup"
-                    />
-                    <label
-                      className="self-center text-base text-gray-900"
-                      htmlFor="different_pickup">
-                      Different pick-up address on return?
-                    </label>
-                  </div>
-                  <div className="flex gap-1 items-center">
-                    <Checkbox
-                      onClick={handleCheckboxClick}
-                      id="different_dropoff"
-                    />
-                    <label htmlFor="different_dropoff">
-                      Different drop-off address on return?
-                    </label>
-                  </div>
-                </div>
-                {differentPickup && (
-                  <input
-                    type="text"
-                    value={returnLocation}
-                    onChange={(e) => setReturnLocation(e.target.value)}
-                  />
-                )}
-              </section>
-            }
+            
           </div>
           <div className="hidden sticky lg:flex float-right ">{mapsLoaded && (
                 <Summary onClick={handleBooking} disabled={!canSubmit} />

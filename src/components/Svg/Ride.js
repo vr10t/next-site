@@ -1,12 +1,11 @@
 export default function Ride() {
   return (
-    <svg
+    <svg className="w-80 h-32 self-center mt-20 xs:mt-32 sm:hidden"
       xmlns="http://www.w3.org/2000/svg"
       data-name="Layer 1"
-      width="918.58215"
-      height="432.0506"
+      
       viewBox="0 0 918.58215 432.0506"
-      xmlns:xlink="http://www.w3.org/1999/xlink">
+      >
       <path
         d="M325.10061,540.37506a10.22114,10.22114,0,0,0-10.20953,10.20973v23.88568a10.22114,10.22114,0,0,0,10.20953,10.20973h12.94974a10.22114,10.22114,0,0,0,10.20953-10.20973V550.58479a10.22114,10.22114,0,0,0-10.20953-10.20973Z"
         transform="translate(-140.70892 -233.9747)"

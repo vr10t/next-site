@@ -7,12 +7,13 @@ import promo6 from "../../../public/promo-6.webp"
 export default function Welcome() {
   return (
     <div id="about" className="max-w-screen bg-gray-100">
+    
       <div className="flex flex-col justify-center">
-        <hr></hr>
-        <h1 className="relative text-gray-900 px-4 md:ml-10 mt-12  pt-20 font-bold text-4xl sm:text-5xl  ">
+        
+        <p className="relative text-gray-900 px-4 md:ml-10 mt-12  font-bold text-4xl sm:text-5xl  ">
           About us...
           
-        </h1>
+        </p>
       </div>
 
       {/* <div className="h-20 bg-gray-50"></div> */}
@@ -22,17 +23,17 @@ export default function Welcome() {
           <Image className="rounded-xl" src={promo6} alt="..." width={1000} height={1300} />
         </div>
         <div className="max-w-screen md:ml-4  w-fit lg:w-1/2 lg:justify-end">
-          <h1 className="mb-10 text-3xl xl:text-center text-sky-700 font-bold tracking-tight sm:text-4xl">
+          <p className="mb-10 text-3xl xl:text-center text-sky-700 font-bold tracking-tight sm:text-4xl">
             {" "}
             Most Trusted Cab Taxi Company in Hemel Hempstead
-          </h1>
-          <h3 className="mb-4 text-xl text-gray-900 font-bold tracking-tight sm:text-2xl">
+          </p>
+          <div className="mb-4 text-xl text-gray-900 font-bold tracking-tight sm:text-2xl">
             <p>
               We offer a reliable and trustworthy minicab service all over
               London. Book online or call our friendly team on (123) 456-78-90 .
             </p>
-          </h3>
-          <h5 className="mb-4">
+          </div>
+          <div className="mb-4">
             <p className="mb-4 text-gray-700">
               We have over 100 experienced minicab drivers fully licenced and
               PCO registered covering all London Postcodes and London Airports.
@@ -46,7 +47,7 @@ export default function Welcome() {
               online or by phone your journey is important to us and we will
               endeavour to ensure that every trip made with us is satisfactory.
             </p>
-          </h5>
+          </div>
         </div>
       </div>
       <Services />
