@@ -24,10 +24,8 @@ async function handler(req, res) {
       return_date: body.return_date,
       flight_number: body.flight_number,
       distance: body.distance,
-      
+     
       service: body.service,
-    luggage: body.luggage,
-    return_luggage: body.return_luggage,
     return_time: body.return_time,
   plane_arriving_from: body.plane_arriving_from,
   airline_name:body.airline_name,

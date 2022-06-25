@@ -41,7 +41,7 @@ function App() {
       <Layout>
         <SignUp show={showSignup} />
         <SignIn show={showSignin} />
-        <Image className="absolute bg-contain" src="/bg-2.jpg" width={1920} height={1080} />
+        <Image className="absolute bg-contain" priority src="/bg-2.jpg" width={1920} height={1080} />
         
        {pageLoaded && <FormV3 />}<div className="shadow-md">
         <svg

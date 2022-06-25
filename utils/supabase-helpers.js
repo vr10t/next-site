@@ -46,9 +46,7 @@ export async function handleSubmitBooking(ev) {
       flight_number: ev.flight_number,
       distance: ev.distance,
       
-      service: ev.service,
-    luggage: ev.luggage,
-    return_luggage: ev.return_luggage,
+      service: ev.service, 
     return_time: ev.return_time,
   plane_arriving_from: ev.plane_arriving_from,
   airline_name:ev.airline_name,
