@@ -13,14 +13,7 @@ export default function MyAccount() {
   const phone = session?.user.phone;
   const id = session?.user.id
   console.log(initial);
-  const user = async ()=>{
-      
-   let prev =  await supabase.from("users").select("bookings").eq("id", "86ceef51-5d75-44e3-973e-68c6cbf507f1")
-   prev=prev?.body[0]?.bookings
-   console.log(prev);
-   await supabase.from("users").update({bookings:[prev + ","+"42"]}).eq("id", "86ceef51-5d75-44e3-973e-68c6cbf507f1").then(res=>console.log(res))
-  }
-  user()
+  
   const router = useRouter();
   useEffect(() => {
       console.log(session);

@@ -99,7 +99,7 @@ export default function admin() {
   }
   return (
      <>
-    {session.user.id==="86ceef51-5d75-44e3-973e-68c6cbf507f1" && <div className="h-full px-4 overflow-scroll ">
+    {session?.user.id==="86ceef51-5d75-44e3-973e-68c6cbf507f1" && <div className="h-full px-4 overflow-scroll ">
    { onRowClick()}
       <Table
         sticky

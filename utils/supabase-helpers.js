@@ -32,6 +32,14 @@ export async function getBookings(){
 
     else{return error}
 }
+async function getBooking(){
+      
+  let prev =  await supabase.from("users").select("bookings").eq("id", "86ceef51-5d75-44e3-973e-68c6cbf507f1")
+  prev=prev?.body[0]?.bookings
+  console.log(prev);
+  await supabase.from("users").update({bookings:[prev + ","+"42"]}).eq("id", "86ceef51-5d75-44e3-973e-68c6cbf507f1").then(res=>console.log(res))
+ }
+
 export async function registerPublicUser(ev){
   const res = await fetch("/api/submit-booking", {
     body: JSON.stringify({ 
