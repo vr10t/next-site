@@ -15,7 +15,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useAppContext } from "../../context/state";
 import Map from "../Map.js";
-import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
+import { geocodeByAddress, getLatLng, } from "react-places-autocomplete";
 import { getURL } from "next/dist/shared/lib/utils";
 import { Loader } from "@googlemaps/js-api-loader";
 import styles from "./Form.module.scss";
@@ -49,6 +49,7 @@ function FormV3() {
     version: "weekly",
     libraries: ["places"],
   });
+  
   useEffect(() => {
     loader.load().then(() => {
       setMapsLoaded(true);
@@ -113,7 +114,7 @@ function FormV3() {
   }, [data]);
   useEffect(() => {
     setData(data);
-
+    
     setTimeout(() => {
       console.log(data);
     }, 1000);
@@ -258,7 +259,14 @@ function FormV3() {
     data.flight_number = "";
     setData(data);
   }
-
+  const center = { lat: 51.8822, lng: -0.4165 };
+  // Create a bounding box with sides ~10km away from the center point
+  const defaultBounds = {
+    north: center.lat + 0.02,
+    south: center.lat - 0.02,
+    east: center.lng + 0.02,
+    west: center.lng - 0.02,
+  };
   return (
     <div className="absolute top-0 bg-gradient-to-b from-sky-100 to-transparent h-full  z-[9]  justify-center mx-auto  w-full  py-4 ">
       {/* <div className="mx-auto  flex flex-col items-center mb-6 w-full h-full">
@@ -344,8 +352,12 @@ function FormV3() {
                     }}
                     shouldFetchSuggestions={shouldFetchOriginSuggestions}
                     searchOptions={{
+                      bounds:defaultBounds,
+                      strictBounds:true,
                       componentRestrictions: { country: "gb" },
-                      fields: ["formatted_address"],
+                      fields: ["address_components","geometry"],
+                      // types:["address"]
+                     
                     }}>
                     {({
                       getInputProps,
@@ -381,7 +393,7 @@ function FormV3() {
                                   backgroundColor: "rgb(249 250 251)",
                                   cursor: "pointer",
                                 };
-                            let key = suggestion.id;
+                            let key = suggestion.placeId;
                             return (
                               <div
                                 {...getSuggestionItemProps(suggestion, {
@@ -389,10 +401,12 @@ function FormV3() {
                                   style,
                                   key,
                                 })}>
-                                <span>{suggestion.description}</span>
+                                <span key={suggestion.description}>{suggestion.description} {console.log(suggestion)}</span>
+                                
                               </div>
                             );
                           })}
+                         {/* { suggestions &&<p className="">Powered by Google</p>} */}
                         </div>
                       </div>
                     )}
@@ -443,8 +457,11 @@ function FormV3() {
                     debounce={200}
                     shouldFetchSuggestions={shouldFetchDestinationSuggestions}
                     searchOptions={{
+                      bounds:defaultBounds,
+                      strictBounds:true,
                       componentRestrictions: { country: "gb" },
-                      fields: ["formatted_address"],
+                      fields: ["address_components","geometry"],
+                      types:["address"]
                     }}>
                     {({
                       getInputProps,

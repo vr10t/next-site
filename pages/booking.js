@@ -173,13 +173,12 @@ export default function Booking() {
   }, [data]);
 
   function savelocalStorage() {
-    setShowPopup(true);
-    if (window.sessionStorage.getItem("shouldUsePreviousData")) {
-      setShowPopup(false);
-      setContextDataToLocalStorageData();
-    }
-    if (shouldUsePreviousData) {
-      setShowPopup(false);
+   
+    
+      // setContextDataToLocalStorageData();
+    
+    if (!data.distance) {
+      // setShowPopup(false);
       setContextDataToLocalStorageData();
     } else {
       setLocalStorageToBookingDataVar();
@@ -362,6 +361,7 @@ export default function Booking() {
   };
 
   function handleBooking() {
+  !session &&  handleSignup({first_name:data.first_name , last_name:data.last_name,email:data.email,phone:data.phone}).then(
     handleSubmitBooking(data)
       .then((res) => {
         if (res[0].id){
@@ -382,7 +382,7 @@ export default function Booking() {
           setBookingError(res)
         }
       })
-
+    )
       
   }
 
@@ -441,13 +441,13 @@ export default function Booking() {
             </Alert>
           </div>
         )}
-        {showPopup && (
+        {/* {showPopup && (
           <div
             onClick={handleClosePopup}
             className="fixed z-[9999] flex flex-col items-center align-middle  overscroll-none h-screen w-screen bg-black/90">
             <Popup onClick={handleRedirectToBooking} />
           </div>
-        )}
+        )} */}
 
         <div
           className={`${
@@ -565,6 +565,14 @@ export default function Booking() {
                       returnServiceSelected === "SelectReturn" ? true : false
                     }
                   />
+                   <Service
+                name="MPV"
+                for="MPV"
+                image="MPV"
+                passengers="5"
+                luggage="4"
+                selected={serviceSelected === "MPV" ? true : false}
+              />
                   <Service
                     name="Bus"
                     for="BusReturn"

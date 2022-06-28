@@ -2,17 +2,17 @@ import { supabase } from "../../utils/supabaseClient";
 import { nanoid } from "nanoid";
 export default async function registerUser(req, res) {
   // destructure the e-mail and password received in the request body.
-  const { name, email, phone } = req.body;
+  const { first_name, last_name, email, phone } = req.body;
 
   //make a SignUp attempt to Supabase and
   // capture the user (on success) and/or error.
 
-  let { user, error } = await supabase.auth.signUp(
+  const { user, error } = await supabase.auth.signUp(
     {email: email
       ,
       password:nanoid()
     },
-    { data: {name: name , phone: phone } }
+    { data: {first_name: first_name ,last_name: last_name, phone: phone } }
   );
   // Send a 400 response if something went wrong
   if (error) {

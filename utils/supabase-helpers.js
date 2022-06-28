@@ -6,7 +6,8 @@ export async function handleSignup(ev) {
   console.log(ev);
   const res = await fetch("/api/register", {
     body: JSON.stringify({
-      name: ev.name,
+      first_name: ev.first_name,
+      last_name: ev.last_name,
       email: ev.email,
       phone: ev.phone,
     }),
@@ -16,8 +17,13 @@ export async function handleSignup(ev) {
     method: "POST",
   });
 
-  const { user } = await res.json();
-  return user;
+  const { data,error } = await res.json();
+  if(error){
+    return error
+  }
+  if(data){
+    return data
+  }
 }
 export async function getBookings(){
   const { data,error}=await supabase.from("bookings").select()

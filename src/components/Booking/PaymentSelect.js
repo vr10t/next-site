@@ -40,7 +40,7 @@ useEffect(()=>{
   
 },[data])
   useEffect(() => {
-    if(renders.current>1){
+    if(renders.current>=1){
       console.log("if");
       setPaymentMethod()
     setData(data)

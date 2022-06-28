@@ -24,6 +24,7 @@ export  function handleGetDistance(location, destination,callback) {
                 travelMode: google.maps.TravelMode.DRIVING,
                 unitSystem: google.maps.UnitSystem.IMPERIAL,
                 avoidTolls: true,
+                
               },
               callback
             ) ;
@@ -32,7 +33,7 @@ export  function handleGetDistance(location, destination,callback) {
         })
         
         .catch((e) => {
-          console.log(e);
+          console.error(e);
         });
     
     

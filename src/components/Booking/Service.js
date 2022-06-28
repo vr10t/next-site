@@ -40,6 +40,7 @@ export default function Service(props) {
       <div className="w-20 min-w-max h-20 sm:py-5 sm:w-32 sm:h-32">
         <div className="flex items-center w-32 h-20">
           <Image
+          
             src={`/${props.image}.webp`}
             width={1920}
             height={1080}
