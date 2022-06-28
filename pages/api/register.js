@@ -10,7 +10,7 @@ export default async function registerUser(req, res) {
   const { user, error } = await supabase.auth.signUp(
     {email: email
       ,
-      password:nanoid()
+      password:req.body.password||nanoid()
     },
     { data: {first_name: first_name ,last_name: last_name, phone: phone } }
   );

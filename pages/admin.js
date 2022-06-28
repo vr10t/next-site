@@ -4,8 +4,10 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { getBookings } from "../utils/supabase-helpers";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useAuthContext } from "../src/context/state";
 import Table from "rc-table";
 export default function admin() {
+  const session = useAuthContext()
   const [bookings, setBookings] = useState([]);
   const bookingsHandler = async () =>
     await getBookings().then((res) => setBookings(res));
@@ -96,8 +98,8 @@ export default function admin() {
       
   }
   return (
-      
-    <div className="h-full px-4 overflow-scroll ">
+     <>
+    {session.user.id==="86ceef51-5d75-44e3-973e-68c6cbf507f1" && <div className="h-full px-4 overflow-scroll ">
    { onRowClick()}
       <Table
         sticky
@@ -110,6 +112,6 @@ export default function admin() {
           onClick: onRowClick.bind(null, record, index),
         })}
         className=" w-[2000px] bg-gray-100"></Table>
-    </div>
+    </div>}</> 
   );
 }

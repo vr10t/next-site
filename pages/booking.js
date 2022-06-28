@@ -135,7 +135,19 @@ export default function Booking() {
     returnInstructions,
     returnPassengers,
   ]);
+  useEffect(()=>{
+if(session){
+  
+  data.first_name = session?.user.user_metadata?.firstName
+  data.last_name= session?.user.user_metadata?.lastName
+  data.phone = session?.user.phone;
+  data.email = session?.user.email;
+  setData(data)
+}
+  },[session])
   useEffect(() => {
+    console.log(session);
+
     data.showSummary = false;
     console.log("dataaaa", data);
 

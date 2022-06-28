@@ -2,9 +2,10 @@ import Link from "next/link";
 import { useState } from "react";
 import { FaBars } from "@react-icons/all-files/fa/FaBars";
 import {Button} from "flowbite-react"
+import { useAuthContext } from "../../context/state";
 export default function Navbar() {
   const [expanded, setExpanded] = useState(false);
-
+  const session = useAuthContext()
   function handleClick() {
     setExpanded(!expanded);
   }
@@ -40,7 +41,7 @@ export default function Navbar() {
             </Link>
           </nav>
 
-          <div className="hidden justify-center space-x-4 grow md:flex">
+          {session?<div>{session.user.email}</div>: <div className="hidden justify-center space-x-4 grow md:flex">
             <Link href="/signin">
               <a className="px-5 py-2 font-medium text-gray-800 no-underline bg-gray-50 text-md hover:text-gray-500">
                 Log in
@@ -51,7 +52,7 @@ export default function Navbar() {
                 Sign up
               </a>
             </Link>
-          </div>
+          </div>}
 
           <div className="md:hidden ">
             <button

@@ -32,6 +32,29 @@ export async function getBookings(){
 
     else{return error}
 }
+export async function registerPublicUser(ev){
+  const res = await fetch("/api/submit-booking", {
+    body: JSON.stringify({ 
+      first_name: ev.first_name,
+      last_name: ev.last_name,
+      email: ev.email,
+      phone: ev.phone,
+      booking_id:ev.booking_id
+     }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+  });
+
+  const { data,error } = await res.json();
+  if(error){
+    return error
+  }
+  if(data){
+    return data
+  }
+}
 export async function handleSubmitBooking(ev) {
   console.log(ev);
   const res = await fetch("/api/submit-booking", {
