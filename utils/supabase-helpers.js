@@ -1,4 +1,4 @@
-import { supabase } from "./supabaseClient";
+import { supabase, getServiceSupabase } from "./supabaseClient";
 export function ev() {
   supabase.storage;
 }
@@ -17,50 +17,96 @@ export async function handleSignup(ev) {
     method: "POST",
   });
 
-  const { data,error } = await res.json();
-  if(error){
-    return error
+  const { data, error } = await res.json();
+  if (error) {
+    return error;
   }
-  if(data){
-    return data
+  if (data) {
+    return data;
   }
 }
-export async function getBookings(){
-  const { data,error}=await supabase.from("bookings").select()
-  if(data){
-    return data}
-
-    else{return error}
+export async function getBookings(which) {
+  const { data, error } = await supabase.from("bookings").select();
+  if (data) {
+    return data;
+  } else {
+    return error;
+  }
 }
-async function getBooking(){
-      
-  let prev =  await supabase.from("users").select("bookings").eq("id", "86ceef51-5d75-44e3-973e-68c6cbf507f1")
-  prev=prev?.body[0]?.bookings
-  console.log(prev);
-  await supabase.from("users").update({bookings:[prev + ","+"42"]}).eq("id", "86ceef51-5d75-44e3-973e-68c6cbf507f1").then(res=>console.log(res))
- }
+export async function getBookingById(id) {
+  const { data, error } = await supabase.from("bookings").select().eq("id",id);
+  if (data) {
+    return data;
+  } else {
+    return error;
+  }
+}
+export async function getBookingsForUser(uid) {
+  const { data, error } = await supabase
+    .from("users")
+    .select("bookings")
+    .eq("user_id", uid);
 
-export async function registerPublicUser(ev){
-  const res = await fetch("/api/submit-booking", {
-    body: JSON.stringify({ 
+  if (error) return error;
+  if (data) {
+    return data;
+  }
+}
+export async function updateUserBookings(uid, bid, prev) {
+  const { data, error } = await supabase
+    .from("users")
+    .update({ bookings: [prev + "," + bid] })
+    .eq("user_id", uid);
+  if (error) return error;
+  if (data) {
+    return data;
+  }
+}
+export async function deleteUserBooking(uid, bid, prev) {
+  const index = prev.findIndex((val)=>val===bid)
+  prev.splice(index,1)
+  const { data, error } = await supabase
+    .from("users")
+    .update({ bookings: [prev] })
+    .eq("user_id", uid);
+  if (error) return error;
+  if (data) {
+    return data;
+  }
+}
+export async function firstUserBooking(uid, bid) {
+  const { data, error } = await supabase
+    .from("users")
+    .update({ bookings: [bid] })
+    .eq("user_id", uid);
+  if (error) return error;
+  if (data) {
+    return data;
+  }
+}
+
+
+export async function registerPublicUser(ev) {
+  const res = await fetch("/api/register-user", {
+    body: JSON.stringify({
       first_name: ev.first_name,
       last_name: ev.last_name,
       email: ev.email,
       phone: ev.phone,
-      booking_id:ev.booking_id
-     }),
+      booking_id: ev.booking_id,
+    }),
     headers: {
       "Content-Type": "application/json",
     },
     method: "POST",
   });
 
-  const { data,error } = await res.json();
-  if(error){
-    return error
+  const { data, error } = await res.json();
+  if (error) {
+    return error;
   }
-  if(data){
-    return data
+  if (data) {
+    return data;
   }
 }
 export async function handleSubmitBooking(ev) {
@@ -82,13 +128,13 @@ export async function handleSubmitBooking(ev) {
       return_date: ev.return_date,
       flight_number: ev.flight_number,
       distance: ev.distance,
-      
-      service: ev.service, 
-    return_time: ev.return_time,
-  plane_arriving_from: ev.plane_arriving_from,
-  airline_name:ev.airline_name,
-    return_location: ev.return_location,
-    return_destination: ev.return_destination,
+
+      service: ev.service,
+      return_time: ev.return_time,
+      plane_arriving_from: ev.plane_arriving_from,
+      airline_name: ev.airline_name,
+      return_location: ev.return_location,
+      return_destination: ev.return_destination,
     }),
     headers: {
       "Content-Type": "application/json",
@@ -96,19 +142,22 @@ export async function handleSubmitBooking(ev) {
     method: "POST",
   });
 
-  const { data,error } = await res.json();
-  if(error){
-    return error
+  const { data, error } = await res.json();
+  if (error) {
+    return error;
   }
-  if(data){
-    return data
+  if (data) {
+    return data;
   }
-  
 }
-export async function cancelBooking(id){
-  const { data,error}=await supabase.from("bookings").delete().match({id:id})
-   if(data){
-    return data}
-
-    else{return error.message}
+export async function cancelBooking(id) {
+  const { data, error } = await supabase
+    .from("bookings")
+    .delete()
+    .match({ id: id });
+  if (data) {
+    return data;
+  } else {
+    return error.message;
+  }
 }

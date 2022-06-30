@@ -29,9 +29,13 @@ import getStripe from "../utils/getStripe";
 import { fetchPostJSON } from "../utils/api-helpers";
 import {
   cancelBooking,
+  firstUserBooking,
   getBookings,
+  getBookingsForUser,
   handleSignup,
   handleSubmitBooking,
+  registerPublicUser,
+  updateUserBookings,
 } from "../utils/supabase-helpers";
 import { useRouter } from "next/router";
 import { handleGetDistance as distanceMatrix } from "../utils/google-helpers";
@@ -79,7 +83,7 @@ export default function Booking() {
   const [paymentMethod, setPaymentMethod] = useState(null);
   const [canSubmit, setCanSubmit] = useState(false);
   const [bookingError, setBookingError] = useState("");
-  const [successAlert, setSuccessAlert] = useState('');
+  const [successAlert, setSuccessAlert] = useState("");
   const [dataError, setDataError] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [shouldUsePreviousData, setShouldUsePreviousData] = useState(false);
@@ -93,6 +97,7 @@ export default function Booking() {
   const [returnInstructions, setReturnInstructions] = useState("");
   const [showReturnServices, setShowReturnServices] = useState(false);
   const renders = useRef(0);
+  let user_id;
   let dataErrorDiv = (
     <div className="fixed overscroll-none w-screen mx-auto mt-1/2 flex pt-64 font-semibold tracking-wide p-8 h-screen z-[99] bg-black/95 text-pink-500 text-4xl">
       No booking data was found, redirecting...
@@ -135,18 +140,25 @@ export default function Booking() {
     returnInstructions,
     returnPassengers,
   ]);
-  useEffect(()=>{
-if(session){
-  
-  data.first_name = session?.user.user_metadata?.firstName
-  data.last_name= session?.user.user_metadata?.lastName
-  data.phone = session?.user.phone;
-  data.email = session?.user.email;
-  setData(data)
-}
-  },[session])
+  useEffect(() => {
+    if (session) {
+      // data.first_name = session?.user.user_metadata?.firstName;
+      // data.last_name = session?.user.user_metadata?.lastName;
+      // data.phone = session?.user.phone;
+      data.email = session?.user.email;
+      data.first_name="asffsa"
+      data.last_name="sdasf"
+      data.phone="0977898988"
+
+      data.user_id = session?.user.id;
+      setData(data);
+      console.log(data);
+      return
+    }
+  }, [session, user_id]);
   useEffect(() => {
     console.log(session);
+    console.log(data.user_id);
 
     data.showSummary = false;
     console.log("dataaaa", data);
@@ -185,10 +197,8 @@ if(session){
   }, [data]);
 
   function savelocalStorage() {
-   
-    
-      // setContextDataToLocalStorageData();
-    
+    // setContextDataToLocalStorageData();
+
     if (!data.distance) {
       // setShowPopup(false);
       setContextDataToLocalStorageData();
@@ -371,31 +381,98 @@ if(session){
     }
     //
   };
-
+  
+function submitBoookingForUser(){
+  handleSubmitBooking(data).then((res) => {
+    if (res[0].id) {
+      const booking_id = res[0].id.toString();
+      console.log(res, "booking");
+      data.id = booking_id;
+    
+      if (data.payment === "Card") {
+    
+        getBookingsForUser(data.user_id).then((res) => {
+          console.log(res,"user bookings");
+          let prev = res[0].bookings
+          if (res) {
+            console.log(prev, "prev");
+            updateUserBookings(data.user_id,booking_id,prev).then(res=>console.log(res,"updated bookings with prev"))
+            // firstUserBooking(data.user_id,booking_id).then(res=>console.log(res,"updated bookings without prev"))
+          }
+          else{
+            firstUserBooking(data.user_id,booking_id).then(res=>console.log(res,"updated bookings without prev"))
+          }
+        });
+      
+       
+        // handleRedirectToCheckout()
+      
+    }
+    if (data.payment === "Cash") {
+      setSuccessAlert(
+        "Please click the link in your inbox to confirm your booking."
+      );
+    }
+    
+    }
+    else {
+      // throw new Error(res)
+      setBookingError(res);
+    }
+  })
+  
+}
   function handleBooking() {
-  !session &&  handleSignup({first_name:data.first_name , last_name:data.last_name,email:data.email,phone:data.phone}).then(
-    handleSubmitBooking(data)
-      .then((res) => {
-        if (res[0].id){
-          
-        console.log(res, "response");
-        data.id = res[0].id;
-        console.log(res[0].id);
-        if(data.payment==="Card"){
-          handleRedirectToCheckout()
-        }
-        if(data.payment==="Cash"){
-          setSuccessAlert("Please click the link in your inbox to confirm your booking.")
-        }
-        
-        }
-        else{
+if (session){
+  submitBoookingForUser()
+  
+}
+
+
+    else{
+    handleSignup({
+      first_name: data.first_name,
+      last_name: data.last_name,
+      email: data.email,
+      phone: data.phone,
+    }).then(
+      handleSubmitBooking(data).then((res) => {
+        if (res[0].id) {
+          const booking_id = res[0].id.toString();
+          console.log(res, "response");
+          data.id = booking_id;
+          console.log(booking_id);
+          if (data.payment === "Card") {
+            if (session) {
+              getBookingsForUser(data.user_id).then((res) => {
+                console.log(res);
+                let prev = res
+                if (!res) {
+                  updateUserBookings(data.user_id,prev).then(res=>console.log(res))
+                }
+              });
+            } else {
+              registerPublicUser({
+                first_name: data.first_name,
+                last_name: data.last_name,
+                email: data.email,
+                phone: data.phone,
+                booking_id: booking_id,
+              }).then((response) => console.log(response, "resasas"));
+              // handleRedirectToCheckout()
+            }
+          }
+          if (data.payment === "Cash") {
+            setSuccessAlert(
+              "Please click the link in your inbox to confirm your booking."
+            );
+          }
+        } else {
           // throw new Error(res)
-          setBookingError(res)
+          setBookingError(res);
         }
       })
-    )
-      
+    );}
   }
 
   function handleClosePopup(e) {
@@ -577,14 +654,14 @@ if(session){
                       returnServiceSelected === "SelectReturn" ? true : false
                     }
                   />
-                   <Service
-                name="MPV"
-                for="MPV"
-                image="MPV"
-                passengers="5"
-                luggage="4"
-                selected={serviceSelected === "MPV" ? true : false}
-              />
+                  <Service
+                    name="MPV"
+                    for="MPV"
+                    image="MPV"
+                    passengers="5"
+                    luggage="4"
+                    selected={serviceSelected === "MPV" ? true : false}
+                  />
                   <Service
                     name="Bus"
                     for="BusReturn"
@@ -599,7 +676,7 @@ if(session){
               )}
             </>
 
-            <section className="">
+            {!session&& <section className="">
               <div className="flex items-stretch w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
                 <p className="grow"> PASSENGER DETAILS</p>
                 <span className="flex self-center tracking-tight text-sm">
@@ -619,7 +696,7 @@ if(session){
                   </div>
                 </div>
               </div>
-            </section>
+            </section>}
             {data.flight_monitoring && (
               <>
                 <FlightMonitoring />

@@ -17,7 +17,7 @@ export default async function registerUser(req, res) {
   // Send a 400 response if something went wrong
   if (error) {
     console.warn(error.message)
-    return res.status(401).json({ error: error.message });}
+    return res.status(401).json( error );}
   // Send 200 success if there were no errors!
   // and also return a copy of the object we received from Supabase
   return res.status(200).json({ user: user });
