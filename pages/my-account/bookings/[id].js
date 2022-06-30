@@ -45,7 +45,7 @@ return <>
           <div  className="w-full h-screen  items-center bg-red-600 flex flex-col gap-4 pt-10 -z-20">
            
             <div className="">
-{data.date}{data.time}
+{/* {data.date}{data.time} */}
             </div>
           </div>
         </div>{" "}
