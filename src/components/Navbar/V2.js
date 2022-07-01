@@ -1,11 +1,26 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaBars } from "@react-icons/all-files/fa/FaBars";
 import {Button} from "flowbite-react"
 import { useAuthContext } from "../../context/state";
+import Initial from "../Account/Initial"
+import Dropdown from "../Account/Dropdown"
+import { getPublicUser } from "../../../utils/supabase-helpers";
+import { useRouter } from "next/router";
 export default function Navbar() {
   const [expanded, setExpanded] = useState(false);
+  const [showDropdown, setShowDropdown]=useState(false)
+  const [ userDetails,setUserDetails] = useState()
+  const router = useRouter()
   const session = useAuthContext()
+  const user_id=session?.user.id
+  useEffect(()=>{
+    session && getPublicUser(user_id).then(data=>setUserDetails(data))
+    console.log(userDetails);
+    console.log(router.asPath,"router as path");
+  },[session])
+ const fullName=userDetails &&userDetails[0]?.first_name + " " + userDetails[0]?.last_name 
+ console.log(fullName);
   function handleClick() {
     setExpanded(!expanded);
   }
@@ -41,8 +56,8 @@ export default function Navbar() {
             </Link>
           </nav>
 
-          {session?<div>{session.user.email}</div>: <div className="hidden justify-center space-x-4 grow md:flex">
-            <Link href="/signin">
+          {session?<div className="w-16 h-16"><Initial onClick={()=>setShowDropdown((showDropdown)=>!showDropdown)} text="5xl" /><Dropdown name={fullName} show={showDropdown}/></div>: <div className="hidden justify-center space-x-4 grow md:flex">
+              <Link href={`/signin?referrer=${router.asPath} `}>
               <a className="px-5 py-2 font-medium text-gray-800 no-underline bg-gray-50 text-md hover:text-gray-500">
                 Log in
               </a>

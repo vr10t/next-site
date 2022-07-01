@@ -13,6 +13,9 @@ import Image from "next/image";
 import { FaLock } from "@react-icons/all-files/fa/FaLock";
 import Link from "next/link";
 import { Alert } from "flowbite-react";
+import { useRouter } from "next/router";
+import { supabase } from "../utils/supabaseClient";
+
 
 
 export default function SignIn(props) {
@@ -23,11 +26,12 @@ export default function SignIn(props) {
   const [phoneError, setPhoneError] = useState("");
   const [loginError, setLoginError]= useState("")
   const [showReturnDetails, setShowReturnDetails] = useState(false);
+  const router = useRouter()
 //   const { data, setData } = useAppContext();
- 
- 
+ const referrer=router.query.referrer
+ console.log(referrer);
   useEffect(() => {
-   
+  
   }, [firstName, lastName, email, phone]);
   function handlePhoneError() {
     setPhoneError("");
@@ -45,25 +49,26 @@ export default function SignIn(props) {
       }
     }
   }
-  
+ 
+ 
   const handleSubmit = async (ev) => {
       console.log(ev);
     
-    const res = await fetch("/api/login", {
-      body: JSON.stringify({
-        email: ev.email,
-        password: ev.password,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-    })
+    // const res = await fetch("/api/login", {
+    //   body: JSON.stringify({
+    //     email: ev.email,
+    //     password: ev.password,
+    //   }),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   method: "POST",
+    // })
 
-    const {user, error} = await res.json()
-
-    if(user) router.push(`/`)
-    if (error) setLoginError(error)
+    const {user, error} = await supabase.auth.signIn({email:ev.email,password:ev.password})
+    if(user) router.push(referrer||"/")
+    if(user) console.log(user);
+    if (error) setLoginError(error.message)
   };
 
   return (<>

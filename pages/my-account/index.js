@@ -5,15 +5,16 @@ import Layout from "../../src/components/layout";
 import Sidebar from "../../src/components/Account/Sidebar";
 import { supabase } from "../../utils/supabaseClient";
 import { getBookings, getBookingsForUser } from "../../utils/supabase-helpers";
+import Initial from "../../src/components/Account/Initial";
 export default function MyAccount() {
   const session = useAuthContext();
-  const initial = session?.user.email.slice(0, 1);
+  
   const email = session?.user.email;
   const firstName = session?.user.user_metadata?.firstName
   const lastName = session?.user.user_metadata?.lastName
   const phone = session?.user.phone;
   const id = session?.user.id
-  console.log(initial);
+  
   
   const router = useRouter();
   useEffect(() => {
@@ -35,9 +36,7 @@ export default function MyAccount() {
         <div className="flex">
           <Sidebar />
           <div  className="w-full h-screen  items-center bg-red-600 flex flex-col gap-4 pt-10 -z-20">
-            <div className=" bg-gray-200 rounded-full h-32 w-32 flex justify-center items-center pb-2 text-black/80 font-medium  text-7xl">
-              {initial}
-            </div>
+            <Initial />
             <div className="">
 <p className="">{firstName }{lastName}</p>
 <p className="">{email}</p>

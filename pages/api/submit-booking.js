@@ -21,6 +21,7 @@ async function handler(req, res) {
       destination: body.destination,
       passengers: body.passengers,
       date: body.date,
+      time:body.time,
       return_date: body.return_date,
       flight_number: body.flight_number,
       distance: body.distance,

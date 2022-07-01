@@ -21,9 +21,10 @@ export function useAppContext() {
 }
 export function AuthWrapper({ children }) {
   const [session, setSession] = useState(null);
+ 
   useEffect(() => {
     setSession(supabase.auth.session());
-
+    console.log(session,"session");
     supabase.auth.onAuthStateChange((_event, session) => {
       console.log(_event);
       setSession(session);

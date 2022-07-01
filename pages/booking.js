@@ -681,7 +681,7 @@ if (session){
                 <p className="grow"> PASSENGER DETAILS</p>
                 <span className="flex self-center tracking-tight text-sm">
                   <p className=" mr-2  "> or </p>
-                  <Link href="/signin">
+                  <Link href="/signin?referrer=/booking">
                     <a className=" text-sky-600 hover:text-sky-400">Sign In</a>
                   </Link>
                 </span>

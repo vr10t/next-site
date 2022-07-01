@@ -52,6 +52,17 @@ export async function getBookingsForUser(uid) {
     return data;
   }
 }
+export async function getPublicUser(uid) {
+  const { data, error } = await supabase
+    .from("users")
+    .select()
+    .eq("user_id", uid);
+
+  if (error) return error;
+  if (data) {
+    return data;
+  }
+}
 export async function updateUserBookings(uid, bid, prev) {
   const { data, error } = await supabase
     .from("users")
@@ -63,6 +74,7 @@ export async function updateUserBookings(uid, bid, prev) {
   }
 }
 export async function deleteUserBooking(uid, bid, prev) {
+  //where prev is all user bookings
   const index = prev.findIndex((val)=>val===bid)
   prev.splice(index,1)
   const { data, error } = await supabase
@@ -160,4 +172,8 @@ export async function cancelBooking(id) {
   } else {
     return error.message;
   }
+}
+export async function signOut(){
+  const {error} = await supabase.auth.signOut()
+  return error
 }
