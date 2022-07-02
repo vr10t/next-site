@@ -1,11 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { GoogleMap, DirectionsService, DirectionsRenderer } from '@react-google-maps/api';
 import {throttle,debounce} from "throttle-debounce"
-const containerStyle = {
-  width: '400px',
-  height: '400px',
+import { Loader } from '@googlemaps/js-api-loader';
 
-};
 
 const center = {
   lat: -3.745,
@@ -13,13 +10,29 @@ const center = {
 };
 
 function Map(props) {
-  // const { isLoaded } = useJsApiLoader({
-  //   id: 'google-map-script',
-  //   googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY
-  // })
+
+  const containerStyle = {
+    width: props.width,
+    height: props.height,
+  
+  };
+ const [mounted,setMounted] = useState(false)
+ const [google,setGoogle] = useState(null)
+const loader = new Loader({
+  apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
+  version: "weekly",
+  libraries: ["places"],
+})
   const [response,setResponse]= React.useState(null)
   const [map, setMap] = React.useState(null)
   const count = React.useRef(0);
+  useEffect(()=>{
+    loader.load().then((res)=>{
+    setMounted(true)
+    setGoogle(res)
+  })
+
+  },[])
   const onLoad = React.useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds(center);
     map.fitBounds(bounds);
@@ -43,8 +56,8 @@ function Map(props) {
     }
   }
   const directionsCallback = React.useCallback( debounce(3000,callback,{atBegin:true}),[])
-  return (
-      <GoogleMap className="mx-auto"
+  return (<>
+      {mounted &&<GoogleMap className="mx-auto"
         mapContainerStyle={containerStyle}
         center={center}
         zoom={10}
@@ -100,7 +113,7 @@ function Map(props) {
             }
         </>
         
-      </GoogleMap>
+      </GoogleMap>}</>
   ) 
 }
 

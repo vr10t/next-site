@@ -10,7 +10,7 @@ export default function Sidebar(props) {
   const path2Active = "text-cyan-200 group-hover:text-cyan-300";
   const path2Inactive = " text-gray-300 group-hover:text-cyan-300"
   return (
-    <div className="min-h-screen  bg-gray-100 w-[3.35rem]">
+    <div className="min-h-screen z-[99] bg-gray-100 w-[3.35rem]">
       <div className=" min-h-screen w-[3.35rem] overflow-hidden border-r hover:w-56 hover:bg-gray-50 hover:shadow-lg">
         <div className="flex h-screen flex-col justify-between pt-2 pb-6">
           <div>
@@ -56,9 +56,9 @@ export default function Sidebar(props) {
                       fill="none">
                       <path
                         className={`fill-current ${path==="/my-account/bookings"?path1Active:path1Inactive} group-hover:text-cyan-600`}
-                        fill-rule="evenodd"
+                        fillRule="evenodd"
                         d="M2 6a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1H8a3 3 0 00-3 3v1.5a1.5 1.5 0 01-3 0V6z"
-                        clip-rule="evenodd"
+                        clipRule="evenodd"
                       />
                       <path
                         className={`fill-current ${path==="/my-account/bookings"?path2Active:path2Inactive}`}
@@ -82,9 +82,9 @@ export default function Sidebar(props) {
                     fill="currentColor">
                     <path
                       className="fill-current text-gray-600 group-hover:text-cyan-600"
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z"
-                      clip-rule="evenodd"
+                      clipRule="evenodd"
                     />
                     <path
                       className="fill-current text-gray-300 group-hover:text-cyan-300"
@@ -130,9 +130,9 @@ export default function Sidebar(props) {
                     />
                     <path
                       className="fill-current text-gray-600 group-hover:text-cyan-600"
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"
-                      clip-rule="evenodd"
+                      clipRule="evenodd"
                     />
                   </svg>
                   <span className="group-hover:text-gray-700">Finance</span>
@@ -150,9 +150,9 @@ export default function Sidebar(props) {
                 viewBox="0 0 20 20"
                 fill="currentColor">
                 <path
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                   d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                  clip-rule="evenodd"
+                  clipRule="evenodd"
                 />
               </svg>
               <span className="group-hover:text-gray-700">Settings</span>

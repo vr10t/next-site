@@ -160,51 +160,59 @@ export default function MyAccount() {
   bookings = response.filter((element) =>
     userBookings.includes(element.id.toString())
   );
-  function handleClick(ev){
-    
-router.push(`/my-account/bookings/${ev.target.id}`)
+  function handleClick(ev) {
+    router.push(`/my-account/bookings/${ev.target.id}`);
   }
   return (
     <>
       <Layout title="My Bookings">
-        <div className="flex ">
+        <div className="flex">
           <Sidebar />
-          <div className="w-full h-screen  items-center bg-red-600 flex flex-col gap-4 pt-10 z-20">
-            <div className="bg-white z-0 flex flex-col items-center w-full text-black">
+          <div className="flex z-20 flex-col gap-4 items-center pt-10 w-full h-screen bg-red-600">
+            <div className="flex z-0 flex-col items-center w-full text-black bg-white">
               {bookings.map((booking) => (
-                <div onClick={handleClick}
-                
-                
-                  className="group cursor-pointer hover:bg-sky-500 h-32 rounded-md w-5/6 bg-gray-100 my-2  py-4 px-2"
+                <div
+                  onClick={handleClick}
+                  className="px-2 py-4 my-2 w-5/6 h-32 bg-gray-100 rounded-md cursor-pointer group hover:bg-sky-500"
                   key={booking.id}
                   id={booking.id}>
-                  <div id={booking.id} className="peer flex mb-2">
+                  <div id={booking.id} className="flex mb-2 peer">
                     <BsCalendarFill
                       aria-hidden
-                      className="text-sky-500 self-center mr-2"
+                      className="self-center mr-2 text-sky-500"
                     />
                     {booking.date}
                     {", "}
                     {booking.time}
                   </div>
-                  {<div id={booking.id} className="flex flex-col justify-center"><div className="flex">
-                    <FaArrowRight
-                      aria-hidden
-                      className="text-sky-500 self-center "
-                    />{" "}
-                    <div id={booking.id} className="truncate w-11/12 text-gray-900 pl-2 flex">
-                      {booking.location}
+                  {
+                    <div
+                      id={booking.id}
+                      className="flex flex-col justify-center">
+                      <div className="flex">
+                        <FaArrowRight
+                          aria-hidden
+                          className="self-center text-sky-500"
+                        />{" "}
+                        <div
+                          id={booking.id}
+                          className="flex pl-2 w-11/12 text-gray-900 truncate">
+                          {booking.location}
+                        </div>
+                      </div>
+                      <div id={booking.id} className="flex">
+                        <FaArrowRight
+                          aria-hidden
+                          className="self-center text-sky-500"
+                        />{" "}
+                        <div
+                          id={booking.id}
+                          className="flex pl-2 w-11/12 text-gray-900 truncate">
+                          {booking.destination}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div id={booking.id} className="flex">
-                    <FaArrowRight
-                      aria-hidden
-                      className="text-sky-500 self-center "
-                    />{" "}
-                    <div id={booking.id} className="truncate w-11/12 text-gray-900 pl-2 flex">
-                      {booking.destination}
-                    </div>
-                  </div></div>}
+                  }
                 </div>
               ))}
             </div>
