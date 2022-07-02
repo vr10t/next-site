@@ -69,7 +69,7 @@ export default function handler() {
       <div className="flex">
         <Sidebar />
         <div className="w-full h-screen  items-center flex flex-col gap-4 pt-10 ">
-          <div className="bg-gray-200 flex flex-col items-start px-6 gap-2 py-5 h-full rounded-lg w-5/6">
+          <div className="bg-gray-200 flex flex-col items-start px-4 gap-2 py-5 h-full rounded-lg w-11/12 ">
             <div className="text-3xl  text-gray-900 font-medium tracking-tight">
               Your booking details
             </div>
@@ -77,13 +77,14 @@ export default function handler() {
               {date}{" "}
             </div>
             <span className="bg-black/20 w-5/6 h-[1px]"></span>
+            <div className="flex flex-col bg-gray-100 w-full px-4 py-4 rounded-lg">
             <Map
               width="100%"
               height="100px"
             origin={origin}
             destination={destination}
             shouldFetchDirections={true} />
-            <div className="flex my-10">
+            <div className="flex my-10 ">
               <div className="flex mt-2 pr-4 flex-col h-5/6">
                 <FaCircle className="mt-2 text-sky-500">.</FaCircle>
                 <div className="border-l-4 h-full self-center border-sky-600/20 border-dotted border-"></div>
@@ -100,7 +101,7 @@ export default function handler() {
                   {booking.destination}{" "}
                 </div>
               </div>
-            </div>
+            </div></div>
             <div className="flex justify-center gap-4 w-full">
               <button className="bg-sky-500 text-gray-50 py-2 px-2 rounded-lg text-lg w-full">Edit booking</button>
               <button className="bg-red-500 text-gray-50 py-2 px-2 rounded-lg text-lg w-full">Cancel booking</button>

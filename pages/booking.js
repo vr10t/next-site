@@ -46,6 +46,7 @@ import AutocompleteInput from "../src/components/Booking/AutocompleteInput";
 import StepperInput from "../src/components/Booking/StepperInput";
 import FlightMonitoring from "../src/components/Booking/FlightMonitoring";
 import ContactDetails from "../src/components/Booking/ContactDetails";
+import { getPublicUser } from "../utils/supabase-helpers";
 import { Alert } from "flowbite-react";
 // import {google} from "googleapis"
 export default function Booking() {
@@ -86,7 +87,6 @@ export default function Booking() {
   const [successAlert, setSuccessAlert] = useState("");
   const [dataError, setDataError] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  const [shouldUsePreviousData, setShouldUsePreviousData] = useState(false);
   const [differentPickup, setDifferentPickup] = useState(false);
   const [differentDropoff, setDifferentDropoff] = useState(false);
   const [returnLocation, setReturnLocation] = useState("");
@@ -97,7 +97,17 @@ export default function Booking() {
   const [returnInstructions, setReturnInstructions] = useState("");
   const [showReturnServices, setShowReturnServices] = useState(false);
   const renders = useRef(0);
-  let user_id;
+  const [ userDetails,setUserDetails] = useState()
+  const user_id=session?.user.id
+  const firstName=userDetails &&userDetails[0]?.first_name 
+  const lastName=userDetails&& userDetails[0]?.last_name 
+  const email=userDetails&& userDetails[0]?.email 
+  const phone=userDetails&& userDetails[0]?.phone
+  useEffect(()=>{
+    session && getPublicUser(user_id).then(data=>setUserDetails(data))
+    console.log(userDetails);
+    console.log(router.asPath,"router as path");
+  },[session])
   let dataErrorDiv = (
     <div className="fixed overscroll-none w-screen mx-auto mt-1/2 flex pt-64 font-semibold tracking-wide p-8 h-screen z-[99] bg-black/95 text-pink-500 text-4xl">
       No booking data was found, redirecting...
@@ -119,6 +129,9 @@ export default function Booking() {
       return_date: data.return_date,
       return_time: data.return_time,
       flight_monitoring: data.flight_monitoring,
+      airline_name:data.airline_name,
+      plane_arriving_from:data.plane_arriving_from,
+      flight_number:data.flight_number,
       return_location: data.return_location,
       return_destination: data.return_destination,
     } || parsedData;
@@ -146,16 +159,16 @@ export default function Booking() {
       // data.last_name = session?.user.user_metadata?.lastName;
       // data.phone = session?.user.phone;
       data.email = session?.user.email;
-      data.first_name="asffsa"
-      data.last_name="sdasf"
-      data.phone="0977898988"
+      data.first_name=firstName
+      data.last_name=lastName
+      data.phone=phone
 
       data.user_id = session?.user.id;
       setData(data);
       console.log(data);
       return
     }
-  }, [session, user_id]);
+  }, [session, user_id,firstName,lastName,phone]);
   useEffect(() => {
     console.log(session);
     console.log(data.user_id);
@@ -184,12 +197,8 @@ export default function Booking() {
 
   useEffect(() => {
     savelocalStorage();
-    window.sessionStorage.setItem(
-      "shouldUsePreviousData",
-      shouldUsePreviousData
-    );
-    console.log("useEffect");
-  }, [shouldUsePreviousData]);
+    
+  }, []);
 
   useEffect(() => {
     console.log("useEffect");
@@ -250,6 +259,9 @@ export default function Booking() {
         data.return_time = parsedData.return_time;
 
         data.flight_monitoring = parsedData.flight_monitoring;
+       data.airline_name=parsedData.airline_name,
+      data.plane_arriving_from= parsedData.plane_arriving_from,
+     data.flight_number = parsedData.flight_number,
         data.return_location = parsedData.return_location;
         data.return_destination = parsedData.return_destination;
 
@@ -278,12 +290,12 @@ export default function Booking() {
       data.email !== undefined &&
       data.email !== "" &&
       data.phone !== undefined &&
-      data.phone !== "" &&
-      data.canSubmit === true
+      data.phone !== "" 
+      
     ) {
-      console.log("setting data inside cansubmit", data.canSubmit);
+      console.log("setting data inside cansubmit", canSubmit);
       // setData(data)
-      setCanSubmit(data.canSubmit);
+      setCanSubmit(true);
     }
   }
   function setLocalStorageToBookingDataVar() {
@@ -305,6 +317,9 @@ export default function Booking() {
       return_time: data.return_time,
 
       flight_monitoring: data.flight_monitoring,
+      airline_name:data.airline_name,
+      plane_arriving_from:data.plane_arriving_from,
+      flight_number:data.flight_number,
       distance: data.distance,
       duration: data.duration,
       service: data.service,
@@ -394,7 +409,8 @@ function submitBoookingForUser(){
         getBookingsForUser(data.user_id).then((res) => {
           console.log(res,"user bookings");
           let prev = res[0].bookings
-          if (res) {
+          console.log( res);
+          if (res[0].bookings) {
             console.log(prev, "prev");
             updateUserBookings(data.user_id,booking_id,prev).then(res=>console.log(res,"updated bookings with prev"))
             // firstUserBooking(data.user_id,booking_id).then(res=>console.log(res,"updated bookings without prev"))

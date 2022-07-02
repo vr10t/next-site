@@ -10,7 +10,7 @@ export default function Sidebar(props) {
   const path2Active = "text-cyan-200 group-hover:text-cyan-300";
   const path2Inactive = " text-gray-300 group-hover:text-cyan-300"
   return (
-    <div className="min-h-screen z-[99] bg-gray-100 w-[3.35rem]">
+    <div className="min-h-screen z-[21] bg-gray-100 w-[3.35rem]">
       <div className=" min-h-screen w-[3.35rem] overflow-hidden border-r hover:w-56 hover:bg-gray-50 hover:shadow-lg">
         <div className="flex h-screen flex-col justify-between pt-2 pb-6">
           <div>

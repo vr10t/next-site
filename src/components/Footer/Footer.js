@@ -9,19 +9,12 @@ export default function Footer() {
     <div className="shadow sticky ">
       <footer className="text-center text-white bg-gradient-to-br from-sky-500 to-sky-600">
         <div className="p-4">
-          <section className="mb-4 ">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt
-              distinctio earum repellat quaerat voluptatibus placeat nam,
-              commodi optio pariatur est quia magnam eum harum corrupti dicta,
-              aliquam sequi voluptate quas.
-            </p>
-          </section>
+          
 
           <section className="text-center ">
             <div className="grid sm:grid-cols-2 md:grid-cols-4">
               <div className="mb-4 flex flex-col ">
-                <p className="text-uppercase">Address</p>
+                <p className="uppercase font-medium">Address</p>
 
                 <p className="text-gray-50">
                   123, Lorem Street, Hemel Hempstead, Beds, HP1 ABC
@@ -29,7 +22,7 @@ export default function Footer() {
               </div>
 
               <div className="mb-4 flex flex-col">
-                <p className="text-uppercase">Social</p>
+                <p className="uppercase font-medium">Social</p>
 
                 <section className="mb-2 flex justify-center ">
                   <a
@@ -56,7 +49,7 @@ export default function Footer() {
               </div>
 
               <div className="mb-4 flex flex-col">
-                <p className="text-uppercase">Contact</p>
+                <p className="uppercase font-medium">Contact</p>
 
                 <ul className="list-unstyled mb-0">
                   <li>
@@ -72,7 +65,7 @@ export default function Footer() {
                 </ul>
               </div>
               <div className="mb-4 flex flex-col">
-                <p className="text-uppercase">Useful Links</p>
+                <p className="uppercase font-medium">Useful Links</p>
 
                 <ul className="list-unstyled mb-0">
                   <li>

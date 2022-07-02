@@ -1,5 +1,6 @@
 import { supabase } from "../../utils/supabaseClient";
 import { withSentry } from '@sentry/nextjs';
+import { nanoid } from "nanoid";
 async function handler(req, res) {
   // Get body submitted in request's body.
   // const router =useRouter()
@@ -9,6 +10,7 @@ async function handler(req, res) {
     .from("bookings")
     .insert([
       {
+        id:nanoid(8).toUpperCase(),
         first_name: body.first_name,
       last_name: body.last_name,
       email: body.email,

@@ -47,7 +47,7 @@ export async function getBookingsForUser(uid) {
     .select("bookings")
     .eq("user_id", uid);
 
-  if (error) return error;
+  if (error) return null;
   if (data) {
     return data;
   }
