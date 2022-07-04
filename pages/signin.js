@@ -33,22 +33,7 @@ export default function SignIn(props) {
   useEffect(() => {
   
   }, [firstName, lastName, email, phone]);
-  function handlePhoneError() {
-    setPhoneError("");
-
-    if (!phone) {
-      setPhoneError("Phone number is required");
-    }
-    if (phone) {
-      console.log(isPossiblePhoneNumber(phone), "IS IT UNDEFINED");
-      if (isPossiblePhoneNumber(phone) === false) {
-        setPhoneError("Invalid phone number");
-      } else {
-        console.log(phone);
-        setPhoneError("");
-      }
-    }
-  }
+  
  
  
   const handleSubmit = async (ev) => {
@@ -91,7 +76,7 @@ export default function SignIn(props) {
                 <span className="justify-center text-sm text-center text-gray-500 flex-items-center dark:text-gray-400">
                   Don't have an account?{" "}
                   <Link
-                    href="#"><a
+                    href="/signup"><a
                     
                     className="text-sm  text-blue-500 underline hover:text-blue-700">
                     Sign up</a>
@@ -110,9 +95,9 @@ export default function SignIn(props) {
         email: Yup.string()
           .required("Email is required")
           .email("Email is invalid"),
-        password: Yup.string()
-        .required("Password is required")
-        .min(8,"Password is too short")
+        // password: Yup.string()
+        // .required("Password is required")
+        // .min(8,"Password is too short")
       })}
       onSubmit={handleSubmit}
  >
@@ -138,9 +123,7 @@ export default function SignIn(props) {
           </span>
 
           <Field
-            // {...getFieldProps("email")}
-            //   onChange={formik.handleChange}
-            //  value={formik.values.email}
+           autoComplete="email"
             name="email"
             type="email"
             id="email"
@@ -171,9 +154,7 @@ export default function SignIn(props) {
           </span>
 
           <Field
-            // {...getFieldProps("lastName")}
-            // onChange={formik.handleChange}
-            // value={formik.values.lastName}
+           autoComplete="current-password"
             name="password"
             type="password"
             id="password"
@@ -192,7 +173,7 @@ export default function SignIn(props) {
             </div>
           )}
         </div>
-        <div className="flex justify-end w-full mt-4"> <p className="text-sm text-blue-500 font-light "><Link href="/">Forgot password?</Link></p></div>
+        <div className="flex justify-end w-full mt-4"> <p className="text-sm text-blue-500 font-light "><Link href="/reset">Forgot password?</Link></p></div>
         <div className="flex justify-center py-4 w-full">
                       <button
                        

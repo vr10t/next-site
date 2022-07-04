@@ -34,7 +34,7 @@ export default function Profile() {
         
         ref={menuRef}
         onClick={toggle}
-        className={`select-none ${isOpen && "hi"} bg-black/10 rounded-full h-full w-full flex justify-center items-center pb-2 text-black/80 font-medium cursor-pointer text-5xl`}>
+        className={`select-none  bg-black/10 rounded-full h-full w-full flex justify-center items-center pb-2 text-black/80 font-medium cursor-pointer text-5xl`}>
         {initial}
       </div>
       <div

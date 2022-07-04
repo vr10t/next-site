@@ -49,12 +49,12 @@ export default function Navbar() {
   return (
     <header className="shadow-sm">
       <div className="max-w-screen h-20 p-4 items-center  shadow flex fixed bg-gray-100 w-screen z-[22] ">
-        <div className="flex justify-between items-center space-x-4 w-full mr-4 lg:gap-10">
+        <div className="flex justify-between items-center mr-4 space-x-4 w-full lg:gap-10">
           <div className="flex lg:w-0 lg:flex-1">
             <span className="w-20 h-10 bg-gray-200 rounded-lg md:flex"></span>
           </div>
 
-          <nav className="hidden space-x-8 justify-center text-sm font-medium md:flex grow">
+          <nav className="hidden justify-center space-x-8 text-sm font-medium md:flex grow">
             <Link href="/#">
               <a className="block px-3 py-2 text-base font-medium text-gray-800 no-underline rounded-md">
                 Home
@@ -78,7 +78,7 @@ export default function Navbar() {
           </nav>
 
           {session ? (
-            <div className="w-16 h-16  hidden md:flex ">
+            <div className="hidden w-16 h-16 md:flex">
               <Profile />
             </div>
           ) : (
@@ -89,14 +89,14 @@ export default function Navbar() {
                 </a>
               </Link>
               <Link href="/signup">
-                <a className="flex px-5 py-2 text-md self-center font-medium text-white no-underline bg-sky-600 rounded-lg shadow-md hover:bg-sky-700">
+                <a className="flex self-center px-5 py-2 font-medium text-white no-underline bg-sky-600 rounded-lg shadow-md text-md hover:bg-sky-700">
                   Sign up
                 </a>
               </Link>
             </div>
           )}
 
-          <div className="md:hidden ">
+          <div className="md:hidden">
             <button
               ref={triggerRef}
               onClick={handleClick}
@@ -112,58 +112,58 @@ export default function Navbar() {
             ref={navRef}
             className="md:hidden flex flex-col gap-2 pt-2 shadow w-3/4 h-screen items-start pr-2 right-0 top-20 pl-4 fixed bg-gray-100   z-[23]">
             <Link href="/#">
-              <a className="block w-full px-3 py-2 text-base font-medium text-gray-800 no-underline rounded-md hover:text-gray-600 hover:bg-gray-200">
+              <a className="block px-3 py-2 w-full text-base font-medium text-gray-800 no-underline rounded-md hover:text-gray-900 hover:bg-gray-200">
                 Home
               </a>
             </Link>
             <Link href="/#about">
-              <a className="block w-full px-3 py-2 text-base font-medium text-gray-800 no-underline rounded-md hover:text-gray-600 hover:bg-gray-200">
+              <a className="block px-3 py-2 w-full text-base font-medium text-gray-800 no-underline rounded-md hover:text-gray-900 hover:bg-gray-200">
                 About
               </a>
             </Link>
             <Link href="/#FAQ">
-              <a className="block w-full px-3 py-2 text-base font-medium text-gray-800 no-underline rounded-md hover:text-gray-600 hover:bg-gray-200">
+              <a className="block px-3 py-2 w-full text-base font-medium text-gray-800 no-underline rounded-md hover:text-gray-900 hover:bg-gray-200">
                 FAQ
               </a>
             </Link>
             <Link href="/#contact">
-              <a className="block w-full px-3 py-2 text-base font-medium text-gray-800 no-underline rounded-md hover:text-gray-600 hover:bg-gray-200">
+              <a className="block px-3 py-2 w-full text-base font-medium text-gray-800 no-underline rounded-md hover:text-gray-900 hover:bg-gray-200">
                 Contact
               </a>
             </Link>
             {session ? (
               <div className="flex flex-col w-full">
-                <details className="text-red-50 marker:hidden list-disc ">
-                  <summary className="mb-2 px-3 py-2 list-none flex justify-between w-full font-medium text-gray-900  ">
-                    {fullName} <FaAngleDown aria-hidden className="self-center z-0"/>
+                <details className="list-disc text-red-50 marker:hidden">
+                  <summary className="flex justify-between px-3 py-2 mb-2 w-full font-medium list-none text-gray-900 cursor-pointer hover:bg-gray-200 hover:rounded-md">
+                    {fullName} <FaAngleDown aria-hidden className="z-0 self-center"/>
                   </summary>
                   <span className="w-full   h-[1px]  self-center bg-black/20" />
                   <div className="flex flex-col gap-2">
-                    <div className="flex justify-start px-4 py-2 font-normal text-gray-900 cursor-pointer peer hover:rounded-md hover:bg-gray-200">
-                      <Link href="/my-account">My account</Link>
-                    </div>
-                    <div className="flex justify-start px-4 py-2 font-normal text-gray-900 cursor-pointer peer hover:rounded-md hover:bg-gray-200">
-                      <Link href="/my-account/bookings">My bookings</Link>
-                    </div>
+                    <Link href="/my-account"><a className="flex justify-start px-3 py-2 font-normal text-gray-900 cursor-pointer peer hover:rounded-md hover:bg-gray-200">
+                      My account
+                    </a></Link>
+                    <Link href="/my-account/bookings"><a className="flex justify-start px-3 py-2 font-normal text-gray-900 cursor-pointer peer hover:rounded-md hover:bg-gray-200">
+                      My bookings
+                    </a></Link>
                   </div>
                 </details>
 
                 <div
                   onClick={() => signOut()}
-                  className="flex flex-col group items-start px-3 py-2 text-red-500 cursor-pointer peer hover:rounded-md hover:bg-gray-200">
+                  className="flex flex-col items-start px-3 py-2 text-red-500 cursor-pointer group peer hover:rounded-md hover:bg-gray-200">
                   Sign out
                 </div>
               </div>
             ) : (
-              <div className="w-full flex gap-6 justify-center">
+              <div className="flex gap-6 justify-center w-full">
                 <Link href="/signin">
-                  <a className="block self-center py-2 px-4 text-base font-medium text-gray-800 no-underline rounded-md hover:text-gray-600 hover:bg-gray-200">
+                  <a className="block self-center px-4 py-2 text-base font-medium text-gray-800 no-underline rounded-md hover:text-gray-900 hover:bg-gray-200">
                     Sign in
                   </a>
                 </Link>
-                <div className="flex  ">
+                <div className="flex">
                   <Link href="/signup">
-                    <a className=" bg-sky-600 p-2 px-4 rounded-lg font-medium text-white no-underline text-md">
+                    <a className="p-2 px-4 font-medium text-white no-underline bg-sky-600 rounded-lg  text-md">
                       Sign up
                     </a>
                   </Link>
