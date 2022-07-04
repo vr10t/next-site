@@ -45,16 +45,16 @@ export default function handler() {
   });
   const router = useRouter();
   // console.log(router.query);
-  // const qid = router.query.id;
-  // useEffect(() => {
-  //   qid &&
-  //     getBookingById(qid).then((res) => {
-  //       console.log(res, "res");
-  //       if (!res) return;
-  //       // if (res) setBooking(res[0]);
-  //       console.log(booking, "booking");
-  //     });
-  // }, [qid]);
+  const qid = router.query.id;
+  useEffect(() => {
+    qid &&
+      getBookingById(qid).then((res) => {
+        console.log(res, "res");
+        if (!res) return;
+        if (res) setBooking(res[0]);
+        console.log(booking, "booking");
+      });
+  }, [qid]);
   const date = dayjs(booking.date + booking.time).format(
     "dddd, MMMM D, YYYY h:mm A"
   );
@@ -78,12 +78,13 @@ export default function handler() {
             </div>
             <span className="bg-black/20 w-5/6 h-[1px]"></span>
             <div className="flex flex-col bg-gray-100 w-full px-4 py-4 rounded-lg">
-            <Map
+            {/* <Map
               width="100%"
               height="100px"
             origin={origin}
             destination={destination}
-            shouldFetchDirections={true} />
+            shouldFetchDirections={true} /> */}
+            
             <div className="flex my-10 ">
               <div className="flex mt-2 pr-4 flex-col h-5/6">
                 <FaCircle className="mt-2 text-sky-500">.</FaCircle>

@@ -137,6 +137,7 @@ export async function handleSubmitBooking(ev) {
       destination: ev.destination,
       passengers: ev.passengers,
       date: ev.date,
+      time:ev.time,
       return_date: ev.return_date,
       flight_number: ev.flight_number,
       distance: ev.distance,

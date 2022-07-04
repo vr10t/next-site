@@ -14,152 +14,36 @@ export default function MyAccount() {
   const session = useAuthContext();
   const router = useRouter();
   let bookings = [];
-  const response = [
-    {
-      id: 110,
-      created_at: "2022-06-30T14:27:20.916059+00:00",
-      location: "SAS Shelters, Ramridge Road, Luton, UK",
-      destination: "Selbourne Road, Maidenhall, Luton, UK",
-      date: "2022-06-27",
-      passengers: 4,
-      distance: "2.8 mi",
-      service: "Standard",
-      return_date: "",
-      flight_number: null,
-      first_name: "asffsa",
-      email: "vr10t@tutanota.com",
-      phone: "0977898988",
-      last_name: "sdasf",
-      time: null,
-      return_time: "",
-      luggage: null,
-      return_luggage: null,
-      plane_arriving_from: null,
-      airline_name: null,
-      return_first_name: null,
-      return_email: null,
-      return_phone: null,
-      return_service: null,
-      return_last_name: null,
-      return_passengers: null,
-      return_location: null,
-      return_destination: null,
-      user_id: null,
-    },
-    {
-      id: 111,
-      created_at: "2022-06-30T14:27:58.650413+00:00",
-      location: "SAS Shelters, Ramridge Road, Luton, UK",
-      destination: "Selbourne Road, Maidenhall, Luton, UK",
-      date: "2022-06-27",
-      passengers: 4,
-      distance: "2.8 mi",
-      service: "MPV",
-      return_date: "",
-      flight_number: null,
-      first_name: "asffsa",
-      email: "vr10t@tutanota.com",
-      phone: "0977898988",
-      last_name: "sdasf",
-      time: null,
-      return_time: "",
-      luggage: null,
-      return_luggage: null,
-      plane_arriving_from: null,
-      airline_name: null,
-      return_first_name: null,
-      return_email: null,
-      return_phone: null,
-      return_service: null,
-      return_last_name: null,
-      return_passengers: null,
-      return_location: null,
-      return_destination: null,
-      user_id: null,
-    },
-    {
-      id: 114,
-      created_at: "2022-06-30T14:27:58.650413+00:00",
-      location: "SAS Shelters, Ramridge Road, Luton, UK",
-      destination: "Selbourne Road, Maidenhall, Luton, UK",
-      date: "2022-06-27",
-      passengers: 4,
-      distance: "2.8 mi",
-      service: "MPV",
-      return_date: "",
-      flight_number: null,
-      first_name: "asffsa",
-      email: "vr10t@tutanota.com",
-      phone: "0977898988",
-      last_name: "sdasf",
-      time: "20:32",
-      return_time: "",
-      luggage: null,
-      return_luggage: null,
-      plane_arriving_from: null,
-      airline_name: null,
-      return_first_name: null,
-      return_email: null,
-      return_phone: null,
-      return_service: null,
-      return_last_name: null,
-      return_passengers: null,
-      return_location: null,
-      return_destination: null,
-      user_id: null,
-    },
-    {
-      id: 117,
-      created_at: "2022-06-30T14:27:58.650413+00:00",
-      location: "SAS Shelters, Ramridge Road, Luton, UK",
-      destination: "Selbourne Road, Maidenhall, Luton, UK",
-      date: "2022-06-27",
-      passengers: 4,
-      distance: "2.8 mi",
-      service: "MPV",
-      return_date: "",
-      flight_number: null,
-      first_name: "asffsa",
-      email: "vr10t@tutanota.com",
-      phone: "0977898988",
-      last_name: "sdasf",
-      time: "20:32",
-      return_time: "",
-      luggage: null,
-      return_luggage: null,
-      plane_arriving_from: null,
-      airline_name: null,
-      return_first_name: null,
-      return_email: null,
-      return_phone: null,
-      return_service: null,
-      return_last_name: null,
-      return_passengers: null,
-      return_location: null,
-      return_destination: null,
-      user_id: null,
-    },
-  ];
-  const userBookings = ["110", "114"];
+  const id = session?.user.id
+  const [response,setResponse] = useState([
+  ])
+  const [userBookings,setUserBookings] =useState( []);
   useEffect(() => {
     console.log(session);
     if (!session) {
       // router.push("/signin")
       return;
     }
-    // getBookingsForUser(id).then((res) => {
-    //   console.log(res[0].bookings);
-    //   getBookings().then((resp) => console.log(resp));
-    // });
+    getBookingsForUser(id).then((res) => {
 
+      console.log(res,"USER bOOKINGS");
+      setUserBookings(res[0].bookings[0].split(","));
+     
+    });
+ getBookings().then((resp) => {
+  console.log(resp,"ALL bOOKings"); 
+  setResponse(resp)});
     //  let now = dayjs().add(2,'hours')
     //  console.log(now);
 
     console.log(bookings, "newArray");
   }, [session]);
+
   bookings = response.filter((element) =>
     userBookings.includes(element.id.toString())
+
   );
+  console.log(userBookings[0]?.split(","),"BOOKINGS");
   function handleClick(ev) {
     router.push(`/my-account/bookings/${ev.target.id}`);
   }

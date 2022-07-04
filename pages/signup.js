@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import * as Yup from "yup";
 import { Field, Formik, useFormik, Form } from "formik";
+import { supabase } from "../utils/supabaseClient";
 import PhoneInput, {
   formatPhoneNumber,
   isPossiblePhoneNumber,
@@ -71,6 +72,13 @@ export default function SignUp(props) {
     //   data.canSubmit=true
     // }
   }
+  async function handleSubmit(ev){
+    const {user, error} = await supabase.auth.signUp({email:ev.email,password:ev.password})
+    if(user) router.push(referrer||"/")
+    if(user) console.log(user);
+    if (error) setLoginError(error.message)
+  }
+  
   return (<><div className="z-[-20] h-sc bg-gray-50"><Image src={"/spiral.png"} layout="fill" /></div>
       <div className="flex bg-gray-200 justify-center">
       
