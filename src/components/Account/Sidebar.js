@@ -11,8 +11,8 @@ export default function Sidebar(props) {
   const iconInactive="text-gray-700 group-hover:text-gray-50"
  
   return (
-    <div className="min-h-screen z-[21] bg-gray-100 w-[3.35rem]">
-      <div className=" min-h-screen w-[3.35rem] overflow-hidden border-r hover:w-56 hover:bg-gray-50 hover:shadow-lg">
+    <div className="min-h-screen shadow-md  z-[21] bg-gray-100 w-[3.35rem]">
+      <div className=" min-h-screen w-[3.35rem] duration-200 overflow-hidden border-r hover:w-56 hover:bg-gray-50 hover:shadow-lg">
         <div className="flex h-screen flex-col justify-between pt-2 pb-6">
           <div>
             <div className="w-max p-2.5"></div>

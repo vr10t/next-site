@@ -10,40 +10,62 @@ import {
 import dayjs from "dayjs";
 import { BsCalendarFill } from "@react-icons/all-files/bs/BsCalendarFill";
 import { FaArrowRight } from "@react-icons/all-files/fa/FaArrowRight";
+import { FaAngleRight } from "@react-icons/all-files/fa/FaAngleRight";
+import { supabase } from "../../../utils/supabaseClient";
 export default function MyAccount() {
   const session = useAuthContext();
   const router = useRouter();
-  let bookings = [];
-  const id = session?.user.id
-  const [response,setResponse] = useState([
-  ])
-  const [userBookings,setUserBookings] =useState( []);
+  const [bookings, setBookings] = useState([]);
+  const id = session?.user.id;
+  const [response, setResponse] = useState([]);
+  const [userBookings, setUserBookings] = useState([]);
   useEffect(() => {
+    // let date=dayjs(bookings[0].date + bookings[0].time)
+    // console.log(date);
+
+    // const now=dayjs().isAfter(date)
+    // console.log(now, "IS IT BEFORE");
     console.log(session);
     if (!session) {
       // router.push("/signin")
       return;
     }
     getBookingsForUser(id).then((res) => {
-
-      console.log(res,"USER bOOKINGS");
-      setUserBookings(res[0].bookings[0].split(","));
-     
+      console.log(res, "USER bOOKINGS");
+      let [data, error] = res;
+      if (data) setUserBookings(res[0].bookings[0].split(","));
+      if (error) console.error(error);
+      console.log(userBookings);
     });
- getBookings().then((resp) => {
-  console.log(resp,"ALL bOOKings"); 
-  setResponse(resp)});
+    getBookings().then((resp) => {
+      console.log(resp, "ALL bOOKings");
+      setResponse(resp);
+    });
     //  let now = dayjs().add(2,'hours')
     //  console.log(now);
 
     console.log(bookings, "newArray");
   }, [session]);
 
-  bookings = response.filter((element) =>
-    userBookings.includes(element.id.toString())
+  useEffect(() => {
+    console.log("response", response, "userbooking", userBookings);
+    setBookings(
+      response.filter((element) => userBookings.includes(element.id.toString()))
+    );
+   
+    console.log(bookings, "BOOKINGS");
+  }, [response, userBookings]);
+  useEffect(()=>{
+   const isUpcoming = bookings.map((booking)=>{
+      let date=dayjs(booking.date + booking.time)
+      
+      let upcoming = dayjs().isBefore(date)
+      return{ id:booking.id,upcoming:upcoming}
+      // setBookings(bookings=>[...bookings])
+    })
+    console.log(isUpcoming);
+  },[bookings])
 
-  );
-  console.log(userBookings[0]?.split(","),"BOOKINGS");
   function handleClick(ev) {
     router.push(`/my-account/bookings/${ev.target.id}`);
   }
@@ -52,51 +74,106 @@ export default function MyAccount() {
       <Layout title="My Bookings">
         <div className="flex">
           <Sidebar />
-          <div className="flex z-20 flex-col gap-4 items-center pt-10 w-full h-screen bg-red-600">
-            <div className="flex z-0 flex-col items-center w-full text-black bg-white">
-              {bookings.map((booking) => (
+          <div className="flex z-20 flex-col gap-4 items-center pt-10 w-full h-screen ">
+          <div className="flex z-0 flex-col items-start w-full  0">
+          <p className=" text-2xl text-gray-900 font-medium tracking-wide">Upcoming</p>
+          {bookings.map((booking) => (
                 <div
                   onClick={handleClick}
-                  className="px-2 py-4 my-2 w-5/6 h-32 bg-gray-100 rounded-md cursor-pointer group hover:bg-sky-500"
+                  className="flex justify-between px-6 py-4 my-2 w-full h-32 rounded-md cursor-pointer group hover:bg-gray-200"
                   key={booking.id}
                   id={booking.id}>
-                  <div id={booking.id} className="flex mb-2 peer">
-                    <BsCalendarFill
-                      aria-hidden
-                      className="self-center mr-2 text-sky-500"
-                    />
-                    {booking.date}
-                    {", "}
-                    {booking.time}
-                  </div>
                   {
                     <div
                       id={booking.id}
-                      className="flex flex-col justify-center">
+                      className="flex flex-col justify-center w-11/12">
+                      <div id={booking.id} className="flex mb-2 text-lg text-gray-900 font-bold">
+                        {/* <BsCalendarFill
+                      aria-hidden
+                      className="self-center mr-2 text-sky-500"
+                    /> */}
+                        {booking.destination}
+                      </div>
                       <div className="flex">
-                        <FaArrowRight
+                        {/* <FaArrowRight
                           aria-hidden
                           className="self-center text-sky-500"
-                        />{" "}
+                        />{" "} */}
                         <div
                           id={booking.id}
-                          className="flex pl-2 w-11/12 text-gray-900 truncate">
-                          {booking.location}
+                          className="flex pl-2 w-11/12 text-gray-700 text-sm truncate">
+                          {dayjs(booking.date + booking.time).format(
+                          "dddd, MMMM D, YYYY h:mm A"
+                        )}{booking.upcoming}
                         </div>
                       </div>
                       <div id={booking.id} className="flex">
-                        <FaArrowRight
+                        {/* <FaArrowRight
                           aria-hidden
                           className="self-center text-sky-500"
-                        />{" "}
+                        />{" "} */}
                         <div
                           id={booking.id}
-                          className="flex pl-2 w-11/12 text-gray-900 truncate">
-                          {booking.destination}
+                          className="flex pl-2 w-11/12 text-gray-700 text-sm truncate">
+                          £{booking.total}
                         </div>
                       </div>
                     </div>
                   }
+                  <span className="self-center text-gray-900 text-xl">
+                    <FaAngleRight />
+                  </span>
+                </div>
+              ))}
+          </div>
+            <div className="flex z-0 flex-col items-start w-full  mb-10">
+            <p className=" text-2xl text-gray-900 font-medium tracking-wide">Past</p>
+              {bookings.map((booking) => (
+                <div
+                  onClick={handleClick}
+                  className="flex justify-between px-6 py-4 my-2 w-full h-32 rounded-md cursor-pointer group hover:bg-gray-200"
+                  key={booking.id}
+                  id={booking.id}>
+                  {
+                    <div
+                      id={booking.id}
+                      className="flex flex-col justify-center w-11/12">
+                      <div id={booking.id} className="flex mb-2 text-lg text-gray-900 font-bold">
+                        {/* <BsCalendarFill
+                      aria-hidden
+                      className="self-center mr-2 text-sky-500"
+                    /> */}
+                        {booking.destination}
+                      </div>
+                      <div className="flex">
+                        {/* <FaArrowRight
+                          aria-hidden
+                          className="self-center text-sky-500"
+                        />{" "} */}
+                        <div
+                          id={booking.id}
+                          className="flex pl-2 w-11/12 text-gray-700 text-sm truncate">
+                          {dayjs(booking.date + booking.time).format(
+                          "dddd, MMMM D, YYYY h:mm A"
+                        )}
+                        </div>
+                      </div>
+                      <div id={booking.id} className="flex">
+                        {/* <FaArrowRight
+                          aria-hidden
+                          className="self-center text-sky-500"
+                        />{" "} */}
+                        <div
+                          id={booking.id}
+                          className="flex pl-2 w-11/12 text-gray-700 text-sm truncate">
+                          £{booking.total}
+                        </div>
+                      </div>
+                    </div>
+                  }
+                  <span className="self-center text-gray-900 text-xl">
+                    <FaAngleRight />
+                  </span>
                 </div>
               ))}
             </div>

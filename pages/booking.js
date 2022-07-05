@@ -290,7 +290,8 @@ export default function Booking() {
       data.email !== undefined &&
       data.email !== "" &&
       data.phone !== undefined &&
-      data.phone !== "" 
+      data.phone !== "" &&
+      data.total_trip_price
       
     ) {
       console.log("setting data inside cansubmit", canSubmit);

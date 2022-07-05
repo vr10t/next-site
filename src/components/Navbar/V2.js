@@ -23,16 +23,16 @@ export default function Navbar() {
   function cleanup() {
     document.removeEventListener("click");
   }
-  useEffect(
-    listenForOutsideClicks(
-      listening,
-      setListening,
-      navRef,
-      setExpanded,
-      cleanup,
-      triggerRef
-    )
-  );
+  // useEffect(
+  //   listenForOutsideClicks(
+  //     listening,
+  //     setListening,
+  //     navRef,
+  //     setExpanded,
+  //     cleanup,
+  //     triggerRef
+  //   )
+  // );
   console.log(expanded);
   useEffect(() => {
     session && getPublicUser(user_id).then((data) => setUserDetails(data));
@@ -43,7 +43,7 @@ export default function Navbar() {
     userDetails && userDetails[0]?.first_name + " " + userDetails[0]?.last_name;
 
   function handleClick() {
-    setExpanded(true);
+    setExpanded(!expanded);
   }
 
   return (
@@ -84,7 +84,7 @@ export default function Navbar() {
           ) : (
             <div className="hidden justify-center space-x-4 grow md:flex">
               <Link href={`/signin?referrer=${router.asPath} `}>
-                <a className="px-5 py-2 font-medium text-gray-800 no-underline bg-gray-50 text-md hover:text-gray-500">
+                <a className="px-5 py-2 font-medium text-gray-800 no-underline bg-gray-100 text-md hover:text-gray-500">
                   Log in
                 </a>
               </Link>
@@ -109,7 +109,7 @@ export default function Navbar() {
         </div>
         {expanded && (
           <nav
-            ref={navRef}
+            // ref={navRef}
             className="md:hidden flex flex-col gap-2 pt-2 shadow w-3/4 h-screen items-start pr-2 right-0 top-20 pl-4 fixed bg-gray-100   z-[23]">
             <Link href="/#">
               <a className="block px-3 py-2 w-full text-base font-medium text-gray-800 no-underline rounded-md hover:text-gray-900 hover:bg-gray-200">
@@ -149,7 +149,7 @@ export default function Navbar() {
                 </details>
 
                 <div
-                  onClick={() => signOut()}
+                  onClick={() =>{ signOut(); router.push("/")}}
                   className="flex flex-col items-start px-3 py-2 text-red-500 cursor-pointer group peer hover:rounded-md hover:bg-gray-200">
                   Sign out
                 </div>

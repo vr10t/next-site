@@ -26,15 +26,23 @@ export async function handleSignup(ev) {
   }
 }
 export async function getBookings(which) {
-  const { data, error } = await supabase.from("bookings").select();
+  const res = await fetch("/api/get-bookings", {
+    body: "",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+  });
+  const { data, error } = await res.json();
   if (data) {
     return data;
   } else {
     return error;
   }
+  // return res
 }
 export async function getBookingById(id) {
-  const { data, error } = await supabase.from("bookings").select().eq("id",id);
+  const { data, error } = await supabase.from("bookings").select().eq("id", id);
   if (data) {
     return data;
   } else {
@@ -67,20 +75,33 @@ export async function updateUserBookings(uid, bid, prev) {
   const { data, error } = await supabase
     .from("users")
     .update({ bookings: [prev + "," + bid] })
-    .eq("user_id", uid);
+    .eq("user_id", uid)
+    .single();
   if (error) return error;
   if (data) {
     return data;
   }
 }
+export async function updateUserDetails(uid, values) {
+  const { data, error, status } = await supabase
+    .from("users")
+    .update(values)
+    .eq("user_id", uid);
+
+  if (error) return { error: error, status: status };
+  if (data) {
+    return { data: data, status: status };
+  }
+}
 export async function deleteUserBooking(uid, bid, prev) {
   //where prev is all user bookings
-  const index = prev.findIndex((val)=>val===bid)
-  prev.splice(index,1)
+  const index = prev.findIndex((val) => val === bid);
+  prev.splice(index, 1);
   const { data, error } = await supabase
     .from("users")
     .update({ bookings: [prev] })
-    .eq("user_id", uid);
+    .eq("user_id", uid)
+    .single();
   if (error) return error;
   if (data) {
     return data;
@@ -96,7 +117,6 @@ export async function firstUserBooking(uid, bid) {
     return data;
   }
 }
-
 
 export async function registerPublicUser(ev) {
   const res = await fetch("/api/register-user", {
@@ -137,17 +157,17 @@ export async function handleSubmitBooking(ev) {
       destination: ev.destination,
       passengers: ev.passengers,
       date: ev.date,
-      time:ev.time,
+      time: ev.time,
       return_date: ev.return_date,
       flight_number: ev.flight_number,
       distance: ev.distance,
-
       service: ev.service,
       return_time: ev.return_time,
       plane_arriving_from: ev.plane_arriving_from,
       airline_name: ev.airline_name,
       return_location: ev.return_location,
       return_destination: ev.return_destination,
+      total_trip_price: ev.total_trip_price,
     }),
     headers: {
       "Content-Type": "application/json",
@@ -174,7 +194,7 @@ export async function cancelBooking(id) {
     return error.message;
   }
 }
-export async function signOut(){
-  const {error} = await supabase.auth.signOut()
-  return error
+export async function signOut() {
+  const { error } = await supabase.auth.signOut();
+  return error;
 }
