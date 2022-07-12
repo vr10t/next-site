@@ -13,7 +13,7 @@ import {cancelBooking} from "../utils/supabase-helpers"
 
 const ResultPage: NextPage = () => {
   const router = useRouter();
-const {bookingData,setData}= useAppContext()
+const {data:bookingData,setData}= useAppContext()
   // Fetch CheckoutSession from static page via
   // https://nextjs.org/docs/basic-features/data-fetching#static-generation
   const { data, error } = useSWR(
