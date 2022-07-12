@@ -7,19 +7,31 @@ import Map from "../../../src/components/Map";
 import { FaSquare } from "@react-icons/all-files/fa/FaSquare";
 import { FaCircle } from "@react-icons/all-files/fa/FaCircle";
 import dayjs from "dayjs";
+import useSWR from "swr";
+import { Spinner } from "flowbite-react";
+const fetcher = (url:string, id:string) =>
+  fetch(url, {
+    method: 'POST',
+    headers: new Headers({ 'Content-Type': 'application/json', 'id':id, }),
+    credentials: 'same-origin',
+  }).then((res) => res.json())
 export default function handler() {
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [shouldFetchDirections, setShouldFetchDirections] = useState(false);
+  
+   
+  
+    
   const [booking, setBooking] = useState({
     id: "",
-    created_at: "2022-06-30T14:27:20.916059+00:00",
-    location: "SAS Shelters, Ramridge Road, Luton, UK",
-    destination: "Selbourne Road, Maidenhall, Luton, UK",
-    date: "2022-06-27",
-    passengers: "4",
-    distance: "33 mi",
-    service: "MPV",
+    created_at: "",
+    location: "",
+    destination: "",
+    date: "",
+    passengers: "",
+    distance: "",
+    service: "",
     return_date: "",
     flight_number: "",
     first_name: "",
@@ -43,18 +55,19 @@ export default function handler() {
     user_id: "",
     status: "Pending",
   });
+ 
   const router = useRouter();
   // console.log(router.query);
-  const qid = router.query.id;
+  const qid:string|string[]|undefined = router.query.id; 
+  
+  const { data, error } = useSWR([`/api/get-booking-id`,qid], fetcher)
+  useEffect(()=>{console.log(data?.data,"DATA",error)})
   useEffect(() => {
-    qid &&
-      getBookingById(qid).then((res) => {
-        console.log(res, "res");
-        if (!res) return;
-        if (res) setBooking(res[0]);
+  
+     if (data) setBooking(data.data[0]);
         console.log(booking, "booking");
-      });
-  }, [qid]);
+     
+  }, [data,error]);
   const date = dayjs(booking.date + booking.time).format(
     "dddd, MMMM D, YYYY h:mm A"
   );
@@ -68,7 +81,7 @@ export default function handler() {
       <Layout title="My Account">
       <div className="flex">
         <Sidebar />
-        <div className="w-full h-screen  items-center flex flex-col gap-4 pt-10 ">
+        {data?<div className="w-full h-screen  items-center flex flex-col gap-4 pt-10 ">
           <div className="bg-gray-200 flex flex-col items-start px-4 gap-2 py-5 h-full rounded-lg w-11/12 ">
             <div className="text-3xl  text-gray-900 font-medium tracking-tight">
               Your booking details
@@ -108,7 +121,7 @@ export default function handler() {
               <button className="bg-red-500 text-gray-50 py-2 px-2 rounded-lg text-lg w-full">Cancel booking</button>
             </div>
           </div>
-        </div>
+        </div>:<div className="flex justify-center w-full mt-64"><Spinner size="xl"  /></div>}
       </div>{" "}
       </Layout>
     </>

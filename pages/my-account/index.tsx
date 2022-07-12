@@ -14,7 +14,7 @@ import {
 import {
   getBookings,
   getBookingsForUser,
-  getPublicUser,
+ 
   updateUserDetails,
 } from "../../utils/supabase-helpers";
 import Initial from "../../src/components/Account/Initial";
@@ -28,62 +28,53 @@ import {
 } from "libphonenumber-js/core";
 import toast, { Toaster } from "react-hot-toast";
 
+// const fetcher = (id) => fetch(id).then((res) => res.json() )
 export default function MyAccount() {
-  const session = useAuthContext();
-  const [userDetails, setUserDetails] = useState();
+  interface UserDetails{
+    id: string;
+          first_name: string;
+          last_name: string;
+          email: string;
+          phone: string;
+          bookings?: any[];
+  }
+  
+  const user = useAuthContext();
+  const user_id = ""
+  // session?.user.id;
+ 
+  console.log(user,"DATA");
+ 
   const [edit, setEdit] = useState(false);
-  const user_id = session?.user.id;
+ 
   useEffect(() => {
-    session && getPublicUser(user_id).then((data) => setUserDetails(data));
-    console.log(userDetails);
+   
     console.log(router.asPath, "router as path");
-  }, [session]);
+  }, [user]);
   const [loading, setLoading] = useState(false);
   const [phoneError, setPhoneError] = useState("");
   const fullName =
-    userDetails && userDetails[0]?.first_name + " " + userDetails[0]?.last_name;
-  const initial = userDetails && userDetails[0]?.first_name.slice(0, 1);
-  const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [newEmail, setNewEmail] = useState("");
-  const [newFirstName, setNewFirstName] = useState("");
-  const [newLastName, setNewLastName] = useState("");
-  const [newPhone, setNewPhone] = useState("");
+    user?.first_name + " " + user?.last_name;
+  const initial = user?.first_name?.slice(0, 1);
+ 
 
   const router = useRouter();
 
+  
   useEffect(() => {
-    try {
-      userDetails && setEmail(userDetails[0].email);
-      userDetails && setFirstName(userDetails[0].first_name);
-      userDetails && setLastName(userDetails[0].last_name);
-      userDetails && setPhone(userDetails[0].phone);
-    } catch (error) {
-      console.error(error);
-    }
-  }, [userDetails]);
-  useEffect(() => {
-    console.log(session);
-    if (!session) {
+    console.log(user);
+    if (!user) {
       // router.push("/signin")
       return;
     }
-    // try {
-    //   getBookingsForUser(user_id).then((res) => {
-    //   console.log(res[0].bookings);
-    //   getBookings().then((resp) => console.log(resp));
-    // });
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    
 
     
-  }, [session]);
+  }, [user]);
 
-  async function handleSubmit(values) {
-    // const notification = toast.loading("Updating Profile....");
+  async function handleSubmit(values: { phone: string; first_name: string; last_name: string; email: string; }) {
+    const notification = toast.loading("Updating Profile....");
+    
     console.log("SUBMITTING");
     setLoading(true);
     
@@ -93,24 +84,33 @@ export default function MyAccount() {
       return;
     } else {
       try {
-        console.log({
-          id: userDetails[0].id,
+        
+        let newDetails: {
+            id:string | undefined,
+            first_name:string,
+            last_name:string,
+            email: string,
+            phone:string,
+            bookings: any[],
+          }
+        newDetails ={
+          id: user?.id ||"",
           first_name: values.first_name,
           last_name: values.last_name,
           email: values.email,
           phone: values.phone,
-          bookings: userDetails[0].bookings,
-        });
+          bookings: user?.bookings,
+        };
         await updateUserDetails(user_id, {
-          id: userDetails[0].id,
+          id: user?.id,
           first_name: values.first_name,
           last_name: values.last_name,
           email: values.email,
           phone: values.phone,
-          bookings: userDetails[0].bookings,
+          bookings: user.bookings,
         }).then(async (res) => {
-          console.log(res.status,"res.status");
-          if (res.status === 200) {
+          console.log(res?.status,"res.status");
+          if (res?.status === 200) {
            await supabase.auth
               .update({ email: values.email })
               .then(({ data, error }) => {
@@ -121,33 +121,30 @@ export default function MyAccount() {
                   toast.success("Profile updated!", {
                     position:"top-right",
                     duration: 4000,
-                    // id: notification,
+                    id: notification,
                   });
 
-                  setNewEmail(values.email);
-                  setNewFirstName(values.first_name);
-                  setNewLastName(values.last_name);
-                  setNewPhone(values.phone);
+                 
                   setEdit(false);
                 } else {
-                  toast.error(error.message, {
+                  toast.error(error!.message, {
                     duration: 4000,
-                    // id: notification,
+                    id: notification,
                   });
                 }
               });
           } else {
-            toast.error(res.error.message, {
+            toast.error(res!.error!.message, {
               duration: 4000,
-              // id: notification,
+              id: notification,
             });
           }
 
-          console.log(res.status, "UpDAET");
+          console.log(res?.status, "UpDAET");
         });
         //
-      } catch (error) {
-        toast.error(error, {
+      } catch (error:any) {
+        toast.error(error!.message, {
           duration: 4000,
           // id: notification,
         });
@@ -171,10 +168,10 @@ export default function MyAccount() {
             {edit ? (
               <Formik
                 initialValues={{
-                  first_name: firstName,
-                  last_name: lastName,
-                  email: email,
-                  phone: phone,
+                  first_name: user?.first_name,
+                  last_name: user?.last_name,
+                  email: user?.email,
+                  phone: user?.phone,
                 }}
                 validationSchema={Yup.object().shape({
                   first_name: Yup.string()
@@ -219,7 +216,7 @@ export default function MyAccount() {
                       type="text"
                       name="last_name"
                       className="px-4 py-2 w-full rounded-lg ring-1 ring-gray-500 focus:ring-sky-500"
-                      placeholder="First Name"
+                      placeholder="Last Name"
                     />
                     {errors.last_name && touched.last_name && (
                       <div className="text-sm text-red-500">
@@ -230,7 +227,7 @@ export default function MyAccount() {
                       type="email"
                       name="email"
                       className="px-4 py-2 w-full rounded-lg ring-1 ring-gray-500 focus:ring-sky-500"
-                      placeholder="First Name"
+                      placeholder="Email"
                     />
                     {errors.email && touched.email && (
                       <div className="text-sm text-red-500">{errors.email}</div>
@@ -239,7 +236,7 @@ export default function MyAccount() {
                       type="tel"
                       name="phone"
                       className="px-4 py-2 w-full rounded-lg ring-1 ring-gray-500 focus:ring-sky-500"
-                      placeholder="First Name"
+                      placeholder="Phone"
                     />
                     {(errors.phone && touched.phone) ||
                       (phoneError && (
@@ -273,10 +270,10 @@ export default function MyAccount() {
                   <FaPencilAlt aria-label="Edit" className="z-20 self-center" />
                 </span>
                 <p className="">
-                  {newFirstName || firstName} {newLastName || lastName}
+                  { user?.first_name} {user?.last_name}
                 </p>
-                <p className="">{newEmail || email}</p>
-                <p className="">{newPhone || phone}</p>
+                <p className="">{ user?.email}</p>
+                <p className="">{user?.phone}</p>
               </div>
             )}
           </div>

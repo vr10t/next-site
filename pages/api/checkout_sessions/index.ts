@@ -15,6 +15,7 @@ async function handler(
 ) {
   if (req.method === 'POST') {
     const amount: number = req.body.amount;
+    const name: string = req.body.name
     try {
      
       // Create Checkout Sessions from body params.
@@ -23,7 +24,7 @@ async function handler(
         payment_method_types: ['card'],
         line_items: [
           {
-            name: 'Booking',
+            name: `Booking for ${name}`,
             amount: formatAmountForStripe(amount, CURRENCY),
             currency: CURRENCY,
             quantity: 1,
@@ -45,4 +46,4 @@ async function handler(
     res.status(405).end('Method Not Allowed');
   }
 }
-export default withSentry(handler);
+export default handler

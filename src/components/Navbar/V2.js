@@ -10,16 +10,24 @@ import { useRouter } from "next/router";
 import { listenForOutsideClicks } from "../../../utils/misc";
 import { signOut } from "../../../utils/supabase-helpers";
 import { FaAngleDown } from "@react-icons/all-files/fa/FaAngleDown";
+
 export default function Navbar() {
   const [expanded, setExpanded] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [userDetails, setUserDetails] = useState();
+  
   const router = useRouter();
-  const session = useAuthContext();
+  const user = useAuthContext();
   const navRef = useRef(null);
   const triggerRef = useRef(null);
   const [listening, setListening] = useState(false);
-  const user_id = session?.user.id;
+  const user_id = "";
+  // try {
+    
+    
+  // } catch (error) {
+    
+  // }
+  
   function cleanup() {
     document.removeEventListener("click");
   }
@@ -35,12 +43,12 @@ export default function Navbar() {
   // );
   console.log(expanded);
   useEffect(() => {
-    session && getPublicUser(user_id).then((data) => setUserDetails(data));
-    console.log(userDetails);
+    
+    
     console.log(router.asPath, "router as path");
-  }, [session]);
-  const fullName =
-    userDetails && userDetails[0]?.first_name + " " + userDetails[0]?.last_name;
+  }, [user]);
+  const fullName = user?.first_name + " " + user?.last_name
+    
 
   function handleClick() {
     setExpanded(!expanded);
@@ -77,7 +85,7 @@ export default function Navbar() {
             </Link>
           </nav>
 
-          {session ? (
+          {user ? (
             <div className="hidden w-16 h-16 md:flex">
               <Profile />
             </div>
@@ -131,7 +139,7 @@ export default function Navbar() {
                 Contact
               </a>
             </Link>
-            {session ? (
+            {user ? (
               <div className="flex flex-col w-full">
                 <details className="list-disc text-red-50 marker:hidden">
                   <summary className="flex justify-between px-3 py-2 mb-2 w-full font-medium list-none text-gray-900 cursor-pointer hover:bg-gray-200 hover:rounded-md">

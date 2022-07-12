@@ -44,4 +44,4 @@ async function handler(req, res) {
   // and also return a copy of the object we received from Supabase
   return res.status(200).json({ data: data });
 }
-export default withSentry(handler);
+export default handler

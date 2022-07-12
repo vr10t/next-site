@@ -4,6 +4,7 @@ import { signOut } from "../../../utils/supabase-helpers";
 import { useAuthContext } from "../../context/state";
 import { listenForOutsideClicks } from "../../../utils/misc";
 import { getPublicUser } from "../../../utils/supabase-helpers";
+
 export default function Profile() {
   const router = useRouter();
   const menuRef = useRef(null);
@@ -12,17 +13,17 @@ export default function Profile() {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () =>{ setIsOpen(!isOpen)};
   
-  const session = useAuthContext();
-  const user_id = session?.user.id
-  
+  const user = useAuthContext();
+  // const user_id = session?.user.id
+ 
   useEffect(() => {
-    session && getPublicUser(user_id).then((data) => setUserDetails(data));
+   if(user) setUserDetails(user);
     console.log(userDetails);
     console.log(router.asPath, "router as path");
-  }, [session]);
+  }, [user]);
   const fullName =
-    userDetails && userDetails[0]?.first_name + " " + userDetails[0]?.last_name;
-    const initial =userDetails&& userDetails[0]?.first_name.slice(0, 1);
+    user?.first_name + " " + user?.last_name;
+    const initial =user?.first_name?.slice(0, 1);
 
   // useEffect(
   //   listenForOutsideClicks(listening, setListening, menuRef, setIsOpen)

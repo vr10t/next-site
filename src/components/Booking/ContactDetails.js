@@ -249,7 +249,7 @@ export default function ContactDetails(props) {
             className={`inline-flex items-center pl-2 w-full text-lg text-gray-900  bg-gray-50 rounded-lg border-r-2 shadow-sm appearance-none focus:outline-none focus:ring-2`}
             defaultCountry="GB"
             initialValueFormat="national"
-            useNationalFormatForDefaultCountryValue={true}
+            
             placeholder="Your phone number"
             value={phone}
             error={phoneError}

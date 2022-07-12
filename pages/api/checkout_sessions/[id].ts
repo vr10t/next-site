@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import  { withSentry } from '@sentry/nextjs';
+
 import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   // https://github.com/stripe/stripe-node#configuration
@@ -25,4 +25,4 @@ async function handler(
     res.status(500).json({ statusCode: 500, message: err.message });
   }
 }
-export default withSentry(handler);
+export default handler

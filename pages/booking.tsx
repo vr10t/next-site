@@ -1,4 +1,4 @@
-import { useContext, useEffect, useCallback, useState, useRef } from "react";
+import { useContext, useEffect, useCallback, useState, useRef, SetStateAction, MouseEvent } from "react";
 import { useAppContext, useAuthContext } from "../src/context/state";
 
 import Layout from "../src/components/layout";
@@ -46,13 +46,12 @@ import AutocompleteInput from "../src/components/Booking/AutocompleteInput";
 import StepperInput from "../src/components/Booking/StepperInput";
 import FlightMonitoring from "../src/components/Booking/FlightMonitoring";
 import ContactDetails from "../src/components/Booking/ContactDetails";
-import { getPublicUser } from "../utils/supabase-helpers";
 import { Alert } from "flowbite-react";
 // import {google} from "googleapis"
 export default function Booking() {
   const [mapsLoaded, setMapsLoaded] = useState(false);
   const loader = new Loader({
-    apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY!,
     version: "weekly",
     libraries: ["places"],
   });
@@ -67,8 +66,8 @@ export default function Booking() {
   const router = useRouter();
   const [distanceResults, setDistanceResults] = useState("");
   const { data, setData } = useAppContext();
-  const session = useAuthContext();
-  let distanceInMiles;
+  const user = useAuthContext();
+  let distanceInMiles: number;
   const [farePrice, setFarePrice] = useState(4);
   let tripStartsAt = parseInt(data.date);
   let tripPrice = 0;
@@ -96,48 +95,61 @@ export default function Booking() {
   const [instructions, setInstructions] = useState("");
   const [returnInstructions, setReturnInstructions] = useState("");
   const [showReturnServices, setShowReturnServices] = useState(false);
-  const renders = useRef(0);
-  const [ userDetails,setUserDetails] = useState()
-  const user_id=session?.user.id
-  const firstName=userDetails &&userDetails[0]?.first_name 
-  const lastName=userDetails&& userDetails[0]?.last_name 
-  const email=userDetails&& userDetails[0]?.email 
-  const phone=userDetails&& userDetails[0]?.phone
-  useEffect(()=>{
-    session && getPublicUser(user_id).then(data=>setUserDetails(data))
-    console.log(userDetails);
-    console.log(router.asPath,"router as path");
-  },[session])
+  useEffect(() => {
+    console.log(router.asPath, "router as path");
+  }, [user]);
   let dataErrorDiv = (
     <div className="fixed overscroll-none w-screen mx-auto mt-1/2 flex pt-64 font-semibold tracking-wide p-8 h-screen z-[99] bg-black/95 text-pink-500 text-4xl">
       No booking data was found, redirecting...
     </div>
   );
-  let parsedData;
-  let BOOKING_DATA =
-    {
-      location: data.location,
-      destination: data.destination,
-      passengers: data.passengers,
-      date: data.date,
-      time: data.time,
-      distance: data.distance,
-      duration: data.duration,
-      service: data.service,
-      payment: data.payment,
-      return: data.return,
-      return_date: data.return_date,
-      return_time: data.return_time,
-      flight_monitoring: data.flight_monitoring,
-      airline_name:data.airline_name,
-      plane_arriving_from:data.plane_arriving_from,
-      flight_number:data.flight_number,
-      return_location: data.return_location,
-      return_destination: data.return_destination,
-    } || parsedData;
+  let parsedData: {
+    location: string;
+    destination: string;
+    passengers: string;
+    date: string;
+    time: string;
+    distance: string;
+    duration: string;
+    service: string;
+    payment: string;
+    return: boolean;
+    return_date: string;
+    return_time: string;
+    flight_monitoring: boolean;
+    airline_name: string;
+    plane_arriving_from: string;
+    flight_number: string;
+    return_location: string;
+    return_destination: string;
+    return_passengers:string
+  };
+  let BOOKING_DATA: typeof parsedData;
 
   useEffect(() => {
-    parsedData = JSON.parse(window.localStorage.getItem("BOOKING_DATA"));
+    parsedData = JSON.parse(window.localStorage.getItem("BOOKING_DATA")!);
+    BOOKING_DATA =
+      {
+        location: data.location,
+        destination: data.destination,
+        passengers: data.passengers,
+        date: data.date,
+        time: data.time,
+        distance: data.distance,
+        duration: data.duration,
+        service: data.service,
+        payment: data.payment,
+        return: data.return,
+        return_date: data.return_date,
+        return_time: data.return_time,
+        flight_monitoring: data.flight_monitoring,
+        airline_name: data.airline_name,
+        plane_arriving_from: data.plane_arriving_from,
+        flight_number: data.flight_number,
+        return_location: data.return_location,
+        return_destination: data.return_destination,
+        return_passengers:data.return_passengers
+      } || parsedData;
     data.return_location = returnLocation || data.return_location;
     data.return_destination = returnDestination || data.return_destination;
     data.instructions = instructions || data.instructions;
@@ -145,60 +157,40 @@ export default function Booking() {
     data.return_passengers = returnPassengers || data.return_passengers;
     console.log(data.return_location);
     setData(data);
-  }, [
-    returnLocation,
-    returnDestination,
-
-    instructions,
-    returnInstructions,
-    returnPassengers,
-  ]);
+  }, [instructions, returnInstructions]);
   useEffect(() => {
-    if (session) {
-      // data.first_name = session?.user.user_metadata?.firstName;
-      // data.last_name = session?.user.user_metadata?.lastName;
-      // data.phone = session?.user.phone;
-      data.email = session?.user.email;
-      data.first_name=firstName
-      data.last_name=lastName
-      data.phone=phone
+    if (user) {
+      data.first_name = user?.first_name;
+      data.last_name = user?.last_name;
+      data.phone = user?.phone;
+      data.email = user?.email;
 
-      data.user_id = session?.user.id;
+      data.user_id = user?.id;
       setData(data);
       console.log(data);
-      return
+      return;
     }
-  }, [session, user_id,firstName,lastName,phone]);
+  }, [user]);
   useEffect(() => {
-    console.log(session);
-    console.log(data.user_id);
+    console.log(user, "user");
+    console.log(data.user_id, "data.user_id");
 
-    data.showSummary = false;
     console.log("dataaaa", data);
-
-    // allow other functions to execute, otherwise component mounts before the variables update
-    console.log("1 one", data.distance);
-    if (data.distance !== undefined) {
-      debounce(5000, console.log("DEBOUNCING"));
-      debounce(1000, setBookingDataVarToContextData());
-      debounce(1000, setTripDistance(data.distance));
-      debounce(1000, setTotalTripPrice(data.total_trip_price));
-    }
     if (data.distance === undefined) {
-      debounce(1000, savelocalStorage());
+      savelocalStorage();
     }
 
     console.log("BOOKING_DATA: ", BOOKING_DATA);
 
-    debounce(1000, calculatePrice());
+    calculatePrice();
 
-    debounce(1000, verifyDataIsValidBeforeEnablingSubmitButton());
+    verifyDataIsValidBeforeEnablingSubmitButton();
   }, [data]);
 
-  useEffect(() => {
-    savelocalStorage();
-    
-  }, []);
+  // useEffect(() => {
+  //   savelocalStorage();
+
+  // }, []);
 
   useEffect(() => {
     console.log("useEffect");
@@ -215,7 +207,26 @@ export default function Booking() {
       setLocalStorageToBookingDataVar();
     }
   }
-  function validateParsedData(obj) {
+  function validateParsedData(obj: {
+    location: string;
+    destination: string;
+    passengers: string;
+    date: string;
+    time?: string;
+    distance?: string;
+    duration?: string;
+    service?: string;
+    payment?: string;
+    return?: boolean;
+    return_date?: string;
+    return_time?: string;
+    flight_monitoring?: boolean;
+    airline_name?: string;
+    plane_arriving_from?: string;
+    flight_number?: string;
+    return_location?: string;
+    return_destination?: string;
+  }) {
     console.log(
       "validating",
       obj.location === undefined ||
@@ -237,7 +248,7 @@ export default function Booking() {
 
   function setContextDataToLocalStorageData() {
     // check whether booking data is present
-    let parsedData = JSON.parse(window.localStorage.getItem("BOOKING_DATA"));
+    parsedData = JSON.parse(window.localStorage.getItem("BOOKING_DATA")!);
     // console.log("parsedData:", parsedData);
     try {
       const parsedDataIsValid = validateParsedData(parsedData);
@@ -252,17 +263,17 @@ export default function Booking() {
         data.duration = parsedData.duration;
         data.service = parsedData.service;
         data.payment = parsedData.payment;
-        data.session = parsedData.session;
+       
 
         data.return = parsedData.return;
         data.return_date = parsedData.return_date;
         data.return_time = parsedData.return_time;
 
         data.flight_monitoring = parsedData.flight_monitoring;
-       data.airline_name=parsedData.airline_name,
-      data.plane_arriving_from= parsedData.plane_arriving_from,
-     data.flight_number = parsedData.flight_number,
-        data.return_location = parsedData.return_location;
+        (data.airline_name = parsedData.airline_name),
+          (data.plane_arriving_from = parsedData.plane_arriving_from),
+          (data.flight_number = parsedData.flight_number),
+          (data.return_location = parsedData.return_location);
         data.return_destination = parsedData.return_destination;
 
         data.return_passengers = parsedData.return_passengers;
@@ -292,7 +303,6 @@ export default function Booking() {
       data.phone !== undefined &&
       data.phone !== "" &&
       data.total_trip_price
-      
     ) {
       console.log("setting data inside cansubmit", canSubmit);
       // setData(data)
@@ -300,8 +310,8 @@ export default function Booking() {
     }
   }
   function setLocalStorageToBookingDataVar() {
-    console.log(BOOKING_DATA.distance !== undefined, "snjansj");
-    if (BOOKING_DATA.distance != undefined) {
+    // console.log(BOOKING_DATA.distance !== undefined, "snjansj");
+    if (BOOKING_DATA?.distance !== undefined) {
       console.log("setting booking data");
       window.localStorage.setItem("BOOKING_DATA", JSON.stringify(BOOKING_DATA));
     }
@@ -318,9 +328,9 @@ export default function Booking() {
       return_time: data.return_time,
 
       flight_monitoring: data.flight_monitoring,
-      airline_name:data.airline_name,
-      plane_arriving_from:data.plane_arriving_from,
-      flight_number:data.flight_number,
+      airline_name: data.airline_name,
+      plane_arriving_from: data.plane_arriving_from,
+      flight_number: data.flight_number,
       distance: data.distance,
       duration: data.duration,
       service: data.service,
@@ -335,6 +345,7 @@ export default function Booking() {
     // Create a Checkout Session.
     const response = await fetchPostJSON("/api/checkout_sessions", {
       amount: data.total_trip_price,
+      name: data.destination,
     });
 
     if (response.statusCode === 500) {
@@ -362,7 +373,7 @@ export default function Booking() {
       console.log(data.distance);
       let distanceInMilesString = data.distance.match(
         /[+-]?([0-9]*[.])?[0-9]+/
-      )[0];
+      )![0];
       distanceInMiles = parseFloat(distanceInMilesString);
 
       console.log(typeof distanceInMiles);
@@ -378,145 +389,141 @@ export default function Booking() {
     data.total_trip_price = tripPrice;
   }
   useEffect(() => {
-    setServiceSelected(data.service);
-    setReturnServiceSelected(data.return_service);
+    setServiceSelected(data.service as unknown as SetStateAction<null>);
+    setReturnServiceSelected(data.return_service as unknown as SetStateAction<null>);
   }, []);
-  const handleSelectService = (e) => {
-    if (e.target.id !== "") {
-      setServiceSelected(e.target.id);
-      data.service = e.target.id;
+  const handleSelectService = (e:MouseEvent<HTMLFormElement>):void => {
+    if ((e.target as HTMLFormElement).id !== "") {
+      setServiceSelected((e.target as HTMLFormElement).id as unknown as SetStateAction<null>) ;
+      data.service = (e.target as HTMLFormElement).id;
       console.log(data.service);
     }
     //
   };
-  const handleSelectReturnService = (e) => {
-    if (e.target.id !== "") {
-      setReturnServiceSelected(e.target.id);
-      data.return_service = e.target.id;
+  const handleSelectReturnService = (e:MouseEvent<HTMLFormElement>):void => {
+    if ((e.target as HTMLFormElement).id !== "") {
+      setReturnServiceSelected((e.target as HTMLFormElement).id as unknown as SetStateAction<null>);
+      data.return_service = (e.target as HTMLFormElement).id;
       console.log(data.return_service);
     }
     //
   };
-  
-function submitBoookingForUser(){
-  handleSubmitBooking(data).then((res) => {
-    if (res[0].id) {
-      const booking_id = res[0].id.toString();
-      console.log(res, "booking");
-      data.id = booking_id;
-    
-      if (data.payment === "Card") {
-    
-        getBookingsForUser(data.user_id).then((res) => {
-          console.log(res,"user bookings");
-          let prev = res[0].bookings
-          console.log( res);
-          if (res[0].bookings) {
-            console.log(prev, "prev");
-            updateUserBookings(data.user_id,booking_id,prev).then(res=>console.log(res,"updated bookings with prev"))
-            // firstUserBooking(data.user_id,booking_id).then(res=>console.log(res,"updated bookings without prev"))
-          }
-          else{
-            firstUserBooking(data.user_id,booking_id).then(res=>console.log(res,"updated bookings without prev"))
-          }
-        });
-      
-       
-        // handleRedirectToCheckout()
-      
-    }
-    if (data.payment === "Cash") {
-      setSuccessAlert(
-        "Please click the link in your inbox to confirm your booking."
-      );
-    }
-    
-    }
-    else {
-      // throw new Error(res)
-      setBookingError(res);
-    }
-  })
-  
-}
-  function handleBooking() {
-if (session){
-  submitBoookingForUser()
-  
-}
 
+  function submitBoookingForUser() {
+    handleSubmitBooking(data).then((res) => {
+      if (res[0].id) {
+        const booking_id = res[0].id.toString();
+        console.log(res, "booking");
+        data.id = booking_id;
 
-    else{
-    handleSignup({
-      first_name: data.first_name,
-      last_name: data.last_name,
-      email: data.email,
-      phone: data.phone,
-    }).then(
-      handleSubmitBooking(data).then((res) => {
-        if (res[0].id) {
-          const booking_id = res[0].id.toString();
-          console.log(res, "response");
-          data.id = booking_id;
-          console.log(booking_id);
-          if (data.payment === "Card") {
-            if (session) {
-              getBookingsForUser(data.user_id).then((res) => {
-                console.log(res);
-                let prev = res
-                if (!res) {
-                  updateUserBookings(data.user_id,prev).then(res=>console.log(res))
-                }
-              });
+        if (data.payment === "Card") {
+          getBookingsForUser(data.user_id).then((res) => {
+            console.log(res, "user bookings");
+            let prev = res![0].bookings;
+            console.log(res);
+            if (res![0].bookings) {
+              console.log(prev, "prev");
+              updateUserBookings(data.user_id, booking_id, prev).then((res) =>
+                console.log(res, "updated bookings with prev")
+              );
+              // firstUserBooking(data.user_id,booking_id).then(res=>console.log(res,"updated bookings without prev"))
             } else {
-              registerPublicUser({
-                first_name: data.first_name,
-                last_name: data.last_name,
-                email: data.email,
-                phone: data.phone,
-                booking_id: booking_id,
-              }).then((response) => console.log(response, "resasas"));
-              // handleRedirectToCheckout()
+              firstUserBooking(data.user_id, booking_id).then((res) =>
+                console.log(res, "updated bookings without prev")
+              );
             }
-          }
-          if (data.payment === "Cash") {
-            setSuccessAlert(
-              "Please click the link in your inbox to confirm your booking."
-            );
-          }
-        } else {
-          // throw new Error(res)
-          setBookingError(res);
-        }
-      })
-    );}
-  }
+          });
 
-  function handleClosePopup(e) {
-    if (e.target.id !== "popup") {
-      setShouldUsePreviousData(true);
-      setShowPopup(false);
+          handleRedirectToCheckout();
+        }
+        if (data.payment === "Cash") {
+          setSuccessAlert(
+            "Please click the link in your inbox to confirm your booking."
+          );
+        }
+      } else {
+        // throw new Error(res)
+        setBookingError(res);
+      }
+    });
+  }
+ async function handleBooking() {
+    if (user) {
+      submitBoookingForUser();
+    } else {
+     let {res,error}= await handleSignup({
+        first_name: data.first_name,
+        last_name: data.last_name,
+        email: data.email,
+        phone: data.phone,
+      }
+      )
+      if(res){
+       let {res,error} = await handleSubmitBooking(data)
+        
+          if (res) {
+            const booking_id = res[0].id.toString();
+            console.log(res, "response");
+            data.id = booking_id;
+            console.log(booking_id);
+            if (data.payment === "Card") {
+              if (user) {
+                getBookingsForUser(data.user_id).then(async (res) => {
+                  console.log(res);
+                  let prev:string[] = res!;
+                  if (!res) {
+                    updateUserBookings(data.user_id, booking_id, prev).then(async (res) =>
+                      console.log(res)
+                    );
+                  }
+                });
+              } else {
+                registerPublicUser({
+                  first_name: data.first_name,
+                  last_name: data.last_name,
+                  email: data.email,
+                  phone: data.phone,
+                  booking_id: booking_id,
+                }).then((response) => console.log(response, "resasas"));
+                // handleRedirectToCheckout()
+              }
+            }
+            if (data.payment === "Cash") {
+              setSuccessAlert(
+                "Please click the link in your inbox to confirm your booking."
+              );
+            }
+          } else {
+            // throw new Error(res)
+            setBookingError(res);
+          }
+        
+      }
+      
+      ;
     }
   }
+
+
   function handleRedirectToBooking() {
     window.localStorage.removeItem("BOOKING_DATA");
     router.push("/");
   }
-  function handleCheckboxClick(e) {
-    if (e.target.id === "different_return_service") {
-      if (e.target.checked) {
+  function handleCheckboxClick(e:MouseEvent<HTMLInputElement>) {
+    if ((e.target as HTMLInputElement).id === "different_return_service") {
+      if ((e.target as HTMLInputElement).checked) {
         setShowReturnServices(true);
       } else {
         setShowReturnServices(false);
-        data.return_service = null;
+        data.return_service = "";
       }
     }
-    if (e.target.id === "different_dropoff") {
-      if (e.target.checked) {
+    if ((e.target as HTMLInputElement).id === "different_dropoff") {
+      if ((e.target as HTMLInputElement).checked) {
         setDifferentDropoff(true);
       } else {
         setDifferentDropoff(false);
-        data.return_destination = null;
+        data.return_destination = "";
       }
     }
   }
@@ -525,7 +532,7 @@ if (session){
     <>
       {dataError && dataErrorDiv}
       <Layout>
-        {!session && showBanner && (
+        {!user && showBanner && (
           <Announcement
             onClick={() => setShowBanner(false)}
             className="fixed"
@@ -693,27 +700,31 @@ if (session){
               )}
             </>
 
-            {!session&& <section className="">
-              <div className="flex items-stretch w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
-                <p className="grow"> PASSENGER DETAILS</p>
-                <span className="flex self-center tracking-tight text-sm">
-                  <p className=" mr-2  "> or </p>
-                  <Link href="/signin?referrer=/booking">
-                    <a className=" text-sky-600 hover:text-sky-400">Sign In</a>
-                  </Link>
-                </span>
+            {!user && (
+              <section className="">
+                <div className="flex items-stretch w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
+                  <p className="grow"> PASSENGER DETAILS</p>
+                  <span className="flex self-center tracking-tight text-sm">
+                    <p className=" mr-2  "> or </p>
+                    <Link href="/signin?referrer=/booking">
+                      <a className=" text-sky-600 hover:text-sky-400">
+                        Sign In
+                      </a>
+                    </Link>
+                  </span>
 
-                {/* <div>or </div> */}
-              </div>
+                  {/* <div>or </div> */}
+                </div>
 
-              <div className="px- bg-gray-100 border-gray-400 shadow-sm lg:w-full ">
-                <div className="flex justify-between items-center cursor-pointer">
-                  <div className="w-full">
-                    <ContactDetails />
+                <div className="px- bg-gray-100 border-gray-400 shadow-sm lg:w-full ">
+                  <div className="flex justify-between items-center cursor-pointer">
+                    <div className="w-full">
+                      <ContactDetails />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </section>}
+              </section>
+            )}
             {data.flight_monitoring && (
               <>
                 <FlightMonitoring />

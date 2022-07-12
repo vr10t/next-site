@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { SetStateAction, useCallback, useEffect, useState } from "react";
 import { useAuthContext } from "../../../src/context/state";
 import Layout from "../../../src/components/layout";
 import Sidebar from "../../../src/components/Account/Sidebar";
@@ -12,73 +12,94 @@ import { BsCalendarFill } from "@react-icons/all-files/bs/BsCalendarFill";
 import { FaArrowRight } from "@react-icons/all-files/fa/FaArrowRight";
 import { FaAngleRight } from "@react-icons/all-files/fa/FaAngleRight";
 import { supabase } from "../../../utils/supabaseClient";
+import { Spinner } from "flowbite-react"; interface Booking{
+id:string
+date:string
+time:string
+location:string
+destination:string
+total:string
+upcoming?:boolean
+  }
 export default function MyAccount() {
-  const session = useAuthContext();
+  const user = useAuthContext();
   const router = useRouter();
-  const [bookings, setBookings] = useState([]);
-  const id = session?.user.id;
-  const [response, setResponse] = useState([]);
-  const [userBookings, setUserBookings] = useState([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const id = user?.id;
+  const [response, setResponse] = useState<Booking[]>([]);
+  const [userBookings, setUserBookings] = useState<Booking[]>([]);
+  const [sortedBookings,setSortedBookings]= useState<Booking[]>([])
+  const [loading,setLoading]= useState(false)
+  const {data,isLoading,isError}= getBookings()
+ 
   useEffect(() => {
     // let date=dayjs(bookings[0].date + bookings[0].time)
     // console.log(date);
 
     // const now=dayjs().isAfter(date)
     // console.log(now, "IS IT BEFORE");
-    console.log(session);
-    if (!session) {
+   
+    console.log(user);
+    if (!user) {
       // router.push("/signin")
       return;
     }
-    getBookingsForUser(id).then((res) => {
-      console.log(res, "USER bOOKINGS");
-      let [data, error] = res;
-      if (data) setUserBookings(res[0].bookings[0].split(","));
-      if (error) console.error(error);
-      console.log(userBookings);
-    });
-    getBookings().then((resp) => {
-      console.log(resp, "ALL bOOKings");
-      setResponse(resp);
-    });
+    try {
+      
+      setLoading(true)
+      setUserBookings(user?.bookings[0].split(",") as unknown as SetStateAction<Booking[]> );
+     
+    
+    if(data){console.log(data.data, "ALL bOOKings");
+      setResponse(data.data);}
+      
+    console.log(data[0],isError);
+
+    } catch (error) {
+      console.error( error)
+    }
+    finally{setLoading(false)}
+    
+    
     //  let now = dayjs().add(2,'hours')
     //  console.log(now);
 
     console.log(bookings, "newArray");
-  }, [session]);
+  }, [user,data,]);
 
   useEffect(() => {
     console.log("response", response, "userbooking", userBookings);
-    setBookings(
-      response.filter((element) => userBookings.includes(element.id.toString()))
+   
+    setBookings(response.filter((element) => userBookings.includes((element as any).id))
     );
    
     console.log(bookings, "BOOKINGS");
-  }, [response, userBookings]);
+  }, [response,userBookings]);
   useEffect(()=>{
    const isUpcoming = bookings.map((booking)=>{
       let date=dayjs(booking.date + booking.time)
       
       let upcoming = dayjs().isBefore(date)
-      return{ id:booking.id,upcoming:upcoming}
+      return{ ...booking,upcoming:upcoming}
       // setBookings(bookings=>[...bookings])
     })
-    console.log(isUpcoming);
+    setSortedBookings(isUpcoming)
+    console.log(isUpcoming,"ISUPCOMING");
   },[bookings])
-
-  function handleClick(ev) {
-    router.push(`/my-account/bookings/${ev.target.id}`);
+console.log(sortedBookings,"SORTED");
+  function handleClick(ev:React.MouseEvent<HTMLDivElement>) {
+    router.push(`/my-account/bookings/${(ev.target as any).id}`);
   }
   return (
     <>
       <Layout title="My Bookings">
         <div className="flex">
           <Sidebar />
-          <div className="flex z-20 flex-col gap-4 items-center pt-10 w-full h-screen ">
+          {sortedBookings.length === 0?<div className="flex justify-center w-full mt-64"><Spinner size="xl"  /></div>: <div className="flex z-20 flex-col gap-4 items-center pt-10 w-full ">
           <div className="flex z-0 flex-col items-start w-full  0">
           <p className=" text-2xl text-gray-900 font-medium tracking-wide">Upcoming</p>
-          {bookings.map((booking) => (
-                <div
+          {sortedBookings.map((booking) => (
+               booking.upcoming?  <div
                   onClick={handleClick}
                   className="flex justify-between px-6 py-4 my-2 w-full h-32 rounded-md cursor-pointer group hover:bg-gray-200"
                   key={booking.id}
@@ -123,13 +144,13 @@ export default function MyAccount() {
                   <span className="self-center text-gray-900 text-xl">
                     <FaAngleRight />
                   </span>
-                </div>
+                </div> :<></>
               ))}
           </div>
             <div className="flex z-0 flex-col items-start w-full  mb-10">
             <p className=" text-2xl text-gray-900 font-medium tracking-wide">Past</p>
-              {bookings.map((booking) => (
-                <div
+              {sortedBookings.map((booking) => (
+                booking.upcoming?<></>:<div
                   onClick={handleClick}
                   className="flex justify-between px-6 py-4 my-2 w-full h-32 rounded-md cursor-pointer group hover:bg-gray-200"
                   key={booking.id}
@@ -177,7 +198,7 @@ export default function MyAccount() {
                 </div>
               ))}
             </div>
-          </div>
+          </div>}
         </div>
       </Layout>
     </>

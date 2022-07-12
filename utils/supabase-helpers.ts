@@ -1,12 +1,18 @@
 import { supabase, getServiceSupabase } from "./supabaseClient";
-export function ev() {
-  supabase.storage;
-}
-export async function handleSignup(ev) {
+import useSWR from "swr";
+import { fetchGetJSON } from "./api-helpers";
+import { AppData } from "../src/context/state";
+
+export async function handleSignup(ev: {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+}) {
   console.log(ev);
   const res = await fetch("/api/register", {
     body: JSON.stringify({
-      first_name: ev.first_name,
+      first_name: ev.first_name!,
       last_name: ev.last_name,
       email: ev.email,
       phone: ev.phone,
@@ -25,33 +31,27 @@ export async function handleSignup(ev) {
     return data;
   }
 }
-export async function getBookings(which) {
-  const res = await fetch("/api/get-bookings", {
-    body: "",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-  });
-  const { data, error } = await res.json();
-  if (data) {
-    return data;
-  } else {
-    return error;
-  }
-  // return res
+export function getBookings() {
+  const { data, error } = useSWR([`/api/get-bookings`, ""], fetcher);
+
+  return {
+    data: data,
+    isLoading: !error && !data,
+    isError: error,
+  };
 }
-export async function getBookingById(id) {
-  const { data, error } = await supabase.from("bookings").select().eq("id", id);
-  if (data) {
-    return data;
-  } else {
-    return error;
-  }
+export function getBookingById(id: string) {
+  const { data, error } = useSWR([`/api/get-booking-id`, id], fetcher);
+
+  return {
+    data: data,
+    isLoading: !error && !data,
+    isError: error,
+  };
 }
-export async function getBookingsForUser(uid) {
+export async function getBookingsForUser(uid: string) {
   const { data, error } = await supabase
-    .from("users")
+    .from("profiles")
     .select("bookings")
     .eq("user_id", uid);
 
@@ -60,20 +60,20 @@ export async function getBookingsForUser(uid) {
     return data;
   }
 }
-export async function getPublicUser(uid) {
-  const { data, error } = await supabase
-    .from("users")
-    .select()
-    .eq("user_id", uid);
+const fetcher = (url: string, id: string) =>
+  fetch(url, {
+    method: "POST",
+    headers: new Headers({ "Content-Type": "application/json", id: id }),
+    credentials: "same-origin",
+  }).then((res) => res.json());
 
-  if (error) return error;
-  if (data) {
-    return data;
-  }
-}
-export async function updateUserBookings(uid, bid, prev) {
+export async function updateUserBookings(
+  uid: string,
+  bid: string,
+  prev: string[]
+) {
   const { data, error } = await supabase
-    .from("users")
+    .from("profiles")
     .update({ bookings: [prev + "," + bid] })
     .eq("user_id", uid)
     .single();
@@ -82,9 +82,19 @@ export async function updateUserBookings(uid, bid, prev) {
     return data;
   }
 }
-export async function updateUserDetails(uid, values) {
+export async function updateUserDetails(
+  uid: string,
+  values: {
+    id: string | undefined;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone: string;
+    bookings: string[];
+  }
+) {
   const { data, error, status } = await supabase
-    .from("users")
+    .from("profiles")
     .update(values)
     .eq("user_id", uid);
 
@@ -93,12 +103,16 @@ export async function updateUserDetails(uid, values) {
     return { data: data, status: status };
   }
 }
-export async function deleteUserBooking(uid, bid, prev) {
+export async function deleteUserBooking(
+  uid: string,
+  bid: string,
+  prev: string[]
+) {
   //where prev is all user bookings
   const index = prev.findIndex((val) => val === bid);
   prev.splice(index, 1);
   const { data, error } = await supabase
-    .from("users")
+    .from("profiles")
     .update({ bookings: [prev] })
     .eq("user_id", uid)
     .single();
@@ -107,9 +121,9 @@ export async function deleteUserBooking(uid, bid, prev) {
     return data;
   }
 }
-export async function firstUserBooking(uid, bid) {
+export async function firstUserBooking(uid: string, bid: string) {
   const { data, error } = await supabase
-    .from("users")
+    .from("profiles")
     .update({ bookings: [bid] })
     .eq("user_id", uid);
   if (error) return error;
@@ -118,7 +132,13 @@ export async function firstUserBooking(uid, bid) {
   }
 }
 
-export async function registerPublicUser(ev) {
+export async function registerPublicUser(ev: {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  booking_id: string;
+}) {
   const res = await fetch("/api/register-user", {
     body: JSON.stringify({
       first_name: ev.first_name,
@@ -141,7 +161,7 @@ export async function registerPublicUser(ev) {
     return data;
   }
 }
-export async function handleSubmitBooking(ev) {
+export async function handleSubmitBooking(ev: AppData) {
   console.log(ev);
   const res = await fetch("/api/submit-booking", {
     body: JSON.stringify({
@@ -183,7 +203,7 @@ export async function handleSubmitBooking(ev) {
     return data;
   }
 }
-export async function cancelBooking(id) {
+export async function cancelBooking(id:string) {
   const { data, error } = await supabase
     .from("bookings")
     .delete()

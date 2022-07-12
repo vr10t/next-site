@@ -47,9 +47,10 @@ export default function SignUp(props) {
 
   async function handleSubmit(ev) {
     console.log(ev);
-    // const {user, error} = await supabase.auth.signUp({email:ev.email,password:ev.password})
+    const {user, error} = await supabase.auth.signUp({email:ev.email,password:ev.password})
     // if(user) router.push(referrer||"/")
-    // if(user) console.log(user);
+    if(user) console.log(user);
+    if (error) console.error(error)
     // if (error) setLoginError(error.message)
   }
 
