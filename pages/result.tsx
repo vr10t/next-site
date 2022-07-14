@@ -9,7 +9,7 @@ import ClearCart from '../src/components/ClearCart';
 import { fetchGetJSON } from '../utils/api-helpers';
 import useSWR from 'swr';
 import { useAppContext } from '../src/context/state';
-import {cancelBooking} from "../utils/supabase-helpers"
+import {deleteBooking} from "../utils/supabase-helpers"
 
 const ResultPage: NextPage = () => {
   const router = useRouter();
@@ -26,7 +26,7 @@ const {data:bookingData,setData}= useAppContext()
   if (error) {
     setData(bookingData)
     let id = bookingData.id
-cancelBooking(id)
+deleteBooking(id)
   };
 
   return (
