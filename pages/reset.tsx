@@ -4,7 +4,7 @@ import { supabase } from "../utils/supabaseClient"
 import React, { useState } from "react";
 import toast, {Toaster} from "react-hot-toast";
 import Layout from "../src/components/layout";
-export default function ResetPassword(params) {
+export default function ResetPassword() {
     
 
    
@@ -12,7 +12,7 @@ export default function ResetPassword(params) {
 
   const [email, setEmail] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:React.FormEvent) => {
     console.log("name");
 
     e.preventDefault();

@@ -1,12 +1,12 @@
 import { getServiceSupabase } from "../../utils/supabaseClient";
-import { withSentry } from '@sentry/nextjs';
+
 async function handler(req, res) {
   // Get body submitted in request's body.
   // const router =useRouter()
   const supabase = getServiceSupabase()
-  const body = req.body;
+  const {body} = req;
 
-  let { data, error } = await supabase
+  const { data, error } = await supabase
     .from("users")
     .insert([
       {
@@ -20,10 +20,10 @@ async function handler(req, res) {
 
   if (error) {
     // console.warn(error);
-    return res.status(401).json({ error:error});
+    return res.status(401).json({ error});
   }
   // Send 200 success if there were no errors!
   // and also return a copy of the object we received from Supabase
-  return res.status(200).json({ data: data });
+  return res.status(200).json({ data });
 }
 export default handler

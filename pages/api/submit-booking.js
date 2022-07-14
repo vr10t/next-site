@@ -36,9 +36,10 @@ async function handler(req, res) {
     },
   ]);
 
+
   if (error) {
     // console.warn(error);
-    return res.status(401).json({ error: error.message });
+    return res.status(401).json({ error });
   }
   // Send 200 success if there were no errors!
   // and also return a copy of the object we received from Supabase

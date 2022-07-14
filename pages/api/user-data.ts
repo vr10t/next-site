@@ -6,16 +6,11 @@ import { NextApiRequest, NextApiResponse } from 'next';
   const supabase=getServiceSupabase()
  const id = req.headers.id
     const { data, error,status } = await supabase
-      .from("users")
-      .select()
-      .eq("user_id", id);
+      .from("profiles")
+      .select("*")
+      .eq("id", id);
   
-      if (status===200){
-          return res.status(200).json(data)
-      }
-      else{
-          return res.status(status).json({error:error?.message})
-      }
-//  return req
+      
+ return res.status(status).json({data,error})
   }
   export default handler
