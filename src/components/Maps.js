@@ -1,13 +1,13 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
-import {supabase} from '../../utils/supabaseClient'
 import distance from 'hpsweb-google-distance'
 import  {
   geocodeByAddress,
   getLatLng,
 } from 'react-places-autocomplete';
+import {supabase} from '../../utils/supabaseClient'
 import getDistance from '../../utils/get-distance'
+
 const PlacesAutocomplete = dynamic(() => import('react-places-autocomplete'))
 
  
@@ -51,7 +51,7 @@ export default function Input(props) {
        destination: `${destination}`,
        units: "imperial"
      })
-     .then(function (data) {
+     .then((data) => {
       
     
       setDistanceResults(data)
@@ -60,7 +60,7 @@ export default function Input(props) {
    
        
      })
-     .catch(function (err) {
+     .catch((err) => {
        console.log(err);
        alert("Please provide a valid route")
      });

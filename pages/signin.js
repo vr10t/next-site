@@ -28,7 +28,7 @@ export default function SignIn(props) {
   const [showReturnDetails, setShowReturnDetails] = useState(false);
   const router = useRouter()
 //   const { data, setData } = useAppContext();
- const referrer=router.query.referrer
+ const {referrer} = router.query
  console.log(referrer);
   useEffect(() => {
   
@@ -55,6 +55,11 @@ export default function SignIn(props) {
     if(user) console.log(user);
     if (error) setLoginError(error.message)
   };
+  async function signInWithGoogle() {
+    const { user, session, error } = await supabase.auth.signIn({
+      provider: 'google',
+    })
+  }
 
   return (<>
   {loginError && (
@@ -65,7 +70,7 @@ export default function SignIn(props) {
             </Alert>
           </div>
         )}
-  <div className="z-[-20] h-sc bg-gray-50"><Image src={"/spiral.png"} layout="fill" /></div>
+  <div className="z-[-20] h-sc bg-gray-50"><Image src="/spiral.png" layout="fill" /></div>
       <div className="flex bg-gray-200 justify-center">
       
       
@@ -178,7 +183,7 @@ export default function SignIn(props) {
                       <button
                        
                         type="submit"
-                        className=" w-1/2 h-10 bg-sky-500  rounded-full text-stone-50 text-xl self-center    transition-all duration-1000 ease-in-out  ">
+                        className=" w-1/2 h-10 bg-sky-500  rounded-lg text-stone-50 text-xl self-center    transition-all duration-1000 ease-in-out  ">
                         Login
                       </button>
                     </div>
@@ -187,6 +192,13 @@ export default function SignIn(props) {
         
         
         </div>
+        <p className="flex justify-center mb-4 text-md text-gray-800">Or sign in with:</p>
+        <button type="button" onClick={signInWithGoogle} className="py-2 px-4 flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg ">
+            <svg width="20" height="20" fill="currentColor" className="mr-2" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                <path d="M896 786h725q12 67 12 128 0 217-91 387.5t-259.5 266.5-386.5 96q-157 0-299-60.5t-245-163.5-163.5-245-60.5-299 60.5-299 163.5-245 245-163.5 299-60.5q300 0 515 201l-209 201q-123-119-306-119-129 0-238.5 65t-173.5 176.5-64 243.5 64 243.5 173.5 176.5 238.5 65q87 0 160-24t120-60 82-82 51.5-87 22.5-78h-436v-264z" />
+            </svg>
+            Google
+        </button>
        
     </div></div></>
   );

@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { withSentry } from '@sentry/nextjs';
+import Stripe from 'stripe';
 import { CURRENCY } from '../../../config/index';
 import { formatAmountForStripe } from '../../../utils/stripe-helpers';
 import { getServiceSupabase } from '../../../utils/supabaseClient';
 
-import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   // https://github.com/stripe/stripe-node#configuration
   apiVersion: '2020-08-27',
@@ -13,9 +13,9 @@ const supabase = getServiceSupabase();
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    //TODO: use amount from db
-    //get total from supabase using bookingId
-    const bookingId = req.body.bookingId;
+    // TODO: use amount from db
+    // get total from supabase using bookingId
+    const {bookingId} = req.body;
     const { data: booking, error } = await supabase
       .from('bookings')
       .select('*')
@@ -25,7 +25,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
     const amount = booking![0].total;
     // const amount = formatAmountForStripe(total, CURRENCY);
-    const name: string = req.body.name;
+    const {name} = req.body;
     try {
       // Create Checkout Sessions from body params.
       const params: Stripe.Checkout.SessionCreateParams = {
@@ -37,19 +37,22 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             amount: formatAmountForStripe(amount, CURRENCY),
             currency: CURRENCY,
             quantity: 1,
+            
           },
         ],
+        
         success_url: `${req.headers.origin}/booking?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${req.headers.origin}/booking`,
         metadata: { bookingId: req.body.bookingId },
       };
+     if(req.body.customerId)  params.customer= req.body.customerId
       const checkoutSession: Stripe.Checkout.Session =
         await stripe.checkout.sessions.create(params);
-      const bookingId = req.body.bookingId;
+      const {bookingId} = req.body;
       const sessionId = checkoutSession.id;
       await supabase
         .from('bookings')
-        .update({ status: 'pending' })
+        .update({ status: 'Pending', checkout_session:sessionId })
         .eq('id', bookingId);
 
       setTimeout(
@@ -64,7 +67,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             console.log('session paid');
             const { data, error, status } = await supabase
               .from('bookings')
-              .update({ status: 'paid' })
+              .update({ status: 'Confirmed' })
               .eq('id', bookingId);
             if (error) {
               console.log(error, 'update error');

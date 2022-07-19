@@ -1,23 +1,13 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useAuthContext } from "../../src/context/state";
-import Layout from "../../src/components/layout";
-import Sidebar from "../../src/components/Account/Sidebar";
-import { supabase } from "../../utils/supabaseClient";
 import { FaPencilAlt } from "@react-icons/all-files/fa/FaPencilAlt";
 import * as Yup from "yup";
+import Image from "next/image";
 import {
   formatPhoneNumber,
   formatPhoneNumberIntl,
   isPossiblePhoneNumber,
 } from "react-phone-number-input";
-import {
-  getBookings,
-  getBookingsForUser,
- 
-  updateUserDetails,
-} from "../../utils/supabase-helpers";
-import Initial from "../../src/components/Account/Initial";
 import { Form, Field, Formik } from "formik";
 import min from "libphonenumber-js/min/metadata";
 import {
@@ -27,6 +17,17 @@ import {
   validatePhoneNumberLength,
 } from "libphonenumber-js/core";
 import toast, { Toaster } from "react-hot-toast";
+import Initial from "../../src/components/Account/Initial";
+import {
+  getBookings,
+  getBookingsForUser,
+ 
+  updateUserDetails,
+} from "../../utils/supabase-helpers";
+import { supabase } from "../../utils/supabaseClient";
+import Sidebar from "../../src/components/Account/Sidebar";
+import Layout from "../../src/components/layout";
+import { useAuthContext } from "../../src/context/state";
 
 // const fetcher = (id) => fetch(id).then((res) => res.json() )
 export default function MyAccount() {
@@ -53,9 +54,9 @@ export default function MyAccount() {
   }, [user]);
   const [loading, setLoading] = useState(false);
   const [phoneError, setPhoneError] = useState("");
-  const fullName =
-    user?.first_name + " " + user?.last_name;
+  const fullName =user?.user_metadata.full_name || `${user?.first_name  } ${  user?.last_name}`;
   const initial = user?.first_name?.slice(0, 1);
+  const profilePic=<Image className="object-fill rounded-full -z-20" src={user?.user_metadata.avatar_url||'/'} width={128} height={128} />;
  
 
   const router = useRouter();
@@ -65,7 +66,7 @@ export default function MyAccount() {
     console.log(user);
     if (!user) {
       // router.push("/signin")
-      return;
+      
     }
     
 
@@ -81,7 +82,7 @@ export default function MyAccount() {
     console.log(isPossiblePhoneNumber(values.phone, "GB"), values.phone);
     if (!isPossiblePhoneNumber(values.phone, "GB")) {
       setPhoneError("Invalid number");
-      return;
+      
     } else {
       try {
         
@@ -154,15 +155,14 @@ export default function MyAccount() {
     }
   }
   return (
-    <>
-      <Layout title="My Account">
+    <Layout title="My Account">
         <div className="flex relative z-20">
           <Sidebar />
           
           <div className="flex flex-col gap-4 items-center pt-10 w-full h-screen bg-gray-100 -z-20">
             <div
-              className={`flex justify-center items-center pb-2 w-32 h-32 text-5xl font-medium rounded-full select-none bg-black/10 text-black/80`}>
-              {initial}
+              className="flex  justify-center items-center pb-2 w-32 h-32 text-5xl font-medium rounded-full select-none  text-black/80">
+              {profilePic||initial}
             </div>{" "}
             <Toaster />
             {edit ? (
@@ -270,7 +270,7 @@ export default function MyAccount() {
                   <FaPencilAlt aria-label="Edit" className="z-20 self-center" />
                 </span>
                 <p className="">
-                  { user?.first_name} {user?.last_name}
+                  {fullName}
                 </p>
                 <p className="">{ user?.email}</p>
                 <p className="">{user?.phone}</p>
@@ -279,6 +279,5 @@ export default function MyAccount() {
           </div>
         </div>{" "}
       </Layout>
-    </>
   );
 }

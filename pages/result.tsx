@@ -1,13 +1,14 @@
+
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 
+import useSWR from 'swr';
 import Layout from '../src/components/layout';
 import PrintObject from '../src/components/PrintObject';
 import Cart from '../src/components/Cart';
 import ClearCart from '../src/components/ClearCart';
 
 import { fetchGetJSON } from '../utils/api-helpers';
-import useSWR from 'swr';
 import { useAppContext } from '../src/context/state';
 import {deleteBooking} from "../utils/supabase-helpers"
 
@@ -25,7 +26,7 @@ const {data:bookingData,setData}= useAppContext()
 
   if (error) {
     setData(bookingData)
-    let id = bookingData.id
+    const {id} = bookingData
 deleteBooking(id)
   };
 

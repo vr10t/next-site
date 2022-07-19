@@ -30,17 +30,17 @@ export function debounce(func, wait, immediate) {
   // 'private' variable for instance
   // The returned function will be able to reference this due to closure.
   // Each call to the returned function will share this common timer.
-  var timeout;
+  let timeout;
 
   // Calling debounce returns a new anonymous function
   return function () {
     // reference the context and args for the setTimeout function
-    let context = this,
-      args = arguments;
+    const context = this;
+      const args = arguments;
 
     // Should the function be called now? If immediate is true
     //   and not already in a timeout then the answer is: Yes
-    let callNow = immediate && !timeout;
+    const callNow = immediate && !timeout;
 
     // This is the basic debounce behaviour where you can call this
     //   function several times, but it will only execute once
@@ -49,7 +49,7 @@ export function debounce(func, wait, immediate) {
     clearTimeout(timeout);
 
     // Set the new timeout
-    timeout = setTimeout(function () {
+    timeout = setTimeout(() => {
       // Inside the timeout function, clear the timeout variable
       // which will let the next execution run when in 'immediate' mode
       timeout = null;

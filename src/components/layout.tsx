@@ -1,19 +1,19 @@
 import Head from "next/head";
 import Image from "next/image";
-import App from "./App";
 import Link from "next/link";
+import { ReactNode } from "react";
+import App from "./App";
 import Navbar from "./Navbar/V2";
 import Summary from "./Booking/Summary"
 import Footer from "./Footer/Footer";
-import { ReactNode } from "react";
 
 type Props = {
   children: ReactNode;
   title?: string;
 };
 
-const Layout = ({ children, title }: Props) => (
-  <>
+function Layout({ children, title }: Props) {
+  return <>
     <Head>
       <link rel="icon" href="/favicon.ico" />
       <meta
@@ -26,12 +26,12 @@ const Layout = ({ children, title }: Props) => (
     </Head>
 
     <Navbar />
-    <div className="h-20 bg-transparent"></div>
-    <main className="">{children}</main>
+    <div className="h-20 bg-transparent" />
+    <main className="overflow-x-hidden min-h-screen" >{children}</main>
 
     <div className="">
       <Footer />
     </div>
   </>
-);
+}
 export default Layout;

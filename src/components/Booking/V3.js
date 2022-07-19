@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback , useEffect, useState } from "react";
 import { FaMapMarkerAlt } from "@react-icons/all-files/fa/FaMapMarkerAlt";
 import { BsFillPersonFill } from "@react-icons/all-files/bs/BsFillPersonFill";
 import { FaPhoneAlt } from "@react-icons/all-files/fa/FaPhoneAlt";
@@ -7,30 +7,29 @@ import { BsCalendarFill } from "@react-icons/all-files/bs/BsCalendarFill";
 import { FaMapPin } from "@react-icons/all-files/fa/FaMapPin";
 import { BsClockFill } from "@react-icons/all-files/bs/BsClockFill";
 import { FaCrosshairs } from "@react-icons/all-files/fa/FaCrosshairs";
-import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { useAppContext } from "../../context/state";
-import Map from "../Map.js";
 import { geocodeByAddress, getLatLng, } from "react-places-autocomplete";
 import { getURL } from "next/dist/shared/lib/utils";
 import { Loader } from "@googlemaps/js-api-loader";
-import styles from "./Form.module.scss";
 import { Alert, Button, Checkbox, Label, Tooltip } from "flowbite-react";
 import { FaArrowRight } from "@react-icons/all-files/fa/FaArrowRight";
-import { handleGetDistance } from "../../../utils/google-helpers";
 import { throttle, debounce } from "throttle-debounce";
-import { AutocompleteInput } from "./AutocompleteInput";
-import { reverseGeocode } from "../../../utils/google-helpers";
-import DateSelect from "./DateSelect";
 import Image from "next/image";
 import Link from "next/link";
-import Ride from "../Svg/Ride";
 import { Formik, Form, Field, } from "formik";
+import styles from "./Form.module.scss";
+import { handleGetDistance , reverseGeocode } from "../../../utils/google-helpers";
+import { AutocompleteInput } from "./AutocompleteInput";
+import DateSelect from "./DateSelect";
+import Ride from "../Svg/Ride";
+import Map from "../Map.js";
+import { useAppContext } from "../../context/state";
 import StepperInput from "./StepperInput";
+
 const PlacesAutocomplete = dynamic(() => import("react-places-autocomplete"));
 
 // const HCaptcha = dynamic(() => import("@hcaptcha/react-hcaptcha"));
@@ -72,13 +71,13 @@ function FormV3() {
   const [addReturn, setAddReturn] = useState(false);
   const [addFlightMonitoring, setAddFlightMonitoring] = useState(false);
   const [canSearch, setCanSearch] = useState(false);
-  let dateObject = new Date();
+  const dateObject = new Date();
   let day = dateObject.getDate();
   let month = dateObject.getMonth() + 1;
-  let year = dateObject.getFullYear();
-  if (month < 10) month = "0" + month;
-  if (day < 10) day = "0" + day;
-  let today = year + "-" + month + "-" + day;
+  const year = dateObject.getFullYear();
+  if (month < 10) month = `0${  month}`;
+  if (day < 10) day = `0${  day}`;
+  const today = `${year  }-${  month  }-${  day}`;
   const router = useRouter();
 
   function handleSearch(values) {
@@ -231,10 +230,10 @@ function FormV3() {
   }
   function showPosition(position) {
     console.log(
-      "Latitude: " +
-        position.coords.latitude +
-        "<br>Longitude: " +
-        position.coords.longitude
+      `Latitude: ${ 
+        position.coords.latitude 
+        }<br>Longitude: ${ 
+        position.coords.longitude}`
     );
     reverseGeocode(position.coords.latitude, position.coords.longitude).then(
       (result) => {
@@ -294,7 +293,7 @@ function FormV3() {
         )}
       </div> */}
 
-      <div className="lg:absolute  lg:w-1/2 flex flex-col mt-24 mb-4 lg:top-40 lg:left-20">
+      <div className="lg:absolute overflow-x-hidden lg:w-1/2 flex flex-col mt-24 mb-4 lg:top-40 lg:left-20">
         <h1 className="lg:text-7xl text-3xl md:text-5xl text-center text-gray-900 font-bold">
           Booking a taxi has never been easier!
         </h1>
@@ -313,7 +312,7 @@ function FormV3() {
 
       <div>
         <div>
-          <div className="flex flex-col  w-screen xs:w-96 lg:absolute  bg-gray-100 shadow-lg p-4 rounded-lg -top-96  lg:mt-0 justify-center self-center lg:top-40 lg:right-10 items-center mx-auto grow     ">
+          <div className="flex flex-col overflow-x-hidden  w-screen xs:w-96 lg:absolute  bg-gray-100 shadow-lg p-4 rounded-lg -top-96  lg:mt-0 justify-center self-center lg:top-40 lg:right-10 items-center mx-auto grow     ">
             {data.distance && (
               <span className="w-full h-full text-center text-gray-900 text-xl ">
                 Est. distance: {data.distance}
@@ -380,11 +379,11 @@ function FormV3() {
                         <div className="absolute bg-gray-50 z-[999] ">
                           {loading && <div>Loading...</div>}
                           {suggestions.map((suggestion) => {
-                            let className = suggestion.active
+                            const className = suggestion.active
                               ? "bg-gray-200 py-2 px-4 max-xs"
                               : "bg-gray-50 py-2 px-4 max-xs";
                             // inline style for demonstration purpose
-                            let style = suggestion.active
+                            const style = suggestion.active
                               ? {
                                   backgroundColor: "rgb(229 231 235)",
                                   cursor: "pointer",
@@ -393,7 +392,7 @@ function FormV3() {
                                   backgroundColor: "rgb(249 250 251)",
                                   cursor: "pointer",
                                 };
-                            let key = suggestion.placeId;
+                            const key = suggestion.placeId;
                             return (
                               <div
                                 {...getSuggestionItemProps(suggestion, {

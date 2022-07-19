@@ -1,5 +1,5 @@
 export default function ButtonPhat(props){
-    const clr=props.clr
+    const {clr} = props
    
     return(
 

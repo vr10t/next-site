@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import * as Yup from "yup";
 import { Field, Formik, useFormik, Form } from "formik";
-import { supabase } from "../utils/supabaseClient";
 import PhoneInput, {
   formatPhoneNumber,
   isPossiblePhoneNumber,
@@ -15,6 +14,7 @@ import { useRouter } from "next/router";
 import { Checkbox } from "flowbite-react";
 import { FaLock } from "@react-icons/all-files/fa/FaLock";
 import Link from "next/link";
+import { supabase } from "../utils/supabaseClient";
 
 export default function SignUp(props) {
   const [firstName, setFirstName] = useState("");
@@ -25,7 +25,7 @@ export default function SignUp(props) {
   const [showReturnDetails, setShowReturnDetails] = useState(false);
   //   const { data, setData } = useAppContext();
   const router = useRouter();
-  const referrer = router.query.referrer;
+  const {referrer} = router.query;
 
   useEffect(() => {}, [firstName, lastName, email, phone]);
   function handlePhoneError() {
@@ -57,7 +57,7 @@ export default function SignUp(props) {
   return (
     <>
       <div className="z-[-20] h-sc bg-gray-50">
-        <Image src={"/spiral.png"} layout="fill" />
+        <Image src="/spiral.png" layout="fill" />
       </div>
       <div className="flex bg-gray-200 justify-center">
         <div className="flex z-20 flex-col  h-3/4 my-8 w-full max-w-md px-4 py-8 mx-4 bg-gray-100 rounded-lg shadow sm:px-6 md:px-8 lg:px-10">
@@ -270,7 +270,7 @@ export default function SignUp(props) {
                       </div>
                     )}
                   </div>
-                  <div className="h-[100px]"></div> {errors.acceptTerms && touched.acceptTerms && (
+                  <div className="h-[100px]" /> {errors.acceptTerms && touched.acceptTerms && (
                     
                       <p className="relative top-3 px-2 text-sm font-medium w-max bg-pink-400 text-white rounded-lg">
                         {errors.acceptTerms} 
@@ -307,7 +307,7 @@ export default function SignUp(props) {
                   // {...getFieldProps("phone")}
                   name="phone"
                   id="phone"
-                  className={`inline-flex items-center pl-2 w-full text-lg text-gray-900  bg-gray-50 rounded-lg border-r-2 shadow-sm appearance-none focus:outline-none focus:ring-2`}
+                  className="inline-flex items-center pl-2 w-full text-lg text-gray-900  bg-gray-50 rounded-lg border-r-2 shadow-sm appearance-none focus:outline-none focus:ring-2"
                   defaultCountry="GB"
                   initialValueFormat="national"
                  

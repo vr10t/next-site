@@ -85,7 +85,7 @@ export default function Contact() {
                   placeholder="Message"
                   rows="8"
                   id="message"
-                  name="Message"></textarea>
+                  name="Message" />
               </div>
 
               <div className="mt-4">

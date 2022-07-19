@@ -10,20 +10,20 @@ import { FaHourglassHalf } from "@react-icons/all-files/fa/FaHourglassHalf";
 import { FaTaxi } from "@react-icons/all-files/fa/FaTaxi";
 import { FaCreditCard } from "@react-icons/all-files/fa/FaCreditCard";
 import { FaCheck } from "@react-icons/all-files/fa/FaCheck";
-import { useAppContext } from "../../context/state";
-import { Tooltip } from "flowbite-react";
-import Receipt from "../Svg/Receipt";
+import { Tooltip , Spinner } from "flowbite-react";
 import { useState } from "react";
-import AutocompleteInput from "../Booking/AutocompleteInput";
 import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
-import { handleGetDistance } from "../../../utils/google-helpers";
-import { Spinner } from "flowbite-react";
 import { useFormik } from "formik";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { FaSuitcase } from "@react-icons/all-files/fa/FaSuitcase";
 import { FaPlaneDeparture } from "@react-icons/all-files/fa/FaPlaneDeparture";
+import { handleGetDistance } from "../../../utils/google-helpers";
+import AutocompleteInput from "./AutocompleteInput";
+import Receipt from "../Svg/Receipt";
+import { useAppContext } from "../../context/state";
 import ReturnSummary from "./ReturnSummary";
+
 export default function Summary(props, children) {
   const { data, setData } = useAppContext();
   const completed =
@@ -45,18 +45,18 @@ export default function Summary(props, children) {
   const [duration, setDuration] = useState("");
   const [departureTabActive, setDepartureTabActive] = useState(true);
   const [returnTabActive, setReturnTabActive] = useState(false);
-  let dateObject = new Date();
-  let minute = dateObject.getMinutes();
-  let hour = dateObject.getHours() + 1;
+  const dateObject = new Date();
+  const minute = dateObject.getMinutes();
+  const hour = dateObject.getHours() + 1;
   let day = dateObject.getDate();
   let month = dateObject.getMonth() + 1;
-  let maxMonths = dateObject.getMonth() + 4;
-  let year = dateObject.getFullYear();
-  if (month < 10) month = "0" + month;
-  if (day < 10) day = "0" + day;
-  let now = hour + ":" + minute;
-  let today = year + "-" + month + "-" + day;
-  let threeMonthsFromNow = year + "-" + maxMonths + "-" + day;
+  const maxMonths = dateObject.getMonth() + 4;
+  const year = dateObject.getFullYear();
+  if (month < 10) month = `0${  month}`;
+  if (day < 10) day = `0${  day}`;
+  const now = `${hour  }:${  minute}`;
+  const today = `${year  }-${  month  }-${  day}`;
+  const threeMonthsFromNow = `${year  }-${  maxMonths  }-${  day}`;
 
   const { getFieldProps, handleSubmit, errors, touched } = useFormik({
     initialValues: {
@@ -226,15 +226,15 @@ export default function Summary(props, children) {
   }
   function handleDateAndTimeChange(e){
     setDateAndTime(e.target.value)
-    let d = dateAndTime.split("T");
+    const d = dateAndTime.split("T");
     setDate(d[0]);
     setTime(d[1]);
     setData(data)
   }
   return (
-    <div className="flex fixed lg:sticky overflow-hidden bg-fixed lg:top-0 lg:self-end lg:right-0 lg:overflow-auto w-screen h-screen lg:h-full bg-clip-content bg-gray-100 shadow-md lg:rounded-sm lg:w-[32rem]">
-      <div className="overflow-auto ovescroll-none bg-green-4 lg:h-fit pb-32 bg-fixed  lg:pt-2 lg:pb-24 w-full mt-10 lg:mt-2 lg:max-w-lg">
-      <div className="flex ovescroll-none top-10 bg-gray-100 w-full lg:w-[32rem] self-center h-20   justify-center mb-4 text-3xl font-bold  text-gray-800 lg:my-10  ">
+    <div className="flex fixed lg:sticky overflow-hidden bg-fixed lg:top-0 lg:self-end lg:right-0 lg:overflow-auto w-screen h-screen lg:h-full bg-clip-content bg-gray-100  lg:rounded-sm lg:w-[32rem]">
+      <div className="overflow-auto ovescroll-none bg-green-4 lg:h-fit pb-32 bg-fixed  lg:pt-0 lg:pb-24 w-full mt-10 lg:mt-0 lg:max-w-lg">
+      <div className="flex ovescroll-none top-10 lg:top-0 bg-gray-100 w-full lg:w-[32rem] self-center h-20 lg:h-auto  justify-center mb-4 text-3xl font-bold  text-gray-800   ">
             <p className="self-center">Summary</p>
           </div>
         <div className="bg-fixed overscroll-none">
@@ -275,7 +275,7 @@ export default function Summary(props, children) {
                         <FaRoute className="z-2" />
                       </Tooltip>
                     </div>
-                    <div className="mx-4 h-1/2 border-t-0 border-b-2 border-gray-400 border-dashed grow"></div>
+                    <div className="mx-4 h-1/2 border-t-0 border-b-2 border-gray-400 border-dashed grow" />
                     <div className="self-center text-base font-bold">
                       {data.distance == undefined ? <Spinner /> : data.distance}
                     </div>
@@ -289,16 +289,15 @@ export default function Summary(props, children) {
                         <FaHourglassHalf />
                       </Tooltip>
                     </div>
-                    <div className="mx-4 h-1/2 border-t-0 border-b-2 border-gray-400 border-dashed grow"></div>
+                    <div className="mx-4 h-1/2 border-t-0 border-b-2 border-gray-400 border-dashed grow" />
                     <div className="self-center text-base font-bold">
                       {data.duration == undefined ? <Spinner /> : data.duration}
                     </div>
                   </div>
                 </div>{" "}
-                <Receipt className="" />
+                
               </div>
-              {
-                <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+              <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
                   <div className="col-span-1 my-auto text-3xl text-gray-800">
                     {" "}
                     <div className={data.location ? completed : uncompleted}>
@@ -321,7 +320,7 @@ export default function Summary(props, children) {
                         onSelect={handleSelectOrigin}
                       />
                     ) : (
-                      <p className={`text-sm text-gray-500`}>
+                      <p className="text-sm text-gray-500">
                         {origin == "" ? data.location : origin}
                       </p>
                     )}
@@ -331,7 +330,7 @@ export default function Summary(props, children) {
                     {locationEditable ? (
                       <button
                         onClick={save}
-                        className="mb-10 text-sm font-bold text-indigo-700 underline sm:mb-0 hover:no-underline hover:text-indigo-500">
+                        className="mb-10 text-sm font-bold text-indigo-700 underline sm:mb-0 lg:mb-10 hover:no-underline hover:text-indigo-500">
                         Save
                       </button>
                     ) : (
@@ -343,9 +342,7 @@ export default function Summary(props, children) {
                     )}
                   </div>
                 </div>
-              }
-              {
-                <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+              <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
                   <div className="col-span-1 my-auto text-3xl text-gray-800">
                     {" "}
                     <div className={data.destination ? completed : uncompleted}>
@@ -378,7 +375,7 @@ export default function Summary(props, children) {
                     {destinationEditable ? (
                       <button
                         onClick={save}
-                        className="mb-10 text-sm font-bold text-indigo-700 underline sm:mb-0 hover:no-underline hover:text-indigo-500">
+                        className="mb-10 text-sm font-bold text-indigo-700 underline sm:mb-0 lg:mb-10 hover:no-underline hover:text-indigo-500">
                         Save
                       </button>
                     ) : (
@@ -390,10 +387,8 @@ export default function Summary(props, children) {
                     )}
                   </div>
                 </div>
-              }
 
-              {
-                <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+              <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
                   <div className="col-span-1 my-auto text-3xl text-gray-800">
                     {" "}
                     <div className={data.passengers ? completed : uncompleted}>
@@ -419,7 +414,7 @@ export default function Summary(props, children) {
                         onChange={(e) => setPassengers(e.target.value)}
                       />
                     ) : (
-                      <p className={`text-sm text-gray-500`}>
+                      <p className="text-sm text-gray-500">
                         {passengers == "" ? data.passengers : passengers}
                       </p>
                     )}
@@ -429,7 +424,7 @@ export default function Summary(props, children) {
                     {passengersEditable ? (
                       <button
                         onClick={save}
-                        className="mb-10 text-sm font-bold text-indigo-700 underline sm:mb-0 hover:no-underline hover:text-indigo-500">
+                        className="mb-10 text-sm font-bold text-indigo-700 underline sm:mb-0 lg:mb-10 hover:no-underline hover:text-indigo-500">
                         Save
                       </button>
                     ) : (
@@ -441,10 +436,8 @@ export default function Summary(props, children) {
                     )}
                   </div>
                 </div>
-              }
 
-              {
-                <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+              <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
                   <div className="col-span-1 my-auto text-3xl text-gray-800">
                     {" "}
                     <div className={data.date ? completed : uncompleted}>
@@ -477,7 +470,7 @@ export default function Summary(props, children) {
                         onChange={(e) => setDate(e.target.value)}
                       />
                     ) : (
-                      <p className={`text-sm text-gray-500`}>
+                      <p className="text-sm text-gray-500">
                         {date == "" ? data.date : date}
                       </p>
                     )}
@@ -487,7 +480,7 @@ export default function Summary(props, children) {
                     {dateEditable ? (
                       <button
                         onClick={save}
-                        className="mb-10 text-sm font-bold text-indigo-700 underline sm:mb-0 hover:no-underline hover:text-indigo-500">
+                        className="mb-10 text-sm font-bold text-indigo-700 underline sm:mb-0 lg:mb-10 hover:no-underline hover:text-indigo-500">
                         Save
                       </button>
                     ) : (
@@ -499,7 +492,6 @@ export default function Summary(props, children) {
                     )}
                   </div>
                 </div>
-              }
               {data.time && data.date !== "ASAP" && (
                 <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
                   <div className="col-span-1 my-auto text-3xl text-gray-800">
@@ -526,7 +518,7 @@ export default function Summary(props, children) {
                         onChange={(e) => setTime(e.target.value)}
                       />
                     ) : (
-                      <p className={`text-sm text-gray-500`}>{data.time}</p>
+                      <p className="text-sm text-gray-500">{data.time}</p>
                     )}
                   </div>
 
@@ -534,7 +526,7 @@ export default function Summary(props, children) {
                     {timeEditable ? (
                       <button
                         onClick={save}
-                        className="mb-10 text-sm font-bold text-indigo-700 underline sm:mb-0 hover:no-underline hover:text-indigo-500">
+                        className="mb-10 text-sm font-bold text-indigo-700 underline sm:mb-0 lg:mb-10 hover:no-underline hover:text-indigo-500">
                         Save
                       </button>
                     ) : (
@@ -577,14 +569,14 @@ export default function Summary(props, children) {
                     data.plane_arriving_from &&
                     data.airline_name ? (
                       <>
-                        <p className={`text-sm text-gray-500`}>
+                        <p className="text-sm text-gray-500">
                           {data.plane_arriving_from}
                         </p>
-                        <p className={`text-sm text-gray-500`}>
+                        <p className="text-sm text-gray-500">
                           {" "}
                           {data.airline_name}
                         </p>
-                        <p className={`text-sm text-gray-500`}>
+                        <p className="text-sm text-gray-500">
                           {data.flight_number}
                         </p>
                       </>
@@ -596,13 +588,12 @@ export default function Summary(props, children) {
                   </div>
 
                   <div className="my-auto">
-                    <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
+                    <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500" />
                   </div>
                 </div>
               )}
               
-              {
-                <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+              <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
                   <div className="col-span-1 my-auto text-3xl text-gray-800">
                     {" "}
                     <div className={data.service ? completed : uncompleted}>
@@ -619,19 +610,17 @@ export default function Summary(props, children) {
                       Service
                     </p>
                     {data.service ? (
-                      <p className={`text-sm text-gray-500`}>{data.service}</p>
+                      <p className="text-sm text-gray-500">{data.service}</p>
                     ) : (
                       <p className="text-sm text-pink-400">Required</p>
                     )}
                   </div>
 
                   <div className="my-auto">
-                    <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
+                    <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500" />
                   </div>
                 </div>
-              }
-              {
-                <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+              <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
                   <div className="col-span-1 my-auto text-3xl text-gray-800">
                     {" "}
                     <div
@@ -664,11 +653,11 @@ export default function Summary(props, children) {
                     data.email &&
                     data.phone ? (
                       <>
-                        <p className={`text-sm text-gray-500`}>
+                        <p className="text-sm text-gray-500">
                           {data.first_name} {data.last_name}
                         </p>
-                        <p className={`text-sm text-gray-500`}>{data.email}</p>
-                        <p className={`text-sm text-gray-500`}>{data.phone}</p>
+                        <p className="text-sm text-gray-500">{data.email}</p>
+                        <p className="text-sm text-gray-500">{data.phone}</p>
                       </>
                     ) : (
                       <p className="text-sm text-pink-400">Required</p>
@@ -676,12 +665,10 @@ export default function Summary(props, children) {
                   </div>
 
                   <div className="my-auto">
-                    <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
+                    <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500" />
                   </div>
                 </div>
-              }
-              {
-                <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
+              <div className="grid grid-cols-4 gap-2 p-4 px-4 m-auto mt-5 w-5/6 bg-gray-200 rounded-2xl">
                   <div className="col-span-1 my-auto text-3xl text-gray-800">
                     {" "}
                     <div className={data.payment ? completed : uncompleted}>
@@ -698,17 +685,16 @@ export default function Summary(props, children) {
                       Payment Method
                     </p>
                     {data.payment ? (
-                      <p className={`text-sm text-gray-500`}>{data.payment}</p>
+                      <p className="text-sm text-gray-500">{data.payment}</p>
                     ) : (
                       <p className="text-sm text-pink-400">Required</p>
                     )}
                   </div>
 
                   <div className="my-auto">
-                    <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
+                    <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500" />
                   </div>
                 </div>
-              }
               
             </>
           )}
@@ -721,8 +707,8 @@ export default function Summary(props, children) {
               <hr className="h-[0.12rem] mt-1 bg-gray-400 absolute w-3/4" />
             </div>
             <div className="col-span-2 pt-1">
-              <p className="font-bold text-gray-800 lg:text-sm"></p>
-              <p className={`text-sm text-gray-500`}></p>
+              <p className="font-bold text-gray-800 lg:text-sm" />
+              <p className="text-sm text-gray-500" />
             </div>
 
             <div className="my-auto text-3xl">
@@ -737,14 +723,14 @@ export default function Summary(props, children) {
               </a>
             </div>
           </div>
-          <div className="h-10"></div>
+          <div className="h-10" />
           <button
             onClick={props.onClick}
             disabled={props.disabled}
             className="hidden justify-center p-4 m-auto w-5/6 text-3xl font-medium text-gray-50 bg-sky-500 rounded-lg lg:flex h-max disabled:bg-gray-400">
             Book Now
           </button>
-          <div className="h-10"></div>
+          <div className="h-10" />
         </div>
       </div>
     </div>

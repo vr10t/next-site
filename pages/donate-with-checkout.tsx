@@ -3,8 +3,7 @@ import Layout from '../src/components/layout'
 
 import CheckoutForm from '../src/components/CheckoutForm'
 
-const DonatePage: NextPage = () => {
-  return (
+const DonatePage: NextPage = () => (
     <Layout >
       <div className="page-container">
         <h1>Donate with Checkout</h1>
@@ -14,6 +13,5 @@ const DonatePage: NextPage = () => {
       </div>
     </Layout>
   )
-}
 
 export default DonatePage

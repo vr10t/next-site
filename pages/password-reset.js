@@ -25,7 +25,7 @@ function PasswordReset() {
           duration:4000,
           id: notification,
         });
-      } else if (hash) {
+      } if (hash) {
         const hashArr = hash
           .substring(1)
           .split("&")
@@ -55,7 +55,7 @@ function PasswordReset() {
 
         //   now we will change the password
         const { error } = await supabase.auth.api.updateUser(accessToken, {
-          password: password,
+          password,
         });
 
         if (error) {

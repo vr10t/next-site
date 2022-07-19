@@ -1,15 +1,16 @@
 import { Carousel } from "react-bootstrap";
 import { useState } from "react";
-import Caption from "./CarouselItem";
-import styles from "./Carousel.module.scss";
 import Link from "next/link";
 import Image from "next/image";
+import Caption from "./CarouselItem";
+import styles from "./Carousel.module.scss";
 import bg2 from "../../../public/bg-2.jpg"
 import slider1 from "../../../public/slider1.jpg"
 import slider2 from "../../../public/slider2.jpg"
 import slider3 from "../../../public/slider3.jpg"
 
 import ButtonPhat from "../Buttons/ButtonPhat";
+
 function BgCarousel() {
   // const imageClasses=""
   return (

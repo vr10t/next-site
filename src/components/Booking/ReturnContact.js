@@ -8,8 +8,8 @@ import PhoneInput, {
 import "react-phone-number-input/style.css";
 import { FaEnvelope } from "@react-icons/all-files/fa/FaEnvelope";
 import { BsFillPersonFill } from "@react-icons/all-files/bs/BsFillPersonFill";
-import { useAppContext } from "../../context/state";
 import {Checkbox} from "flowbite-react"
+import { useAppContext } from "../../context/state";
 
 export default function ReturnContact() {
     const [firstName, setFirstName] = useState("");
@@ -196,10 +196,10 @@ export default function ReturnContact() {
             // {...getFieldProps("phone")}
             name="returnPhone"
             id="returnPhone"
-            className={`inline-flex items-center pl-2 w-full text-lg text-gray-900  bg-gray-50 rounded-lg border-r-2 shadow-sm appearance-none focus:outline-none focus:ring-2`}
+            className="inline-flex items-center pl-2 w-full text-lg text-gray-900  bg-gray-50 rounded-lg border-r-2 shadow-sm appearance-none focus:outline-none focus:ring-2"
             defaultCountry="GB"
             initialValueFormat="national"
-            useNationalFormatForDefaultCountryValue={true}
+            useNationalFormatForDefaultCountryValue
             placeholder="Your phone number"
             value={phone}
             error={phoneError}

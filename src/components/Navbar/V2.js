@@ -2,14 +2,13 @@ import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import { FaBars } from "@react-icons/all-files/fa/FaBars";
 import { Button } from "flowbite-react";
+import { useRouter } from "next/router";
+import { FaAngleDown } from "@react-icons/all-files/fa/FaAngleDown";
 import { useAuthContext } from "../../context/state";
 import Initial from "../Account/Initial";
 import Profile from "../Account/Profile";
-import { getPublicUser } from "../../../utils/supabase-helpers";
-import { useRouter } from "next/router";
+import { getPublicUser , signOut } from "../../../utils/supabase-helpers";
 import { listenForOutsideClicks } from "../../../utils/misc";
-import { signOut } from "../../../utils/supabase-helpers";
-import { FaAngleDown } from "@react-icons/all-files/fa/FaAngleDown";
 
 export default function Navbar() {
   const [expanded, setExpanded] = useState(false);
@@ -47,7 +46,7 @@ export default function Navbar() {
     
     console.log(router.asPath, "router as path");
   }, [user]);
-  const fullName = user?.first_name + " " + user?.last_name
+  const fullName =user?.user_metadata.full_name || `${user?.first_name  } ${  user?.last_name}`
     
 
   function handleClick() {
@@ -56,30 +55,30 @@ export default function Navbar() {
 
   return (
     <header className="shadow-sm">
-      <div className="max-w-screen h-20 p-4 items-center  shadow flex fixed bg-gray-100 w-screen z-[22] ">
-        <div className="flex justify-between items-center mr-4 space-x-4 w-full lg:gap-10">
-          <div className="flex lg:w-0 lg:flex-1">
-            <span className="w-20 h-10 bg-gray-200 rounded-lg md:flex"></span>
+      <div className="max-w-screen  items-center  shadow flex fixed bg-gray-100 w-screen z-[22] ">
+        <div className="flex justify-between items-center h-20 p-4 mr-4 w-full lg:gap-10">
+          <div className="flex  ">
+            <span className="w-20 h-10 bg-gray-200 rounded-lg md:flex" />
           </div>
 
-          <nav className="hidden justify-center space-x-8 text-sm font-medium md:flex grow">
+          <nav className="hidden justify-center gap-10 self-center  text-sm font-medium md:flex grow">
             <Link href="/#">
-              <a className="block px-3 py-2 text-base font-medium text-gray-800 no-underline rounded-md">
+              <a className="block self-center text-lg font-medium text-gray-800 no-underline rounded-md">
                 Home
               </a>
             </Link>
             <Link href="/#about">
-              <a className="block px-3 py-2 text-base font-medium text-gray-800 no-underline rounded-md">
+              <a className="block self-center text-lg font-medium text-gray-800 no-underline rounded-md">
                 About
               </a>
             </Link>
             <Link href="/#FAQ">
-              <a className="block px-3 py-2 text-base font-medium text-gray-800 no-underline rounded-md">
+              <a className="block self-center  text-lg font-medium text-gray-800 no-underline rounded-md">
                 FAQ
               </a>
             </Link>
             <Link href="/#contact">
-              <a className="block px-3 py-2 text-base font-medium text-gray-800 no-underline rounded-md">
+              <a className="block  self-center text-lg font-medium text-gray-800 no-underline rounded-md">
                 Contact
               </a>
             </Link>
@@ -90,7 +89,7 @@ export default function Navbar() {
               <Profile />
             </div>
           ) : (
-            <div className="hidden justify-center space-x-4 grow md:flex">
+            <div className="hidden justify-end space-x-4 mr-4  md:flex">
               <Link href={`/signin?referrer=${router.asPath} `}>
                 <a className="px-5 py-2 font-medium text-gray-800 no-underline bg-gray-100 text-md hover:text-gray-500">
                   Log in
@@ -120,22 +119,22 @@ export default function Navbar() {
             // ref={navRef}
             className="md:hidden flex flex-col gap-2 pt-2 shadow w-3/4 h-screen items-start pr-2 right-0 top-20 pl-4 fixed bg-gray-100   z-[23]">
             <Link href="/#">
-              <a className="block px-3 py-2 w-full text-base font-medium text-gray-800 no-underline rounded-md hover:text-gray-900 hover:bg-gray-200">
+              <a className="block px-3 py-2 w-full text-lg font-medium text-gray-800 no-underline rounded-md hover:text-gray-900 hover:bg-gray-200">
                 Home
               </a>
             </Link>
             <Link href="/#about">
-              <a className="block px-3 py-2 w-full text-base font-medium text-gray-800 no-underline rounded-md hover:text-gray-900 hover:bg-gray-200">
+              <a className="block px-3 py-2 w-full text-lg font-medium text-gray-800 no-underline rounded-md hover:text-gray-900 hover:bg-gray-200">
                 About
               </a>
             </Link>
             <Link href="/#FAQ">
-              <a className="block px-3 py-2 w-full text-base font-medium text-gray-800 no-underline rounded-md hover:text-gray-900 hover:bg-gray-200">
+              <a className="block px-3 py-2 w-full text-lg font-medium text-gray-800 no-underline rounded-md hover:text-gray-900 hover:bg-gray-200">
                 FAQ
               </a>
             </Link>
             <Link href="/#contact">
-              <a className="block px-3 py-2 w-full text-base font-medium text-gray-800 no-underline rounded-md hover:text-gray-900 hover:bg-gray-200">
+              <a className="block px-3 py-2 w-full text-lg font-medium text-gray-800 no-underline rounded-md hover:text-gray-900 hover:bg-gray-200">
                 Contact
               </a>
             </Link>
@@ -165,7 +164,7 @@ export default function Navbar() {
             ) : (
               <div className="flex gap-6 justify-center w-full">
                 <Link href="/signin">
-                  <a className="block self-center px-4 py-2 text-base font-medium text-gray-800 no-underline rounded-md hover:text-gray-900 hover:bg-gray-200">
+                  <a className="block self-center px-4 py-2 text-lg font-medium text-gray-800 no-underline rounded-md hover:text-gray-900 hover:bg-gray-200">
                     Sign in
                   </a>
                 </Link>

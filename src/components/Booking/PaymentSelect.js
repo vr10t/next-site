@@ -3,8 +3,8 @@ import { Listbox } from "@headlessui/react";
 import { FaCheck } from "@react-icons/all-files/fa/FaCheck";
 import { FaMoneyBill } from "@react-icons/all-files/fa/FaMoneyBill";
 import { FaCreditCard } from "@react-icons/all-files/fa/FaCreditCard";
-import { useAppContext } from "../../context/state";
 import { FaAngleDown } from "@react-icons/all-files/fa/FaAngleDown";
+import { useAppContext } from "../../context/state";
 
 const methods = [
   { id: 999, name: "Payment Method", unavailable: true },
@@ -66,7 +66,7 @@ useEffect(()=>{
   }
   return (
     <Listbox value={selectedMethod} onChange={setSelectedMethod}>
-      <Listbox.Button className="bg-sky-600 flex items-center justify-between px-8 text-lg text-white rounded-lg h-10">
+      <Listbox.Button className="bg-sky-500 flex items-center justify-between px-8 text-lg text-white rounded-lg h-10">
         <div className="text-left self-center grow">{selectedMethod.name}</div>
 
         {}
@@ -74,7 +74,7 @@ useEffect(()=>{
       </Listbox.Button>
       <Listbox.Options
         style={{ borderRadius: "10px" }}
-        className="absolute mt-[9.5rem] ml-  bg-gray-100 w-5/6 border-[2px] py-1 border-t-0  border-gray-200 rounded-b-2xl">
+        className="absolute mt-[9.5rem] max-w-sm bg-gray-100 w-5/6  border-[2px] py-1 border-t-0  border-gray-200 rounded-b-2xl">
         {methods.map((method) => (
           <Listbox.Option
             className=" "
@@ -88,7 +88,7 @@ useEffect(()=>{
                 } items-center ${
                   active
                     ? "bg-gray-200 text-gray-800"
-                    : "bg-gray-50 text-gray-800"
+                    : "bg-gray-100 text-gray-800"
                 }`}>
                 {method.icon}
                 {method.id !== 999 && method.name}

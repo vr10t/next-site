@@ -1,7 +1,7 @@
 import { Carousel } from "react-bootstrap";
+import Link from "next/link";
 import styles from "./Carousel.module.scss";
 import ButtonPhat from "../Buttons/ButtonPhat";
-import Link from "next/link";
 
 
 export default function Caption(props) {

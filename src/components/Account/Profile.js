@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
 import { useEffect, useState, useRef } from "react";
-import { signOut } from "../../../utils/supabase-helpers";
+import Image from "next/image";
+import { signOut , getPublicUser } from "../../../utils/supabase-helpers";
 import { useAuthContext } from "../../context/state";
 import { listenForOutsideClicks } from "../../../utils/misc";
-import { getPublicUser } from "../../../utils/supabase-helpers";
 
 export default function Profile() {
   const router = useRouter();
@@ -21,10 +21,10 @@ export default function Profile() {
     console.log(userDetails);
     console.log(router.asPath, "router as path");
   }, [user]);
-  const fullName =
-    user?.first_name + " " + user?.last_name;
+  const fullName =user?.user_metadata.full_name || `${user?.first_name  } ${  user?.last_name}`;
     const initial =user?.first_name?.slice(0, 1);
-
+console.log(fullName, "full name");
+const profilePic=<Image className="object-fill rounded-full -z-20" src={user?.user_metadata.avatar_url||''} width={64} height={64} />;
   // useEffect(
   //   listenForOutsideClicks(listening, setListening, menuRef, setIsOpen)
    
@@ -35,8 +35,8 @@ export default function Profile() {
         
         ref={menuRef}
         onClick={toggle}
-        className={`select-none  bg-black/10 rounded-full h-full w-full flex justify-center items-center  text-black/80 font-medium cursor-pointer text-3xl`}>
-        {initial}
+        className="select-none  bg-black/10 rounded-full h-16 w-16 flex justify-center items-center  text-black/80 font-medium cursor-pointer text-3xl">
+        {profilePic||initial}
       </div>
       <div
        

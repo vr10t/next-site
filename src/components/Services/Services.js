@@ -1,8 +1,8 @@
-import ServicesItem from "./ServicesItem"
 import { FaMapMarkedAlt } from "@react-icons/all-files/fa/FaMapMarkedAlt";
 import { FaPlaneDeparture } from "@react-icons/all-files/fa/FaPlaneDeparture";
 import { FaRoute } from "@react-icons/all-files/fa/FaRoute";
 import { FaTaxi } from "@react-icons/all-files/fa/FaTaxi";
+import ServicesItem from "./ServicesItem"
 
 export default function Services(){
     return(

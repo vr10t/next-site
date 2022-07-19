@@ -12,7 +12,7 @@ type Props = {
   className?: string;
 };
 
-const CustomDonationInput = ({
+function CustomDonationInput({
   name,
   value,
   min,
@@ -21,8 +21,8 @@ const CustomDonationInput = ({
   step,
   onChange,
   className,
-}: Props) => (
-  <label>
+}: Props) {
+  return <label>
     Custom donation amount ({formatAmountForDisplay(min, currency)}-
     {formatAmountForDisplay(max, currency)}):
     <input
@@ -34,7 +34,7 @@ const CustomDonationInput = ({
       max={max}
       step={step}
       onChange={onChange}
-    ></input>
+     />
     <input
       type="range"
       name={name}
@@ -43,8 +43,8 @@ const CustomDonationInput = ({
       max={max}
       step={step}
       onChange={onChange}
-    ></input>
+     />
   </label>
-);
+}
 
 export default CustomDonationInput;

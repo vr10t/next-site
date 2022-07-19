@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import {FaUser} from "@react-icons/all-files/fa/FaUser"
 import {FaClipboardList} from "@react-icons/all-files/fa/FaClipboardList"
+
 export default function Sidebar(props) {
   const router = useRouter();
   const path = router.pathname;
@@ -15,7 +16,7 @@ export default function Sidebar(props) {
       <div className=" min-h-screen w-[3.35rem] duration-200 overflow-hidden border-r hover:w-56 hover:bg-gray-50 hover:shadow-lg">
         <div className="flex h-screen flex-col justify-between pt-2 pb-6">
           <div>
-            <div className="w-max p-2.5"></div>
+            <div className="w-max p-2.5" />
             <ul className="mt-6 space-y-2 tracking-wide">
               <li className="min-w-max">
                 <Link href="/my-account">

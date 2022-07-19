@@ -4,9 +4,10 @@ import { FaFacebook } from "@react-icons/all-files/fa/FaFacebook";
 import { FaTwitter } from "@react-icons/all-files/fa/FaTwitter";
 import { FaInstagram } from "@react-icons/all-files/fa/FaInstagram";
 import Link from "next/link";
+
 export default function Footer() {
   return (
-    <div className="shadow sticky ">
+    <div className="">
       <footer className="text-center text-white bg-gradient-to-br from-sky-500 to-sky-600">
         <div className="p-4">
           

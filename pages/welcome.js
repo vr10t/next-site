@@ -1,15 +1,13 @@
+import { useRouter } from "next/router";
 import Footer from "../src/components/Footer/Footer";
 import Navbar from "../src/components/Navbar/Navbar"
-import { useRouter } from "next/router";
 
 export default function Welcome() {
   const router = useRouter();
   const { email } = router.query;
 return (
     <div>
-    <Navbar>
-
-    </Navbar>
+    <Navbar />
       <main>
       <div className="h-96 ">
         <p>

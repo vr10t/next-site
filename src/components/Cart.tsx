@@ -3,8 +3,8 @@ import { CartProvider } from 'use-shopping-cart';
 import getStripe from '../../utils/getStripe';
 import * as config from '../../config';
 
-const Cart = ({ children }: { children: ReactNode }) => (
-  <CartProvider
+function Cart({ children }: { children: ReactNode }) {
+  return <CartProvider
   cartMode='checkout-session'
     
     stripe={getStripe()}
@@ -12,6 +12,6 @@ const Cart = ({ children }: { children: ReactNode }) => (
   >
     <>{children}</>
   </CartProvider>
-);
+}
 
 export default Cart;

@@ -1,6 +1,6 @@
+import Image from "next/image";
 import Services from "../Services/Services";
 import Features from "./Features";
-import Image from "next/image";
 import promo6 from "../../../public/promo-6.webp"
 
 // import tailwindcss from 'tailwindcss'

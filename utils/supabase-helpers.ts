@@ -1,7 +1,8 @@
-import { supabase, getServiceSupabase } from './supabaseClient';
 import useSWR from 'swr';
+import { supabase, getServiceSupabase } from './supabaseClient';
 import { fetchGetJSON } from './api-helpers';
 import { AppData } from '../src/context/state';
+import { Booking } from '../pages/my-account/bookings';
 
 export async function handleSignup(ev: {
   first_name: string;
@@ -23,28 +24,25 @@ export async function handleSignup(ev: {
     method: 'POST',
   });
 
-  const { data, error } = await res.json();
-  if (error) {
-    return error;
-  }
-  if (data) {
-    return data;
-  }
+  const { user, error,session } = await res.json();
+  return { user, error,session };
+  
 }
-export function getBookings() {
-  const { data, error } = useSWR([`/api/get-bookings`, ''], fetcher);
+export function getBookings(userBookings: string[]) {
+  const { data, error } = useSWR([`/api/get-bookings`, userBookings], fetcher);
+console.log(data,error,userBookings);
 
   return {
-    data: data,
+    data,
     isLoading: !error && !data,
-    isError: error,
+    isError: {error,userBookings},
   };
 }
 export function getBookingById(id: string) {
   const { data, error } = useSWR([`/api/get-booking-id`, id], fetcher);
 
   return {
-    data: data,
+    data,
     isLoading: !error && !data,
     isError: error,
   };
@@ -58,7 +56,7 @@ export async function getBookingsForUser(uid: string) {
   });
   const { data, error } = await res.json();
   if (data) {
-    const bookings = data[0].bookings;
+    const {bookings} = data[0];
     return { bookings };
   }
   return { error };
@@ -66,7 +64,7 @@ export async function getBookingsForUser(uid: string) {
 const fetcher = (url: string, id: string) =>
   fetch(url, {
     method: 'POST',
-    headers: new Headers({ 'Content-Type': 'application/json', id: id }),
+    headers: new Headers({ 'Content-Type': 'application/json', id }),
     credentials: 'same-origin',
   }).then((res) => res.json());
 
@@ -80,7 +78,7 @@ export async function updateUserBookings(
     body: JSON.stringify({
       userId: uid,
       bookingId: bid,
-      previousBookings: previousBookings,
+      previousBookings,
     }),
     headers: {
       'Content-Type': 'application/json',
@@ -106,9 +104,9 @@ export async function updateUserDetails(
     .update(values)
     .eq('user_id', uid);
 
-  if (error) return { error: error, status: status };
+  if (error) return { error, status };
   if (data) {
-    return { data: data, status: status };
+    return { data, status };
   }
 }
 export async function deleteUserBooking(
@@ -116,7 +114,7 @@ export async function deleteUserBooking(
   bid: string,
   prev: string[]
 ) {
-  //where prev is all user bookings
+  // where prev is all user bookings
   const index = prev.findIndex((val) => val === bid);
   prev.splice(index, 1);
   const { data, error } = await supabase
@@ -207,12 +205,12 @@ export async function deleteBooking(id: string) {
   const { data, error } = await supabase
     .from('bookings')
     .delete()
-    .match({ id: id });
+    .match({ id });
   if (data) {
     return data;
-  } else {
+  } 
     return error.message;
-  }
+  
 }
 export async function signOut() {
   const { error } = await supabase.auth.signOut();

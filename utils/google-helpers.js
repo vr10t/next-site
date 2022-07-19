@@ -43,10 +43,10 @@ export  function handleGetDistance(location, destination,callback) {
   }
   export async function reverseGeocode(lat, long) {
     try {
-      let res = await fetch(
+      const res = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`
       );
-      let data = await res.json();
+      const data = await res.json();
       console.log(data.results[0].formatted_address);
       return (data.results[0].formatted_address);
     } catch (err) {

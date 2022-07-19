@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "../src/components/App";
 import Head from "next/head";
+import App from "../src/components/App";
 
 export default function Home() {
  
@@ -10,11 +10,7 @@ export default function Home() {
      return (
      
     <>
-      <Head>
-    
-      
-
-      </Head>
+      <Head />
       <main>
       <App />
       </main>

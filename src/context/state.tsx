@@ -8,6 +8,7 @@ import {
   Dispatch,
 } from "react";
 import { supabase } from "../../utils/supabaseClient";
+
 export interface AppData {
   id: string;
   first_name: string;
@@ -49,6 +50,7 @@ type InitialStateType = {
   setData: Dispatch<any>;
 };
 interface ExtendedUser extends User {
+  stripe_customer: any;
   first_name: string;
   last_name: string;
   phone: string;

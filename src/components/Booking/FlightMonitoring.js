@@ -40,7 +40,6 @@ setData(data)
       <div className="flex items-stretch w-full text-lg font-medium tracking-wider text-gray-600 bg-gray-100">
         <p className="grow"> FLIGHT DETAILS</p>
       </div>
-      <>
       <label
         htmlFor="plane_arriving_from"
         className="text-gray-900 font-medium">
@@ -65,14 +64,10 @@ setData(data)
           placeholder="Airport Name"
         />
         {errors.plane_arriving_from && touched.plane_arriving_from && (
-          <>
-            <div className="absolute pointer-events-none  w-full h-full text-sm font-medium text-pink-500 rounded-lg ring-2 ring-pink-400"></div>
-          </>
+          <div className="absolute pointer-events-none  w-full h-full text-sm font-medium text-pink-500 rounded-lg ring-2 ring-pink-400" />
         )}
       </div>
-      </>
 
-      <>
       <label
         htmlFor="plane_arriving_from"
         className="text-gray-900 font-medium">
@@ -97,12 +92,9 @@ setData(data)
           placeholder="e.g. Ryanair"
         />
         {errors.airline_name && touched.airline_name && (
-          <>
-            <div className="absolute pointer-events-none  w-full h-full text-sm font-medium text-pink-500 rounded-lg ring-2 ring-pink-400"></div>
-          </>
+          <div className="absolute pointer-events-none  w-full h-full text-sm font-medium text-pink-500 rounded-lg ring-2 ring-pink-400" />
         )}
       </div>
-      </>
 
       <div>
       <label
@@ -129,9 +121,7 @@ setData(data)
           placeholder="e.g. RYR 1234"
         />
         {errors.flight_number && touched.flight_number && (
-          <>
-            <div className="absolute pointer-events-none  w-full h-full text-sm font-medium text-pink-500 rounded-lg ring-2 ring-pink-400"></div>
-          </>
+          <div className="absolute pointer-events-none  w-full h-full text-sm font-medium text-pink-500 rounded-lg ring-2 ring-pink-400" />
         )}
       </div>
       </div>

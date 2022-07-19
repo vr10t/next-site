@@ -3,8 +3,8 @@ import { Listbox } from "@headlessui/react";
 import { FaCheck } from "@react-icons/all-files/fa/FaCheck";
 import { FaMoneyBill } from "@react-icons/all-files/fa/FaMoneyBill";
 import { FaCreditCard } from "@react-icons/all-files/fa/FaCreditCard";
-import { useAppContext } from "../../context/state";
 import { FaAngleDown } from "@react-icons/all-files/fa/FaAngleDown";
+import { useAppContext } from "../../context/state";
 
 const methods = [
  

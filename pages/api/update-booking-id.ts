@@ -3,12 +3,15 @@ import { getServiceSupabase } from "../../utils/supabaseClient";
 
 async function handler(req:NextApiRequest,res:NextApiResponse) {
     const supabase = getServiceSupabase()
-    const {userId,bookingId,previousBookings}=req.body
-    const prev = previousBookings.split(",") || [];
+
+
+    const {query,id}=req.body
+    // const queryObj=JSON.parse(query)
+    console.log(query);
     const { data, error,status } = await supabase
-    .from("profiles")
-    .update({ bookings: [`${prev  },${  bookingId}`] })
-    .eq("id", userId)
+    .from("bookings")
+    .update(query)
+    .eq("id", id)
     .single();
     return res.status(status).json({data,error})
 }

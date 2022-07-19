@@ -1,4 +1,4 @@
-const Features=(props) => {
+function Features(props) {
   return (
     <div className="relative">
       <dt>

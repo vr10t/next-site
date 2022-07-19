@@ -1,8 +1,9 @@
 import useStepper from "use-stepper";
 import { useRef, useEffect, useState } from "react";
 import { useAppContext } from "../../context/state";
+
 export default function StepperInput(props) {
-  const min = 4;
+  const min = 1;
   const max = 16;
   const renders = useRef(0);
   const {
@@ -47,7 +48,7 @@ data.passengers=value
         <input value={value}
           onChange={(e) => setValue(e.target.value)}
           {...getInputProps()}
-          className="shadow-md border-0 h-8 rounded-xl focus:ring-2 focus:outline-none focus:ring-sky-500 hover:ring-sky-500 text-center w-12 bg-gray-50 ring-1 ring-sky-500 font-semibold text-md hover:text-sky-600  focus:text-sky-500  md:text-basecursor-default flex items-center text-gray-800  outline-none"></input>
+          className="shadow-md border-0 h-8 rounded-xl focus:ring-2 focus:outline-none focus:ring-sky-500 hover:ring-sky-500 text-center w-12 bg-gray-50 ring-1 ring-sky-500 font-semibold text-md hover:text-sky-600  focus:text-sky-500  md:text-basecursor-default flex items-center text-gray-800  outline-none" />
         <button
           {...getIncrementProps()}
           className="border-0 shadow-md bg-sky-500 ring-1 ring-sky-500 font-bold hover:scale-105 duration-200 text-gray-50 hover:text-sky-500 hover:bg-gray-50 h-full w-20 hover:ring-sky-500 rounded-full cursor-pointer outline-none">

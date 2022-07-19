@@ -8,8 +8,9 @@ import getStripe from '../../utils/getStripe';
 import { fetchPostJSON } from '../../utils/api-helpers';
 import { formatAmountForDisplay } from '../../utils/stripe-helpers';
 import * as config from '../../config';
-type Props={amount:Number}
-const CheckoutForm = ({amount}: Props, children: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined) => {
+
+type Props={amount:number}
+function CheckoutForm({amount}: Props, children: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined) {
   
   const [loading, setLoading] = useState(false);
 //   const [input, setInput] = useState({
@@ -28,7 +29,7 @@ const CheckoutForm = ({amount}: Props, children: string | number | boolean | Rea
     setLoading(true);
     // Create a Checkout Session.
     const response = await fetchPostJSON('/api/checkout_sessions', {
-      amount: amount,
+      amount,
     });
 
     if (response.statusCode === 500) {
@@ -56,6 +57,6 @@ const CheckoutForm = ({amount}: Props, children: string | number | boolean | Rea
      {children}
     </form>
   );
-};
+}
 
 export default CheckoutForm;

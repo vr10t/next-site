@@ -3,8 +3,9 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import initStripe from 'stripe';
 import { buffer } from 'micro';
 import Cors from 'micro-cors';
-import { getServiceSupabase } from '../../utils/supabaseClient';
 import { PostgrestResponse } from '@supabase/supabase-js';
+import { getServiceSupabase } from '../../utils/supabaseClient';
+
 const cors = Cors({
   allowMethods: ['POST', 'HEAD'],
 });
@@ -30,9 +31,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       // Handle the checkout.session.completed event
       try {
         // confirm booking in bookings table
-        //get checkout session object
+        // get checkout session object
         const session = await stripe.checkout.sessions.retrieve((event.data.object as any).id);
-        const bookingId = session.metadata!.bookingId;
+        const {bookingId} = session.metadata!;
         const booking = await supabase
           .from('bookings')
           .select('*')
@@ -43,7 +44,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           await supabase
             .from('bookings')
             .update({
-              status: 'paid',
+              status: 'Confirmed',
             })
             .eq('id', bookingId);
           res.status(200).send('Booking confirmed');
@@ -57,7 +58,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       // Handle the checkout.session.expired event
       try {
         const session = await stripe.checkout.sessions.retrieve((event.data.object as any).id);
-        const bookingId = session.metadata!.bookingId;
+        const {bookingId} = session.metadata!;
 
         const booking = await supabase
           .from('bookings')

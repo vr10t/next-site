@@ -1,4 +1,5 @@
 import PlacesAutocomplete from "react-places-autocomplete";
+
 export default function AutocompleteInput(props){
    return( <PlacesAutocomplete
                 value={props.value}
@@ -40,11 +41,11 @@ export default function AutocompleteInput(props){
                     <div className="relative top-0 max-h-[10rem] bg-gray-50 z-[999] w-auto max-w-[12rem] xs:max-w-[15rem] overflow-auto ">
                       {loading && <div>Loading...</div>}
                       {suggestions.map((suggestion) => {
-                        let className = suggestion.active
+                        const className = suggestion.active
                           ? "bg-gray-200 py-2 px-4 max-xs"
                           : "bg-gray-50 py-2 px-4 max-xs";
                         // inline style for demonstration purpose
-                        let style = suggestion.active
+                        const style = suggestion.active
                           ? {
                               backgroundColor: "rgb(229 231 235)",
                               cursor: "pointer",
@@ -53,7 +54,7 @@ export default function AutocompleteInput(props){
                               backgroundColor: "rgb(249 250 251)",
                               cursor: "pointer",
                             };
-                        let key = 1;
+                        const key = 1;
                         return (
                           <div
                             {...getSuggestionItemProps(suggestion, {

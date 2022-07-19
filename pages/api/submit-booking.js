@@ -1,15 +1,16 @@
-import { getServiceSupabase } from "../../utils/supabaseClient";
 import { withSentry } from "@sentry/nextjs";
 import { nanoid } from "nanoid";
+import { getServiceSupabase } from "../../utils/supabaseClient";
+
 async function handler(req, res) {
   // Get body submitted in request's body.
   // const router =useRouter()
   const supabase = getServiceSupabase();
-  const body = req.body;
+  const {body} = req;
   console.log(body);
-  let { data, error } = await supabase.from("bookings").insert([
+  const { data, error } = await supabase.from("bookings").insert([
     {
-      id: body.id || nanoid(8).toUpperCase(),
+      id: body.id || nanoid(),
       first_name: body.first_name,
       last_name: body.last_name,
       email: body.email,
@@ -43,6 +44,6 @@ async function handler(req, res) {
   }
   // Send 200 success if there were no errors!
   // and also return a copy of the object we received from Supabase
-  return res.status(200).json({ data: data });
+  return res.status(200).json({ data });
 }
 export default handler

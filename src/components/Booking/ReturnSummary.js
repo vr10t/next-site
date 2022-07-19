@@ -10,19 +10,19 @@ import { FaHourglassHalf } from "@react-icons/all-files/fa/FaHourglassHalf";
 import { FaTaxi } from "@react-icons/all-files/fa/FaTaxi";
 import { FaCreditCard } from "@react-icons/all-files/fa/FaCreditCard";
 import { FaCheck } from "@react-icons/all-files/fa/FaCheck";
-import { useAppContext } from "../../context/state";
-import { Tooltip } from "flowbite-react";
-import Receipt from "../Svg/Receipt";
+import { Tooltip , Spinner } from "flowbite-react";
 import { useState } from "react";
-import AutocompleteInput from "../Booking/AutocompleteInput";
 import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
-import { handleGetDistance } from "../../../utils/google-helpers";
-import { Spinner } from "flowbite-react";
 import { useFormik } from "formik";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { FaSuitcase } from "@react-icons/all-files/fa/FaSuitcase";
 import { FaPlaneDeparture } from "@react-icons/all-files/fa/FaPlaneDeparture";
+import { handleGetDistance } from "../../../utils/google-helpers";
+import AutocompleteInput from "./AutocompleteInput";
+import Receipt from "../Svg/Receipt";
+import { useAppContext } from "../../context/state";
+
 export default function Summary(props, children) {
   const { data, setData } = useAppContext();
   const completed =
@@ -47,18 +47,18 @@ export default function Summary(props, children) {
   const [destination, setDestination] = useState("");
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
-  let dateObject = new Date();
-  let minute = dateObject.getMinutes();
-  let hour = dateObject.getHours() + 1;
+  const dateObject = new Date();
+  const minute = dateObject.getMinutes();
+  const hour = dateObject.getHours() + 1;
   let day = dateObject.getDate();
   let month = dateObject.getMonth() + 1;
-  let maxMonths = dateObject.getMonth() + 4;
-  let year = dateObject.getFullYear();
-  if (month < 10) month = "0" + month;
-  if (day < 10) day = "0" + day;
-  let now = hour + ":" + minute;
-  let today = year + "-" + month + "-" + day;
-  let threeMonthsFromNow = year + "-" + maxMonths + "-" + day;
+  const maxMonths = dateObject.getMonth() + 4;
+  const year = dateObject.getFullYear();
+  if (month < 10) month = `0${  month}`;
+  if (day < 10) day = `0${  day}`;
+  const now = `${hour  }:${  minute}`;
+  const today = `${year  }-${  month  }-${  day}`;
+  const threeMonthsFromNow = `${year  }-${  maxMonths  }-${  day}`;
 
   const { getFieldProps, handleSubmit, errors, touched } = useFormik({
     initialValues: {
@@ -245,7 +245,7 @@ export default function Summary(props, children) {
                   onSelect={handleSelectOrigin}
                 />
               ) : (
-                <p className={`text-sm text-gray-500`}>
+                <p className="text-sm text-gray-500">
                   {origin == "" ? data.return_location : origin}
                 </p>
               )}
@@ -336,7 +336,7 @@ export default function Summary(props, children) {
                   onChange={(e) => setPassengers(e.target.value)}
                 />
               ) : (
-                <p className={`text-sm text-gray-500`}>
+                <p className="text-sm text-gray-500">
                   {passengers == "" ? data.return_passengers : passengers}
                 </p>
               )}
@@ -378,7 +378,7 @@ export default function Summary(props, children) {
                   onChange={(e) => setDate(e.target.value)}
                 />
               ) : (
-                <p className={`text-sm text-gray-500`}>
+                <p className="text-sm text-gray-500">
                   {date == "" ? data.return_date : date}
                 </p>
               )}
@@ -419,7 +419,7 @@ export default function Summary(props, children) {
                   onChange={(e) => setTime(e.target.value)}
                 />
               ) : (
-                <p className={`text-sm text-gray-500`}>
+                <p className="text-sm text-gray-500">
                   {data.return_time}
                 </p>
               )}
@@ -496,9 +496,9 @@ export default function Summary(props, children) {
                
                 {data.return_first_name &&data.return_last_name&& data.return_email && data.return_phone ? (
                   <>
-                    <p className={`text-sm text-gray-500`}>{data.return_first_name}{" "}{data.return_last_name}</p>
-                    <p className={`text-sm text-gray-500`}>{data.return_email}</p>
-                    <p className={`text-sm text-gray-500`}>{data.return_phone}</p>
+                    <p className="text-sm text-gray-500">{data.return_first_name}{" "}{data.return_last_name}</p>
+                    <p className="text-sm text-gray-500">{data.return_email}</p>
+                    <p className="text-sm text-gray-500">{data.return_phone}</p>
                   </>
                 ) : (
                   <p className="text-sm text-pink-400">Required</p>
@@ -506,7 +506,7 @@ export default function Summary(props, children) {
               </div>
 
               <div className="my-auto">
-                <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500"></a>
+                <a className="text-sm font-bold text-indigo-700 underline hover:no-underline hover:text-indigo-500" />
               </div>
             </div>
           }

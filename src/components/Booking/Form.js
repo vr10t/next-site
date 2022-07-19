@@ -6,12 +6,12 @@ import { BsCalendarFill } from "@react-icons/all-files/bs/BsCalendarFill";
 import { FaMapPin } from "@react-icons/all-files/fa/FaMapPin";
 import { BsClockFill } from "@react-icons/all-files/bs/BsClockFill";
 
-import InputField from "./InputField2";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+import InputField from "./InputField2";
 import styles from "./Form.module.scss";
 import bg2 from "../../../public/bg-2.jpg";
-import dynamic from "next/dynamic";
 
 const HCaptcha = dynamic(() => import("@hcaptcha/react-hcaptcha"));
 
@@ -20,14 +20,14 @@ export default function Form() {
   const [term, setTerm]= useState('')
 
 
-  let date = new Date();
+  const date = new Date();
   let day = date.getDate();
   let month = date.getMonth() + 1;
-  let year = date.getFullYear();
+  const year = date.getFullYear();
 
-  if (month < 10) month = "0" + month;
-  if (day < 10) day = "0" + day;
-  let today = year + "-" + month + "-" + day;
+  if (month < 10) month = `0${  month}`;
+  if (day < 10) day = `0${  day}`;
+  const today = `${year  }-${  month  }-${  day}`;
   
   
   useEffect(()=>setTimeout(() => (
@@ -54,20 +54,20 @@ export default function Form() {
         </div>
       </div>
       <div className="m-4 justify-center flex">
-        <form autocomplete="off" action="https://formspree.io/f/xoqrkbwb" method="POST">
+        <form autoComplete="off" action="https://formspree.io/f/xoqrkbwb" method="POST">
           <div className="grid max-w-2xl left-1/2 ">
             <h1 className="text-center font-bold ">Book a Ride</h1>
             <div className="md:grid mx-4 xl:grid-cols-2 lg:gap-4 md:float-right">
               <div className="noblur flex flex-col">
                 {" "}
-                {/*first col*/}
+                {/* first col */}
                 <InputField
                   icon={
                     <BsFillPersonFill className="pt-1 text-3xl text-stone-800 justify-start" />
                   }
                   label="Name"
                   name="name"
-                  required={true}
+                  required
                   type="text"
                   placeholder="Your name"
                 />
@@ -77,7 +77,7 @@ export default function Form() {
                   }
                   label="Phone"
                   name="telephone"
-                  required={true}
+                  required
                   type="tel"
                   defaultValue="+44"
                   placeholder="+44"
@@ -88,7 +88,7 @@ export default function Form() {
                   }
                   label="Pickup date"
                   name="date"
-                  required={true}
+                  required
                   type="date"
                   defaultValue={today}
                 />
@@ -98,21 +98,21 @@ export default function Form() {
                   }
                   label="Pickup time"
                   name="time"
-                  required={true}
+                  required
                   max="10"
                   type="time"
                 />
               </div>
               <div className="flex flex-col">
                 {" "}
-                {/*second col*/}
+                {/* second col */}
                 <InputField
                   icon={
                     <BsFillPersonPlusFill className="pt-1 text-3xl text-stone-800 justify-start" />
                   }
                   label="Passangers"
                   name="passangers"
-                  required={true}
+                  required
                   min="1"
                   max="10"
                   type="number"
@@ -126,7 +126,7 @@ export default function Form() {
                   }
                   label="Pickup from"
                   name="location"
-                  required={true}
+                  required
                   type="text"
                   placeholder="Type in your pickup location"
                 />
@@ -136,13 +136,13 @@ export default function Form() {
                   }
                   label="Destination"
                   name="destination"
-                  required={true}
+                  required
                   type="text"
                   placeholder="Type in your destination"
                 />
                 <div className="mt-4 pt-1 ">
                   {canLoad&&<HCaptcha
-                    required={true}
+                    required
                     sitekey="63ecdeb2-95ea-4c7a-9e95-02195a81d5c5"
                     onVerify={(token, ekey) =>
                       handleVerificationSuccess(token, ekey)
@@ -155,11 +155,11 @@ export default function Form() {
               <input
                 name="tos"
                 id="tos"
-                required={true}
+                required
                 className=" lg:p-4 mt-2 scale-150 "
                 type="checkbox"
               />
-              <label className=" text-gray-700 px-2 lg:indent-2" for="tos">
+              <label className=" text-gray-700 px-2 lg:indent-2" htmlFor="tos">
                 By using this form you agree with the storage and handling of
                 your data by this website.
               </label>
